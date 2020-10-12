@@ -1,0 +1,1386 @@
+{
+    "dashboard": {
+        "bn": "ড্যাশবোর্ড",
+        "en": "Dashboard"
+    },
+    "locale": {
+        "bn": "আঞ্চলিকতা",
+        "en": "Locale"
+    },
+    "user_management": {
+        "bn": "ব্যবহারকারী ব্যবস্থাপনা",
+        "en": "User Management"
+    },
+    "role_management": {
+        "bn": "ভূমিকা ব্যবস্থাপনা",
+        "en": "Role Management"
+    },
+    "permission_management": {
+        "bn": "অনুমতি ব্যবস্থাপনা",
+        "en": "Permission Management"
+    },
+    "check_user_ability": {
+        "bn": "ব্যবহারকারীর সক্ষমতা যাচাই",
+        "en": "Check User Ability"
+    },
+    "check_role_ability": {
+        "bn": "ভূমিকা সক্ষমতা যাচাই",
+        "en": "Check Role Ability"
+    },
+    "sales": {
+        "bn": "বিক্রয়সমূহ",
+        "en": "Sales"
+    },
+    "new_sale": {
+        "bn": "নতুন বিক্রয়",
+        "en": "New Sale"
+    },
+    "list_sales": {
+        "bn": "বিক্রয়ের তালিকা",
+        "en": "List Sales"
+    },
+    "purchases": {
+        "bn": "ক্রয়সমূহ",
+        "en": "Purchases"
+    },
+    "new_purchase": {
+        "bn": "নতুন ক্রয়",
+        "en": "New Purchase"
+    },
+    "list_purchases": {
+        "bn": "ক্রয়ের তালিকা",
+        "en": "List Purchases"
+    },
+    "contacts": {
+        "bn": "মানবসম্পদ",
+        "en": "Contacts"
+    },
+    "customers": {
+        "bn": "গ্রাহকের তালিকা",
+        "en": "Customers"
+    },
+    "suppliers": {
+        "bn": "সরবরাহকারীর ",
+        "en": "Suppliers"
+    },
+    "balance_sheet": {
+        "bn": "ব্যালান্স শিট",
+        "en": "Balance Sheet"
+    },
+    "customers_balance": {
+        "bn": "ক্রেতার আর্থিক ব্যালান্স",
+        "en": "Customers Balance"
+    },
+    "suppliers_balance": {
+        "bn": "সরবরাহকারীর আর্থিক ব্যালান্স",
+        "en": "Suppliers Balance"
+    },
+    "capital_funds": {
+        "bn": "মূলধন ব্যালান্স",
+        "en": "Capital Funds"
+    },
+    "balance": {
+        "bn": "ব্যালান্স",
+        "en": "Balance"
+    },
+    "deposits": {
+        "bn": "জমা",
+        "en": "Deposits"
+    },
+    "withdraws": {
+        "bn": "উত্তোলন",
+        "en": "Withdraws"
+    },
+    "expenses": {
+        "bn": "খরচের তালিকা",
+        "en": "Expenses"
+    },
+    "list": {
+        "bn": "তালিকা",
+        "en": "List"
+    },
+    "code": {
+        "bn": "কোড",
+        "en": "Code"
+    },
+    "cost": {
+        "bn": "ক্রয়মূল্য",
+        "en": "Cost"
+    },
+    "price": {
+        "bn": "বিক্রয়মূল্য",
+        "en": "Price"
+    },
+    "barcode_symbology": {
+        "bn": "বারকোডের ধরণ",
+        "en": "Barcode Symbology"
+    },
+    "brand": {
+        "bn": "ব্র্যান্ড",
+        "en": "Brand"
+    },
+    "brand_name": {
+        "bn": "ব্র্যান্ডের নাম",
+        "en": "Brand Name"
+    },
+    "category": {
+        "bn": "বিভাগ",
+        "en": "Category"
+    },
+    "category_name": {
+        "bn": "বিভাগের নাম",
+        "en": "Category Name"
+    },
+    "sub_category": {
+        "bn": "উপবিভাগ",
+        "en": "Sub Category"
+    },
+    "sub_category_name": {
+        "bn": "আন্তবিভাগের নাম",
+        "en": "Sub Category Name"
+    },
+    "unit": {
+        "bn": "একক",
+        "en": "Unit"
+    },
+    "unit_name": {
+        "bn": "এককের নাম",
+        "en": "Unit Name"
+    },
+    "status": {
+        "bn": "অবস্থা",
+        "en": "Status"
+    },
+    "quantity": {
+        "bn": "পরিমান.",
+        "en": "Quantity"
+    },
+    "alert_quantity": {
+        "bn": "সতর্কতার পরিমান",
+        "en": "Alert Quantity"
+    },
+    "view_product": {
+        "bn": "পণ্যের বিবরণ",
+        "en": "View Product"
+    },
+    "select_product": {
+        "bn": "পণ্য বাছাই করুন",
+        "en": "Select Product"
+    },
+    "cart_details": {
+        "bn": "ক্রয়ের/বিক্রয়ের বিবরণ",
+        "en": "Cart Details"
+    },
+    "created_by": {
+        "bn": "প্রস্তুতকারী",
+        "en": "Created By"
+    },
+    "datetime": {
+        "bn": "সময় ও তারিখ",
+        "en": "Datetime"
+    },
+    "reference": {
+        "bn": "রেফারেন্স",
+        "en": "Reference"
+    },
+    "supplier": {
+        "bn": "সরবরাহকারি",
+        "en": "Supplier"
+    },
+    "note": {
+        "bn": "নোট",
+        "en": "Note"
+    },
+    "amount": {
+        "bn": "পরিমান",
+        "en": "Amount"
+    },
+    "taken_by": {
+        "bn": "গ্রহণকারী",
+        "en": "Taken By"
+    },
+    "total_deposit": {
+        "bn": "সর্বমোট বিনিয়োগ",
+        "en": "Total Deposit"
+    },
+    "total_withdrawals": {
+        "bn": "সর্বোমট উত্তোলন",
+        "en": "Total Withdrawals"
+    },
+    "overview": {
+        "bn": "সারসংক্ষেপ",
+        "en": "Overview"
+    },
+    "funding_overview": {
+        "bn": "আর্থিক বিবরণ",
+        "en": "Funding Overview"
+    },
+    "deposit_amount": {
+        "bn": "বিনোয়োগকৃত অর্থের পরিমান",
+        "en": "Deposit Amount"
+    },
+    "withdrawal_amount": {
+        "bn": "উত্তোলিত অর্থের পরিমান",
+        "en": "Withdrawal Amount"
+    },
+    "payment_amount": {
+        "bn": "পরিশোধিত অর্থ",
+        "en": "Payment Amount"
+    },
+    "payment_method": {
+        "bn": "পরিশোধের মাধ্যম",
+        "en": "Payment Method"
+    },
+    "bank": {
+        "bn": "ব্যাংক",
+        "en": "Bank"
+    },
+    "check_no": {
+        "bn": "চেক নং",
+        "en": "Check No"
+    },
+    "transaction_no": {
+        "bn": "লেনদেন নং",
+        "en": "Transaction No"
+    },
+    "customer_balance_sheet": {
+        "bn": "ক্গ্রাহকের আর্থিক হিসাবনিকাশ",
+        "en": "Customer Balance Sheet"
+    },
+    "company": {
+        "bn": "কোম্পানি",
+        "en": "Company"
+    },
+    "district": {
+        "bn": "জেলা",
+        "en": "District"
+    },
+    "deposit": {
+        "bn": "বিনিয়োগ",
+        "en": "Deposit"
+    },
+    "withdrawn": {
+        "bn": "উত্তোলন",
+        "en": "Withdrawn"
+    },
+    "payable": {
+        "bn": "প্রদেয়",
+        "en": "Payable"
+    },
+    "paid": {
+        "bn": "পরিশোধিত",
+        "en": "Paid"
+    },
+    "final_balance": {
+        "bn": "সামগ্রিক আর্থিক হিসাবনিকাশ",
+        "en": "Final Balance"
+    },
+    "village": {
+        "bn": "গ্রাম",
+        "en": "Village"
+    },
+    "thana": {
+        "bn": "থানা",
+        "en": "Thana"
+    },
+    "post_office": {
+        "bn": "ডাকঘর.",
+        "en": "Post Office"
+    },
+    "funds_balance": {
+        "bn": "আর্থিক হিসাবনিকাশ",
+        "en": "Funds Balance"
+    },
+    "categories": {
+        "bn": "বিভাগসমূহ",
+        "en": "Categories"
+    },
+    "sub_categories": {
+        "bn": "আন্তবিভাগসমূহ",
+        "en": "Sub Categories"
+    },
+    "brands": {
+        "bn": "ব্রান্ডের তালিকা",
+        "en": "Brands"
+    },
+    "units": {
+        "bn": "এককসমূহ",
+        "en": "Units"
+    },
+    "main_inventory": {
+        "bn": "পণ্য তালিকা",
+        "en": "Main Inventory"
+    },
+    "products": {
+        "bn": "পণ্যসমূহ",
+        "en": "Products"
+    },
+    "check_ins": {
+        "bn": "চেক-ইন সমূহ",
+        "en": "Check Ins"
+    },
+    "check_outs": {
+        "bn": "চেক-আউট সমূহ",
+        "en": "Check Outs"
+    },
+    "settings": {
+        "bn": "সেটিংস",
+        "en": "Settings"
+    },
+    "languages": {
+        "bn": "ভাষাসমূহ",
+        "en": "Languages"
+    },
+    "add_language": {
+        "bn": "নতুন ভাষা",
+        "en": "Add Language"
+    },
+    "edit_language": {
+        "bn": "ভাষা সম্পাদন",
+        "en": "Edit Language"
+    },
+    "view_language": {
+        "bn": "ভাষা বিবরণ",
+        "en": "View Language"
+    },
+    "delete_language": {
+        "bn": "ভাষা মুছুন",
+        "en": "Delete Language"
+    },
+    "definitions": {
+        "bn": "অনুবাদসমূহ",
+        "en": "Definitions"
+    },
+    "preferences": {
+        "bn": "পছন্দসমূহ",
+        "en": "Preferences"
+    },
+    "address": {
+        "bn": "ঠিকানা",
+        "en": "Address"
+    },
+    "currency": {
+        "bn": "মুদ্রা",
+        "en": "Currency"
+    },
+    "default_customer": {
+        "bn": "ডিফল্ট ক্রেতা",
+        "en": "Default Customer"
+    },
+    "default_discount": {
+        "bn": "ডিফল্ট ছাড়ের পরিমান",
+        "en": "Default Discount"
+    },
+    "default_tax": {
+        "bn": "ডিফল্ট ট্যাক্সের পরিমান",
+        "en": "Default Tax"
+    },
+    "email": {
+        "bn": "ইমেইল",
+        "en": "Email"
+    },
+    "language": {
+        "bn": "ভাষা",
+        "en": "Language"
+    },
+    "logo": {
+        "bn": "লোগো",
+        "en": "Logo"
+    },
+    "phone": {
+        "bn": "ফোন",
+        "en": "Phone"
+    },
+    "send_sms_after_order": {
+        "bn": "অর্ডার সম্পন্নের পর এসএমএস (ক্ষুদ্রবার্তা) পাঠাবেন?",
+        "en": "Send Sms After Order"
+    },
+    "send_sms_after_sale": {
+        "bn": "বিক্রয় সম্পন্নের পর এসএমএস (ক্ষুদ্রবার্তা) পাঠাবেন?",
+        "en": "Send Sms After Sale"
+    },
+    "site_name": {
+        "bn": "সাইটের নাম",
+        "en": "Site Name"
+    },
+    "timezone": {
+        "bn": "সময় অঞ্চল",
+        "en": "Timezone"
+    },
+    "are_you_sure": {
+        "bn": "আপনি কি নিশ্চিত?",
+        "en": "Are You Sure"
+    },
+    "name": {
+        "bn": "নাম",
+        "en": "Name"
+    },
+    "photo": {
+        "bn": "ছবি",
+        "en": "Photo"
+    },
+    "key": {
+        "bn": "শিরোনাম",
+        "en": "Key"
+    },
+    "action": {
+        "bn": "ক্রিয়াকলাপ",
+        "en": "Action"
+    },
+    "value": {
+        "bn": "মান",
+        "en": "Value"
+    },
+    "description": {
+        "bn": "বর্ণনা",
+        "en": "Description"
+    },
+    "created_at": {
+        "bn": "তৈরির সময়",
+        "en": "Created At"
+    },
+    "updated_at": {
+        "bn": "সম্পাদনের সময়",
+        "en": "Updated At"
+    },
+    "submit": {
+        "bn": "সাবমিট",
+        "en": "Submit"
+    },
+    "roles": {
+        "bn": "ব্যবহারকারী ভূমিকা",
+        "en": "Roles"
+    },
+    "permissions": {
+        "bn": "ব্যবহারকারী অনুমতিসমূহ",
+        "en": "Permissions"
+    },
+    "user_abilities": {
+        "bn": "ব্যবহারকারীর সক্ষমতা",
+        "en": "User Abilities"
+    },
+    "role_abilities": {
+        "bn": "রোল সক্ষমতা",
+        "en": "Role Abilities"
+    },
+    "add_edit_user": {
+        "bn": "ব্যবহারকারী যুক্ত / সম্পাদন",
+        "en": "Add Edit User"
+    },
+    "view_user": {
+        "bn": "ব্যবহারকারীর বিবরণ",
+        "en": "View User"
+    },
+    "add": {
+        "bn": "নতুন",
+        "en": "Add"
+    },
+    "id": {
+        "bn": "আইডি",
+        "en": "Id"
+    },
+    "per_page": {
+        "bn": "প্রতিপেজে",
+        "en": "Per Page"
+    },
+    "type_and_hit_enter_to_search_the_table": {
+        "bn": "টাইপ করে ইন্টার বাটন চাপুন , রিসেট করার জন্য  ESC চাপুন",
+        "en": "Type And Hit Enter To Search The Table"
+    },
+    "columns": {
+        "bn": "কলামসমূহ",
+        "en": "Columns"
+    },
+    "no_items_found": {
+        "bn": "কোনো আইটেম খুঁজে পাওয়া যায়নি",
+        "en": "No Items Found"
+    },
+    "view_role": {
+        "bn": "ব্যবহারকারীর ভূমিকা",
+        "en": "View Role"
+    },
+    "guard": {
+        "bn": "Guard",
+        "en": "Guard"
+    },
+    "add_edit_permission": {
+        "bn": "Permission যুক্ত / সম্পাদন",
+        "en": "Add Edit Permission"
+    },
+    "view_permission": {
+        "bn": "Permission এর বিবরণ",
+        "en": "View Permission"
+    },
+    "assigned_roles": {
+        "bn": "অর্পিত ভূমিকা",
+        "en": "Assigned Roles"
+    },
+    "assigned_users": {
+        "bn": "নির্ধারিত ব্যবহারকারী",
+        "en": "Assigned Users"
+    },
+    "search_users": {
+        "bn": "Search Users",
+        "en": "Search Users"
+    },
+    "type_and_search_user": {
+        "bn": "ব্যবহারকারীদের অনুসন্ধান করুন",
+        "en": "Type And Search User"
+    },
+    "search_permissions": {
+        "bn": "Permission অনুসন্ধান করুন",
+        "en": "Search Permissions"
+    },
+    "type_and_search_permission": {
+        "bn": "টাইপ এবং অনুমতি অনুসন্ধান করুন",
+        "en": "Type And Search Permission"
+    },
+    "reset": {
+        "bn": "রিসেট করুন",
+        "en": "Reset"
+    },
+    "search_roles": {
+        "bn": "ভূমিকা অনুসন্ধান করুন",
+        "en": "Search Roles"
+    },
+    "type_and_search_role": {
+        "bn": "ভূমিকা অনুসন্ধান করুন",
+        "en": "Type And Search Role"
+    },
+    "email_verified_at": {
+        "bn": "ইমেল যাচাইয়ের সময়",
+        "en": "Email Verified At"
+    },
+    "email_address": {
+        "bn": "ইমেল ঠিকানা",
+        "en": "Email Address"
+    },
+    "password": {
+        "bn": "পাসওয়ার্ড",
+        "en": "Password"
+    },
+    "please_select_an_option": {
+        "bn": "একটি অপশন নির্বাচন করুন",
+        "en": "Please Select An Option"
+    },
+    "click_to_remove": {
+        "bn": "বাদ দেওয়ার জন্য ক্লিক করুন",
+        "en": "Click To Remove"
+    },
+    "guard_name": {
+        "bn": "Guard Name",
+        "en": "Guard Name"
+    },
+    "revoke_user": {
+        "bn": "ব্যবহারকারী প্রত্যাহার করুন",
+        "en": "Revoke User"
+    },
+    "detach": {
+        "bn": "বিচ্ছিন্ন করুন",
+        "en": "Detach"
+    },
+    "allowed": {
+        "bn": "অনুমোদিত",
+        "en": "Allowed"
+    },
+    "users": {
+        "bn": "ব্যবহারকারীসমূহ",
+        "en": "Users"
+    },
+    "selected_users": {
+        "bn": "নির্বাচিত ব্যবহারকারী",
+        "en": "Selected Users"
+    },
+    "search_and_assign_roles": {
+        "bn": "খুজুন এবং ভূমিকা নির্ধারণ করুন",
+        "en": "Search And Assign Roles"
+    },
+    "search_and_assign_users": {
+        "bn": "খুজুন এবং ব্যবহারকারী নির্ধারণ করুন",
+        "en": "Search And Assign Users"
+    },
+    "cash": {
+        "bn": "নগদ",
+        "en": "Cash"
+    },
+    "card": {
+        "bn": "কার্ড",
+        "en": "Card"
+    },
+    "bkash": {
+        "bn": "বিকাশ",
+        "en": "Bkash"
+    },
+    "rocket": {
+        "bn": "রকেট",
+        "en": "Rocket"
+    },
+    "customer": {
+        "bn": "ক্রেতা",
+        "en": "Customer"
+    },
+    "date": {
+        "bn": "তারিখ",
+        "en": "Date"
+    },
+    "returned": {
+        "bn": "ফিরে এসেছে",
+        "en": "Returned"
+    },
+    "processed": {
+        "bn": "প্রক্রিয়াজাত",
+        "en": "Processed"
+    },
+    "cancelled": {
+        "bn": "বাতিল করা হয়েছে",
+        "en": "Cancelled"
+    },
+    "full": {
+        "bn": "সম্পূর্ণ",
+        "en": "Full"
+    },
+    "tax": {
+        "bn": "কর",
+        "en": "Tax"
+    },
+    "discount": {
+        "bn": "ছাড়",
+        "en": "Discount"
+    },
+    "total": {
+        "bn": "মোট",
+        "en": "Total"
+    },
+    "sales_note": {
+        "bn": "বিক্রয় নোট",
+        "en": "Sales Note"
+    },
+    "pid": {
+        "bn": "PID",
+        "en": "Pid"
+    },
+    "not_selected": {
+        "bn": "অনির্বাচিত",
+        "en": "Not Selected"
+    },
+    "history": {
+        "bn": "ইতিহাস",
+        "en": "History"
+    },
+    "take_payment": {
+        "bn": "পেমেন্ট নিন",
+        "en": "Take Payment"
+    },
+    "payment_history": {
+        "bn": "অর্থ প্রদান ইতিহাস",
+        "en": "Payment History"
+    },
+    "view_sale_history": {
+        "bn": "বিক্রয় বিবরণ দেখুন",
+        "en": "View Sale History"
+    },
+    "edit_the_sale": {
+        "bn": "বিক্রয় সম্পাদনা করুন",
+        "en": "Edit The Sale"
+    },
+    "delete_the_sale": {
+        "bn": "বিক্রয় মুছুন",
+        "en": "Delete The Sale"
+    },
+    "check": {
+        "bn": "চেক",
+        "en": "Check"
+    },
+    "customer_id": {
+        "bn": "গ্রাহক আইডি",
+        "en": "Customer Id"
+    },
+    "supplier_name": {
+        "bn": "সরবরাহকারী নাম",
+        "en": "Supplier Name"
+    },
+    "payment_is_completed_for_this_sale": {
+        "bn": "এই বিক্রয়টির জন্য অর্থ প্রদান সম্পন্ন হয়েছে। আর কোনও পদক্ষেপের প্রয়োজন নেই।",
+        "en": "Payment Is Completed For This Sale"
+    },
+    "view_sale": {
+        "bn": "বিক্রয় দেখুন",
+        "en": "View Sale"
+    },
+    "customer_details": {
+        "bn": "কাস্টমার বিস্তারিত",
+        "en": "Customer Details"
+    },
+    "sale_items": {
+        "bn": "বিক্রয় আইটেম",
+        "en": "Sale Items"
+    },
+    "sale_id": {
+        "bn": "বিক্রয় আইডি",
+        "en": "Sale Id"
+    },
+    "product_name": {
+        "bn": "পণ্যের নাম",
+        "en": "Product Name"
+    },
+    "shipping_address": {
+        "bn": "প্রেরণের ঠিকানা",
+        "en": "Shipping Address"
+    },
+    "deleted_at": {
+        "bn": "ডিলিটের সময়",
+        "en": "Deleted At"
+    },
+    "ok": {
+        "bn": "ঠিক আছে",
+        "en": "Ok"
+    },
+    "cancel": {
+        "bn": "বাতিল",
+        "en": "Cancel"
+    },
+    "purchase_note": {
+        "bn": "ক্রয় নোট",
+        "en": "Purchase Note"
+    },
+    "list_of_purchases": {
+        "bn": "ক্রয়ের তালিকা",
+        "en": "List Of Purchases"
+    },
+    "view_purchase_history": {
+        "bn": "ক্রয়ের বিবরণ দেখুন",
+        "en": "View Purchase History"
+    },
+    "edit_the_purchase": {
+        "bn": "ক্রয় সম্পাদনা করুন",
+        "en": "Edit The Purchase"
+    },
+    "delete_the_purchase": {
+        "bn": "ক্রয় মুছুন",
+        "en": "Delete The Purchase"
+    },
+    "payment_is_completed_for_this_purchase": {
+        "bn": "এই ক্রয়ের জন্য অর্থ প্রদান সম্পন্ন হয়েছে। আর কোনও পদক্ষেপের প্রয়োজন নেই।",
+        "en": "Payment Is Completed For This Purchase"
+    },
+    "given_by": {
+        "bn": "প্রদানকারী",
+        "en": "Given By"
+    },
+    "supplier_id": {
+        "bn": "সরবরাহকারী আইডি",
+        "en": "Supplier Id"
+    },
+    "view_purchase": {
+        "bn": "ক্রয় দেখুন",
+        "en": "View Purchase"
+    },
+    "supplier_details": {
+        "bn": "সরবরাহকারী বিবরণ",
+        "en": "Supplier Details"
+    },
+    "purchase_id": {
+        "bn": "ক্রয় আইডি",
+        "en": "Purchase Id"
+    },
+    "add_fund": {
+        "bn": "তহবিল যুক্ত করুন",
+        "en": "Add Fund"
+    },
+    "view": {
+        "bn": "দেখুন",
+        "en": "View"
+    },
+    "view_customer": {
+        "bn": "গ্রাহক দেখুন",
+        "en": "View Customer"
+    },
+    "edit": {
+        "bn": "সম্পাদনা করুন",
+        "en": "Edit"
+    },
+    "edit_customer": {
+        "bn": "গ্রাহক সম্পাদনা করুন",
+        "en": "Edit Customer"
+    },
+    "delete": {
+        "bn": "মুছুন",
+        "en": "Delete"
+    },
+    "delete_customer": {
+        "bn": "গ্রাহক মুছুন",
+        "en": "Delete Customer"
+    },
+    "add_customer": {
+        "bn": "গ্রাহক যুক্ত করুন",
+        "en": "Add Customer"
+    },
+    "phone_number": {
+        "bn": "ফোন নম্বর",
+        "en": "Phone Number"
+    },
+    "withdrawn_amount": {
+        "bn": "উত্তোলনের পরিমাণ",
+        "en": "Withdrawn Amount"
+    },
+    "sales_payable": {
+        "bn": "বিক্রয়মূল্য প্রদেয়",
+        "en": "Sales Payable"
+    },
+    "sales_paid": {
+        "bn": "বিক্রয়মূল্য পরিশোধিত",
+        "en": "Sales Paid"
+    },
+    "sales_balance": {
+        "bn": "বিক্রয়মূল্য জের",
+        "en": "Sales Balance"
+    },
+    "view_supplier": {
+        "bn": "সরবরাহকারী দেখুন",
+        "en": "View Supplier"
+    },
+    "purchases_payable": {
+        "bn": "ক্রয়মূল্য প্রদেয়",
+        "en": "Purchases Payable"
+    },
+    "purchases_paid": {
+        "bn": "ক্রয়মূল্য পরিশোধিত",
+        "en": "Purchases Paid"
+    },
+    "purchases_balance": {
+        "bn": "ক্রয়মূল্য জের",
+        "en": "Purchases Balance"
+    },
+    "add_more_fund": {
+        "bn": "আরও তহবিল যুক্ত করুন",
+        "en": "Add More Fund"
+    },
+    "make_due_sales_payment_from_available_fund": {
+        "bn": "অবশিষ্ট তহবিল থেকে বিক্রয় অর্থ প্রদান করুন",
+        "en": "Make Due Sales Payment From Available Fund"
+    },
+    "make_due_payments": {
+        "bn": "বকেয়া অর্থ প্রদান করুন",
+        "en": "Make Due Payments"
+    },
+    "customer_name": {
+        "bn": "ক্রেতার নাম",
+        "en": "Customer Name"
+    },
+    "available_funds": {
+        "bn": "অবশিষ্ট তহবিল",
+        "en": "Available Funds"
+    },
+    "supplier_balance_sheet": {
+        "bn": "সরবরাহকারী ব্যালেন্স শীট",
+        "en": "Supplier Balance Sheet"
+    },
+    "due_purchases": {
+        "bn": "বকেয়া ক্রয়",
+        "en": "Due Purchases"
+    },
+    "make_due_purchase_payment_from_available_fund": {
+        "bn": "অবশিষ্ট তহবিল থেকে ক্রয় অর্থ প্রদান করুন",
+        "en": "Make Due Purchase Payment From Available Fund"
+    },
+    "funds": {
+        "bn": "তহবিল",
+        "en": "Funds"
+    },
+    "capital_deposits": {
+        "bn": "মূলধন আমানত",
+        "en": "Capital Deposits"
+    },
+    "capital_withdraws": {
+        "bn": "মূলধন উত্তোলন",
+        "en": "Capital Withdraws"
+    },
+    "total_number_of_withdrawals": {
+        "bn": "উত্তোলনের মোট সংখ্যা",
+        "en": "Total Number Of Withdrawals"
+    },
+    "total_withdrawal_amount": {
+        "bn": "মোট উত্তোলিত অর্থ",
+        "en": "Total Withdrawal Amount"
+    },
+    "view_deposit_details": {
+        "bn": "আমানতের/জমার বিস্তারিত দেখুন",
+        "en": "View Deposit Details"
+    },
+    "deposited_by": {
+        "bn": "আমানত প্রদানকারী",
+        "en": "Deposited By"
+    },
+    "deposit_method": {
+        "bn": "জমা প্রদান মাধ্যম",
+        "en": "Deposit Method"
+    },
+    "edit_fund": {
+        "bn": "তহবিল সম্পাদনা করুন",
+        "en": "Edit Fund"
+    },
+    "view_withdrawal_details": {
+        "bn": "উত্তোলনের বিবরণ দেখুন",
+        "en": "View Withdrawal Details"
+    },
+    "withdrawn_by": {
+        "bn": "উত্তোলনকারী",
+        "en": "Withdrawn By"
+    },
+    "withdraw_method": {
+        "bn": "উত্তোলন মাধ্যম",
+        "en": "Withdraw Method"
+    },
+    "total_expense_amount": {
+        "bn": "মোট ব্যায়িত অর্থ",
+        "en": "Total Expense Amount"
+    },
+    "total_expense_quantity": {
+        "bn": "মোট ব্যয়ের সংখ্যা",
+        "en": "Total Expense Quantity"
+    },
+    "view_expense": {
+        "bn": "ব্যয় দেখুন",
+        "en": "View Expense"
+    },
+    "expense_category_id": {
+        "bn": "ব্যয় বিভাগের আইডি",
+        "en": "Expense Category Id"
+    },
+    "expense_category_name": {
+        "bn": "ব্যয় বিভাগের নাম",
+        "en": "Expense Category Name"
+    },
+    "taken_by_name": {
+        "bn": "গ্রহণকারীর নাম",
+        "en": "Taken By Name"
+    },
+    "add_expense": {
+        "bn": "ব্যয় যুক্ত করুন",
+        "en": "Add Expense"
+    },
+    "expense_category": {
+        "bn": "ব্যয় বিভাগ",
+        "en": "Expense Category"
+    },
+    "expense_amount": {
+        "bn": "ব্যয়ের পরিমাণ",
+        "en": "Expense Amount"
+    },
+    "expense_reference": {
+        "bn": "ব্যয় রেফারেন্স",
+        "en": "Expense Reference"
+    },
+    "edit_expense": {
+        "bn": "ব্যয় সম্পাদনা করুন",
+        "en": "Edit Expense"
+    },
+    "view_category": {
+        "bn": "বিভাগ দেখুন",
+        "en": "View Category"
+    },
+    "add _category": {
+        "bn": "বিভাগ যুক্ত করুন",
+        "en": "Add  Category"
+    },
+    "edit_category": {
+        "bn": "বিভাগ সম্পাদনা করুন",
+        "en": "Edit Category"
+    },
+    "category_id": {
+        "bn": "বিভাগ আইডি",
+        "en": "Category Id"
+    },
+    "subcategory_id": {
+        "bn": "উপবিভাগ আইডি",
+        "en": "Subcategory Id"
+    },
+    "brand_id": {
+        "bn": "ব্র্যান্ড আইডি",
+        "en": "Brand Id"
+    },
+    "unit_id": {
+        "bn": "একক আইডি",
+        "en": "Unit Id"
+    },
+    "subcategory_name": {
+        "bn": "উপবিভাগ",
+        "en": "Subcategory Name"
+    },
+    "add_product": {
+        "bn": "পণ্য যুক্ত করুন",
+        "en": "Add Product"
+    },
+    "barcode_symboloy": {
+        "bn": "বারকোড সিম্বোলজি",
+        "en": "Barcode Symboloy"
+    },
+    "code_barcode_sku_upc_isbn": {
+        "bn": "কোড (বারকোড / এসকিউ / ইউপিসি / আইএসবিএন)",
+        "en": "Code Barcode Sku Upc Isbn"
+    },
+    "product_quantity": {
+        "bn": "পণ্যের পরিমাণ",
+        "en": "Product Quantity"
+    },
+    "product_alert_quantity": {
+        "bn": "পণ্য সতর্কতা পরিমাণ",
+        "en": "Product Alert Quantity"
+    },
+    "product_description": {
+        "bn": "পণ্যের বর্ণনা",
+        "en": "Product Description"
+    },
+    "edit_product": {
+        "bn": "পণ্য সম্পাদনা করুন",
+        "en": "Edit Product"
+    },
+    "view_check_in": {
+        "bn": "চেক ইন দেখুন",
+        "en": "View Check In"
+    },
+    "SL": {
+        "bn": "ক্র:নং",
+        "en": "SL"
+    },
+    "add_check_in": {
+        "bn": "চেক ইন যোগ করুন",
+        "en": "Add Check In"
+    },
+    "attachment": {
+        "bn": "সংযুক্তি",
+        "en": "Attachment"
+    },
+    "check_in_note": {
+        "bn": "চেক ইন নোট",
+        "en": "Check In Note"
+    },
+    "search_and_select_product": {
+        "bn": "অনুসন্ধান করে পণ্য নির্বাচন করুন",
+        "en": "Search And Select Product"
+    },
+    "available": {
+        "bn": "অবশিষ্ট",
+        "en": "Available"
+    },
+    "edit_check_in": {
+        "bn": "চেক ইন সম্পাদন",
+        "en": "Edit Check In"
+    },
+    "remove_item": {
+        "bn": "আইটেম বাদ দিন",
+        "en": "Remove Item"
+    },
+    "view_check_out": {
+        "bn": "চেক আউট দেখুন",
+        "en": "View Check Out"
+    },
+    "add_check_out": {
+        "bn": "নতুন চেক আউট",
+        "en": "Add Check Out"
+    },
+    "check_out_note": {
+        "bn": "চেক আউট নোট",
+        "en": "Check Out Note"
+    },
+    "select_and_search_products": {
+        "bn": "অনুসন্ধান করে পণ্য নির্বাচন করুন",
+        "en": "Select And Search Products"
+    },
+    "edit_check_out": {
+        "bn": "চেক আউট সম্পাদন",
+        "en": "Edit Check Out"
+    },
+    "Subcategories": {
+        "bn": "উপবিভাগসমূহ",
+        "en": "Subcategories"
+    },
+    "view_subcategory": {
+        "bn": "উপবিভাগ দেখুন",
+        "en": "View Subcategory"
+    },
+    "view_brand": {
+        "bn": "ব্র্যান্ড দেখুন",
+        "en": "View Brand"
+    },
+    "add_brand": {
+        "bn": "নতুন ব্র্যান্ড",
+        "en": "Add Brand"
+    },
+    "edit_brand": {
+        "bn": "ব্র্যান্ড সম্পাদন করুন",
+        "en": "Edit Brand"
+    },
+    "view_unit": {
+        "bn": "একক দেখুন",
+        "en": "View Unit"
+    },
+    "add_unit": {
+        "bn": "নতুন একক",
+        "en": "Add Unit"
+    },
+    "edit_unit": {
+        "bn": "একক সম্পাদন করুন",
+        "en": "Edit Unit"
+    },
+    "language_description": {
+        "bn": "ভাষার বর্ণনা",
+        "en": "Language Description"
+    },
+    "add_new_definition": {
+        "bn": "নতুন অনুবাদ যুক্ত করুন",
+        "en": "Add New Definition"
+    },
+    "definition_key": {
+        "bn": "অনুবাদ চাবি",
+        "en": "Definition Key"
+    },
+    "definition_value": {
+        "bn": "অনুবাদ",
+        "en": "Definition Value"
+    },
+    "view_employee": {
+        "bn": "কর্মচারী বিবরণ দেখুন",
+        "en": "View Employee"
+    },
+    "is_active": {
+        "bn": "সক্রিয়?",
+        "en": "Is Active"
+    },
+    "joining_date": {
+        "bn": "যোগদানের তারিখ",
+        "en": "Joining Date"
+    },
+    "leaving_date": {
+        "bn": "ছাড়ার তারিখ",
+        "en": "Leaving Date"
+    },
+    "position": {
+        "bn": "পদ",
+        "en": "Position"
+    },
+    "salary": {
+        "bn": "বেতন",
+        "en": "Salary"
+    },
+    "employees": {
+        "bn": "কর্মচারীর তালিকা",
+        "en": "Employees"
+    },
+    "edit_employee": {
+        "bn": "কর্মচারী সম্পাদনা করুন",
+        "en": "Edit Employee"
+    },
+    "delete_employee": {
+        "bn": "কর্মচারী মুছুন",
+        "en": "Delete Employee"
+    },
+    "paid_salary": {
+        "bn": "পরিশোধিত বেতন",
+        "en": "Paid Salary"
+    },
+    "active": {
+        "bn": "সক্রিয়",
+        "en": "Active"
+    },
+    "inactive": {
+        "bn": "নিষ্ক্রিয়",
+        "en": "Inactive"
+    },
+    "january": {
+        "bn": "জানুয়ারী",
+        "en": "January"
+    },
+    "february": {
+        "bn": "ফেব্রুয়ারী",
+        "en": "February"
+    },
+    "march": {
+        "bn": "মার্চ",
+        "en": "March"
+    },
+    "april": {
+        "bn": "এপ্রিল",
+        "en": "April"
+    },
+    "may": {
+        "bn": "মে",
+        "en": "May"
+    },
+    "june": {
+        "bn": "জুন",
+        "en": "June"
+    },
+    "july": {
+        "bn": "জুলাই",
+        "en": "July"
+    },
+    "august": {
+        "bn": "আগস্ট",
+        "en": "August"
+    },
+    "september": {
+        "bn": "সেপ্টেম্বর",
+        "en": "September"
+    },
+    "october": {
+        "bn": "অক্টোবর",
+        "en": "October"
+    },
+    "november": {
+        "bn": "নভেম্বর",
+        "en": "November"
+    },
+    "december": {
+        "bn": "ডিসেম্বর",
+        "en": "December"
+    },
+    "paid_salaries": {
+        "bn": "পরিশোধিত বেতনের তালিকা",
+        "en": "Paid Salaries"
+    },
+    "total_paid": {
+        "bn": "মোট পরিশোধিত অর্থ",
+        "en": "Total Paid"
+    },
+    "year": {
+        "bn": "বর্ষ",
+        "en": "Year"
+    },
+    "month": {
+        "bn": "মাস",
+        "en": "Month"
+    },
+    "capital_deposited": {
+        "bn": "মূলধন আমানত",
+        "en": "Capital Deposited"
+    },
+    "capital_withdrawn": {
+        "bn": "মূলধন প্রত্যাহার",
+        "en": "Capital Withdrawn"
+    },
+    "capital_balance": {
+        "bn": "মূলধন ব্যালেন্স",
+        "en": "Capital Balance"
+    },
+    "sales_due": {
+        "bn": "বকেয়া বিক্রয়",
+        "en": "Sales Due"
+    },
+    "purchases_due": {
+        "bn": "বকেয়া ক্রয়",
+        "en": "Purchases Due"
+    },
+    "expenses_amount": {
+        "bn": "ব্যয়ের পরিমাণ",
+        "en": "Expenses Amount"
+    },
+    "employee_salaries": {
+        "bn": "কর্মচারীদের বেতন",
+        "en": "Employee Salaries"
+    },
+    "total_employees": {
+        "bn": "মোট কর্মচারী",
+        "en": "Total Employees"
+    },
+    "cash_available": {
+        "bn": "নগদ অর্থ",
+        "en": "Cash Available"
+    },
+    "customer_funds_deposits": {
+        "bn": "গ্রাহক তহবিল জমা",
+        "en": "Customer Funds Deposits"
+    },
+    "customer_funds_withdrawn": {
+        "bn": "গ্রাহক তহবিল উত্তোলন",
+        "en": "Customer Funds Withdrawn"
+    },
+    "customer_funds_balance": {
+        "bn": "গ্রাহক তহবিলের ভারসাম্য",
+        "en": "Customer Funds Balance"
+    },
+    "supplier_funds_deposit": {
+        "bn": "সরবরাহকারী তহবিল জমা",
+        "en": "Supplier Funds Deposit"
+    },
+    "supplier_funds_withdrawn": {
+        "bn": "সরবরাহকারী তহবিল উত্তোলন",
+        "en": "Supplier Funds Withdrawn"
+    },
+    "supplier_funds_balance": {
+        "bn": "সরবরাহকারী তহবিলের ভারসাম্য",
+        "en": "Supplier Funds Balance"
+    },
+    "funding_source": {
+        "bn": "তহবিল উৎস",
+        "en": "Funding Source"
+    },
+    "debit": {
+        "bn": "ডেবিট",
+        "en": "Debit"
+    },
+    "credit": {
+        "bn": "ক্রেডিট",
+        "en": "Credit"
+    },
+    "total_financial_report": {
+        "bn": "মোট আর্থিক প্রতিবেদন",
+        "en": "Total Financial Report"
+    },
+    "total_selling_price": {
+        "bn": "মোট বিক্রয়মূল্য",
+        "en": "Total Selling Price"
+    },
+    "total_price": {
+        "bn": "মোট বিক্রয়মূল্য",
+        "en": "Total Price"
+    },
+    "total_buying_cost": {
+        "bn": "মোট ক্রয়মূল্য",
+        "en": "Total Cost"
+    },
+    "total_cost": {
+        "bn": "মোট ক্রয়মূল্য",
+        "en": "Total Cost"
+    },
+    "probable_profit_loss": {
+        "bn": "সম্ভাব্য লাভ এবং ক্ষতি",
+        "en": "Probable Profit & Loss"
+    },
+    "probable_profit": {
+        "bn": "সম্ভাব্য লাভ",
+        "en": "Probable Profit"
+    },
+    "view_sms": {
+        "bn": "এসএমএস দেখুন",
+        "en": "View SMS"
+    },
+    "sender": {
+        "bn": "প্রেরক",
+        "en": "Sender"
+    },
+    "type": {
+        "bn": "ধরণ",
+        "en": "Type"
+    },
+    "provider": {
+        "bn": "বার্তাবাহক",
+        "en": "Provider"
+    },
+    "message": {
+        "bn": "বার্তা",
+        "en": "Message"
+    },
+    "delivery": {
+        "bn": "ডেলিভারি",
+        "en": "Delivery"
+    },
+    "resend": {
+        "bn": "পুনরায় পাঠান",
+        "en": "Resend"
+    },
+    "subcategories": {
+        "bn": "উপবিভাগসমুহ",
+        "en": "Subcategories"
+    }
+}

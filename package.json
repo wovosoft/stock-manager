@@ -1,0 +1,49 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "yarn run development",
+        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "watch": "yarn run development --watch",
+        "watch-poll": "yarn run watch --watch-poll",
+        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --disable-host-check --https --key /home/narayan/.valet/Certificates/bdpos.test.key --cert /home/narayan/.valet/Certificates/bdpos.test.crt  --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "prod": "yarn run production",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    },
+    "devDependencies": {
+        "cross-env": "^7.0",
+        "css-loader": "^3.5.3",
+        "laravel-mix": "^5.0.1",
+        "laravel-mix-purgecss": "^5.0.0",
+        "popper.js": "^1.12",
+        "resolve-url-loader": "^2.3.1",
+        "sass": "^1.20.1",
+        "sass-loader": "^8.0.0",
+        "style-loader": "^1.2.1",
+        "vue-loader": "^15.9.2",
+        "vue-template-compiler": "^2.6.10"
+    },
+    "dependencies": {
+        "@ckeditor/ckeditor5-adapter-ckfinder": "^19.0.1",
+        "@ckeditor/ckeditor5-build-classic": "^19.0.2",
+        "@ckeditor/ckeditor5-build-decoupled-document": "^19.0.2",
+        "@ckeditor/ckeditor5-ckfinder": "^19.0.1",
+        "@ckeditor/ckeditor5-essentials": "^19.0.1",
+        "@ckeditor/ckeditor5-image": "^19.0.1",
+        "@ckeditor/ckeditor5-vue": "^1.0.1",
+        "@fortawesome/fontawesome-free": "^5.13.0",
+        "alpinejs": "^2.3.5",
+        "axios": "^0.19",
+        "bootstrap-vue": "^2.13.1",
+        "dayjs": "^1.8.26",
+        "highcharts": "^8.1.2",
+        "jquery": "^3.5.1",
+        "lodash": "^4.17.13",
+        "vue": "^2.6.11",
+        "vue-click-outside": "^1.1.0",
+        "vue-highcharts": "^0.1.0",
+        "vue-router": "^3.1.6",
+        "vue-server-renderer": "^2.6.11",
+        "vuedraggable": "^2.23.2",
+        "vuex": "^3.3.0"
+    }
+}
