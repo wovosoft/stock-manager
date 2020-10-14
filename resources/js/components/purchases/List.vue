@@ -2,58 +2,73 @@
     <div>
         <b-row class="mb-3">
             <b-col md="4" sm="12">
-                <b-card bg-variant="dark" text-variant="light" :title="__('purchases_payable','purchases Payable')">
-                    <h4>{{headers.payable | currency}}</h4>
-                    {{__('total','Total')}}: {{overview.purchases_payable | currency}}
+                <b-card bg-variant="dark" text-variant="light" :title="__('purchases_quantity','Purchases Quantity')">
+                    {{overview.purchases_quantity | localNumber}}
                 </b-card>
             </b-col>
             <b-col md="4" sm="12">
-                <b-card bg-variant="dark" text-variant="light" :title="__('purchases_paid','purchases Paid')">
-                    <h4>{{headers.paid |currency}}</h4>
-                    {{__('total','Total')}}: {{overview.purchases_paid | currency}}
+                <b-card bg-variant="dark" text-variant="light" :title="__('purchases_total','Purchases Total')">
+                    {{overview.purchases_payable | currency}}
                 </b-card>
             </b-col>
-
             <b-col md="4" sm="12">
-                <b-card bg-variant="dark" text-variant="light" :title="__('purchases_balance','purchases Balance')">
-                    <h4>{{(headers.payable-headers.paid) | currency}}</h4>
-                    {{__('total','Total')}}:{{overview.purchases_balance | currency}}
+                <b-card bg-variant="dark" text-variant="light" :title="__('purchases_returned','Purchases Returned')">
+                    {{overview.purchases_returned | currency}}
                 </b-card>
             </b-col>
         </b-row>
-        <dt-table :title="title"
-                  v-model="search"
-                  :fields="fields"
-                  :datatable="datatable"
-                  :custom_buttons="custom_buttons">
+        <dt-table :title="title" v-model="search" :fields="fields" :datatable="datatable"
+                  :custom_buttons="custom_buttons"
+                  enable-date-range
+                  @refreshDatatable="$refs.datatable.refresh()"
+        >
             <template v-slot:table>
-                <b-table ref="datatable"
-                         variant="primary"
-                         responsive="md"
-                         hover bordered small striped
+                <b-table ref="datatable" variant="primary" responsive="md" hover bordered small striped
                          head-variant="dark"
-                         @refreshed="overview=JSON.parse(headers.overview)"
                          :items="getItems"
                          class="mb-0"
                          :fields="fields"
+                         @refreshed="overview=JSON.parse(headers.overview||'{}')"
                          :sort-by.sync="datatable.sortBy"
                          :sort-desc.sync="datatable.sortDesc"
                          :filter="search"
                          :per-page="datatable.per_page"
-                         :current-page="datatable.current_page">
+                         :current-page="datatable.current_page"
+                         foot-clone
+                         foot-variant="light"
+                >
+                    <template v-slot:foot(supplier_name)="row">
+                        {{colCount(datatable.items,'supplier_name')|localNumber}} {{__('persons','Persons')}}
+                    </template>
+
+                    <template v-slot:foot(total)="row">
+                        {{colSum(datatable.items,'total')|currency}}
+                    </template>
+                    <template v-slot:foot(discount)="row">
+                        {{colSum(datatable.items,'discount')|localNumber}}%
+                    </template>
+                    <template v-slot:foot(tax)="row">
+                        {{colSum(datatable.items,'tax')|localNumber}}%
+                    </template>
+                    <template v-slot:foot(payable)="row">
+                        {{colSum(datatable.items,'payable')|currency}}
+                    </template>
+                    <template v-slot:foot(previous_balance)="row">
+                        {{colSum(datatable.items,'previous_balance')|currency}}
+                    </template>
+                    <template v-slot:foot(current_balance)="row">
+                        {{colSum(datatable.items,'current_balance')|currency}}
+                    </template>
+                    <template v-slot:foot(returned)="row">
+                        {{colSum(datatable.items,'returned')|currency}}
+                    </template>
                     <template v-slot:cell(action)="row">
                         <b-button-group size="sm">
                             <b-button variant="dark"
-                                      :title="__('take_payment','Take Payment')"
-                                      v-b-modal:add-payment
+                                      :title="__('view_invoice','View Invoice')"
+                                      v-b-modal:invoice-modal
                                       @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-money-bill"></i>
-                            </b-button>
-                            <b-button variant="secondary"
-                                      :title="__('payment_history','Payment History')"
-                                      v-b-modal:payment-history
-                                      @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-money-bill-wave"></i>
+                                <i class="fa fa-file-invoice"></i>
                             </b-button>
                             <b-button variant="primary"
                                       :title="__('view_purchase_history','View Purchase\'s Details')"
@@ -61,12 +76,6 @@
                                       @click="currentItem=JSON.parse(JSON.stringify(row.item))">
                                 <i class="fa fa-eye"></i>
                             </b-button>
-                            <!--                            <b-button variant="warning"-->
-                            <!--                                      :title="__('edit_the_purchase','Edit the Purchase')"-->
-                            <!--                                      :to="{name:'PurchasesEdit',params:{id:row.item.id}}"-->
-                            <!--                                      @click="currentItem=JSON.parse(JSON.stringify(row.item))">-->
-                            <!--                                <i class="fa fa-edit"></i>-->
-                            <!--                            </b-button>-->
                             <b-button variant="danger"
                                       :title="__('delete_the_purchase','Delete the Purchase')"
                                       @click="trash(row.item.id)">
@@ -77,28 +86,26 @@
                 </b-table>
             </template>
         </dt-table>
-        <b-modal id="add-payment"
-                 :title="__('take_payment','Take Payment')"
-                 v-if="currentItem"
-                 hide-footer
-                 header-bg-variant="dark"
-                 header-text-variant="light">
-            <template v-slot:default="{hide}">
-                <add-payment
-                    @msgBox="v=>msgBox(v)"
-                    @success="v=>{if(v) {hide();$refs.datatable.refresh();}}"
-                    :purchase="currentItem"/>
-            </template>
-        </b-modal>
-        <b-modal id="payment-history"
+
+        <b-modal id="invoice-modal"
                  size="xl"
-                 body-class="p-1"
-                 :title="__('payment_history','Payment History')"
+                 footer-class="text-right"
+                 body-class="p-0"
+                 :title="__('purchase_invoice','Purchase Invoice')"
                  v-if="currentItem"
+                 @hidden="currentItem=null"
                  header-bg-variant="dark"
-                 header-text-variant="light">
-            <template v-slot:default="{hide}">
-                <payments-history :purchase="currentItem"/>
+                 header-text-variant="light"
+                 footer-bg-variant="dark"
+                 footer-text-variant="light">
+            <b-embed
+                id="print_invoice"
+                aspect="16by9"
+                allowfullscreen
+                :src="route('Backend.Purchases.Invoice.PDF',{purchase:currentItem.id,type:'pdf'})"/>
+            <template v-slot:modal-footer="{close}">
+                <b-button @click="printInvoice" variant="primary">Print</b-button>
+                <b-button @click="close" variant="secondary">Close</b-button>
             </template>
         </b-modal>
         <router-view
@@ -109,26 +116,22 @@
 </template>
 
 <script>
-    import DtHeader from '../../partials/DtHeader'
-    import DtFooter from '../../partials/DtFooter'
-    import Datatable from "../../partials/datatable";
-    import DtTable from "../../partials/DtTable";
-    import AddPayment from "@/components/purchases/AddPayment";
-    import Payments from "@/components/purchases/Payments";
+    import DtHeader from '@/partials/DtHeader'
+    import DtFooter from '@/partials/DtFooter'
+    import Datatable, {colSum, colCount} from "@/partials/datatable";
+    import DtTable from "@/partials/DtTable";
 
     export default {
         components: {
             DtHeader,
             DtFooter,
-            DtTable,
-            AddPayment,
-            PaymentsHistory: Payments
+            DtTable
         },
         mixins: [Datatable],
         props: {
             title: {
                 type: String,
-                default: _t('list_of_purchases', 'List of Purchases')
+                default: 'List of Purchases'
             },
             api_url: {
                 type: String,
@@ -156,15 +159,25 @@
                         to: {
                             name: 'ModelHistory',
                             params: {
-                                model: 'Purchases'
+                                model: 'purchases'
                             }
                         }
                     }
                 ]
             },
         },
+        methods: {
+            colSum,
+            colCount,
+            printInvoice() {
+                let el = document.getElementById('print_invoice').contentWindow;
+                el.focus();
+                el.print();
+            }
+        },
         data() {
             return {
+                invoice_type: 'html',
                 form: {},
                 fields: [
                     {
@@ -176,39 +189,48 @@
                         key: 'supplier_name',
                         name: 'suppliers.name',
                         sortable: true,
-                        label: _t('supplier', 'Supplier')
+                        label: _t('supplier', "Supplier")
                     },
                     {
                         key: 'total', sortable: true,
                         label: _t('total', 'Total'),
                         formatter: v => this.$options.filters.currency(v || 0)
                     },
-                    {
-                        key: 'tax', sortable: true,
-                        label: _t('tax', 'Tax'),
-                        formatter: v => (v || 0) + "%"
-                    },
-                    {
-                        key: 'discount', sortable: true,
-                        label: _t('discount', 'Discount'),
-                        formatter: v => (v || 0) + "%"
-                    },
+                    // {
+                    //     key: 'tax', sortable: true,
+                    //     label: _t('tax', 'Tax'),
+                    //     formatter: v => this.$options.filters.localNumber(v || 0) + "%"
+                    // },
+                    // {
+                    //     key: 'discount', sortable: true,
+                    //     label: _t('discount', 'Discount'),
+                    //     formatter: v => this.$options.filters.localNumber(v || 0) + "%"
+                    // },
                     {
                         key: 'payable', sortable: true,
                         label: _t('payable', 'Payable'),
                         formatter: v => this.$options.filters.currency(v || 0)
                     },
                     {
-                        key: 'paid', sortable: true,
-                        label: _t('paid', 'Paid'),
+                        key: 'previous_balance', sortable: true,
+                        label: _t('previous_balance', 'Previous Balance'),
                         formatter: v => this.$options.filters.currency(v || 0)
                     },
                     {
-                        key: 'balance', sortable: true,
-                        label: _t('balance', 'Balance'),
+                        key: 'current_balance', sortable: true,
+                        label: _t('current_balance', 'Current Balance'),
                         formatter: v => this.$options.filters.currency(v || 0)
                     },
-                    {key: 'date', sortable: true, label: _t('date', 'Date'),},
+                    {
+                        key: 'returned', sortable: true,
+                        label: _t('returned', 'Returned'),
+                        formatter: v => this.$options.filters.currency(v || 0)
+                    },
+                    {
+                        key: 'date',
+                        sortable: true, label: _t('date', 'Date'),
+                        formatter: v => (new Date(v)).toLocaleDateString(_s('locale'))
+                    },
                     {key: 'status', sortable: true, label: _t('status', 'Status'),},
                     {
                         key: 'note',
@@ -222,14 +244,14 @@
                         name: 'purchases.created_at',
                         sortable: true,
                         label: _t('created_at', 'Created At'),
-                        formatter: v => this.dayjs(v)
+                        formatter: v => this.$options.filters.localDateTime(v)
                     },
                     {
                         key: 'updated_at',
                         name: 'purchases.updated_at',
                         sortable: true,
                         label: _t('updated_at', 'Updated At'),
-                        formatter: v => this.dayjs(v)
+                        formatter: v => this.$options.filters.localDateTime(v)
                     },
                     {
                         key: 'action',

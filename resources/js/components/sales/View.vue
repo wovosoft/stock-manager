@@ -13,17 +13,18 @@
              no-body
              :title="__('view_sale','View Sale')"
              lazy>
+
         <b-row>
             <b-col sm="12" md="4">
                 <h4>{{__('customer_details','Customer Details')}}</h4>
                 <b-table
-                    :items="obj2Table(the_item.customer,['deleted_at'])"
+                    style="border: 1px solid lightgray"
+                    :items="obj2Table(the_item.customer,['deleted_at','created_at','updated_at','photo','shipping_address','id'])"
                     :fields="[
                         {key:'key',label:__('key','Key'),formatter:v=>__(v,startCase(v))},
                         {key:'value',label:__('value','Value')}
                     ]"
                     striped
-                    bordered
                     small head-variant="dark">
                     <template v-slot:cell(value)="row">
                         <template v-if="['created_at','updated_at'].includes(row.item.key)">
@@ -34,10 +35,11 @@
                 </b-table>
             </b-col>
             <b-col sm="12" md="8">
-                <h4>{{__('cart_details','Cart Details')}}</h4>
-                <b-table small hover striped bordered
+                <h4>{{__('sale_details','Sale Details')}}</h4>
+                <b-table small hover striped
+                         style="border: 1px solid lightgray"
                          head-variant="dark"
-                         :items="obj2Table(the_item,['deleted_at','image','items','customer','customer_name'])"
+                         :items="obj2Table(the_item,['deleted_at','image','items','customer','customer_name','customer_id','tax','discount','updated_at','total','status'])"
                          :fields="[
                             {
                                 label:__('key','Key'),
@@ -74,41 +76,48 @@
             head-variant="dark"
             :items="the_item.items"
             :fields="saleItemFields">
-            <template #cell(return_quantity)="row">
+            <template #cell(returned_quantity)="row">
                 <b-form @submit.prevent="returnItems(row.item)">
                     <b-input-group size="sm">
-                        <b-input :max="row.item.quantity" type="number" step="any" v-model="row.item.return_quantity"/>
+                        <template #prepend>
+                            <b-input-group-text style="min-width: 100px;" class="text-right">
+                                {{row.item.returned_quantity | localNumber}}
+                            </b-input-group-text>
+                        </template>
+                        <b-input :max="row.item.quantity-row.item.returned_quantity"
+                                 type="number" step="any" :required="true"
+                                 placeholder="Return Quantity"
+                                 v-model="row.item.returning"/>
                         <template #append>
                             <b-button :title="__('submit','Submit')" type="submit">
-                                <b-icon-arrow-clockwise></b-icon-arrow-clockwise>
+                                <b-icon-plus></b-icon-plus>
                             </b-button>
                         </template>
                     </b-input-group>
                 </b-form>
             </template>
         </b-table>
-
-        <h3 class="text-center">Payments History</h3>
-        <payments-history :sale="the_item" :customer-overview="false"/>
     </b-modal>
 </template>
 <script>
     import view from "@/partials/view"
-    import Payments from "@/components/sales/Payments";
     import statuses from "@/shared/statuses";
-    import {msgBox} from "@/partials/datatable";
 
     export default {
         mixins: [view],
-        components: {
-            PaymentsHistory: Payments
-        },
         methods: {
-            msgBox,
             returnItems(item) {
-                if (item.quantity < item.return_quantity) {
-                    this.msgBox({
-                        message: 'Return Qty. should be less than quantity',
+                if (!item.returning) {
+                    this.$root.msgBox({
+                        message: 'Return Qty. should not be empty or zero',
+                        type: 'danger',
+                        title: 'Failed'
+                    });
+                    return false;
+                }
+                if (item.quantity - item.returned_quantity < item.returning) {
+                    this.$root.msgBox({
+                        message: 'Return Qty. should be less than available quantity',
                         type: 'danger',
                         title: 'Failed'
                     });
@@ -117,8 +126,8 @@
                 axios.post(route('Backend.Sales.Items.Return', {
                     sale: item.sale_id,
                     sale_item: item.id
-                }).url(), {return_quantity: item.return_quantity}).then(res => {
-                    this.msgBox(res.data);
+                }).url(), {returning: item.returning}).then(res => {
+                    this.$root.msgBox(res.data);
                     this.dirty = true;
                     this.getItem(this.$route.params.id, this.$parent.$props.api_url)
                         .then(rr => {
@@ -126,7 +135,7 @@
                         })
                         .catch(err => console.log(err.response));
                 }).catch(err => {
-                    this.msgBox(err.response.data);
+                    this.$root.msgBox(err.response.data);
                     console.log(err.response);
                 });
             }
@@ -155,11 +164,11 @@
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {
-                        key: 'return_quantity',
-                        label: _t('return_quantity', 'Returned Qty.'),
+                        key: 'returned_quantity',
+                        label: _t('returned_quantity', 'Returned Qty.'),
                     },
                     {
-                        key: 'return_price', label: _t('return_price', 'Returned Price'),
+                        key: 'returned_total', label: _t('returned_total', 'Returned Total'),
                         formatter: v => this.$options.filters.currency(v)
                     }
                 ]

@@ -29,23 +29,40 @@ class SaleItem extends BaseModel
                 if ($item->getOriginal('quantity') !== $item->quantity) {
                     $item->product->increment('quantity', $item->getOriginal('quantity') - $item->quantity);
                 }
-                if ($item->return_quantity <= $item->quantity) {
-                    if ($item->return_quantity !== $item->getOriginal('return_quantity')) {
-                        $item->product->increment('quantity', $item->return_quantity - $item->getOriginal('return_quantity'));
+                if ($item->returned_quantity <= $item->quantity) {
+                    if ($item->returned_quantity !== $item->getOriginal('returned_quantity')) {
+                        $item->product->increment('quantity', $item->returned_quantity - $item->getOriginal('returned_quantity'));
+                        $returning = new SaleReturn();
+                        $returning->forceFill([
+                            "sale_id" => $item->sale_id,
+                            "sale_item_id" => $item->id,
+                            "product_id" => $item->product_id,
+                            "customer_id" => $item->customer_id,
+                            "quantity" => $item->returned_quantity - $item->getOriginal('returned_quantity'),
+                            "amount" => round(($item->returned_quantity - $item->getOriginal('returned_quantity')) * $item->price, 2)
+                        ]);
+                        $returning->saveOrFail();
                     }
                 }
             });
         });
+        static::updated(function (self $item) {
+            $sale = $item->sale;
+            $sale->returned = $sale->items->sum('returned_total');
+            $sale->saveOrFail();
+        });
         static::deleting(function (self $item) {
             $item->product->increment('quantity', $item->quantity);
+            $sale = $item->sale;
+            $sale->returned = $sale->items->sum('returned_total');
+            $sale->saveOrFail();
         });
     }
 
     private function applytCalculatedValues()
     {
         $this->total = round(($this->quantity ?? 0) * ($this->price ?? 0), 2);
-        $this->payable = round(($this->total ?? 0) * (1 + ($this->tax ?? 0) / 100 - ($this->discount ?? 0) / 100), 2);
-        $this->return_price = round(($this->return_quantity ?? 0) * ($this->price ?? 0), 2);
+        $this->returned_total = round(($this->returned_quantity ?? 0) * ($this->price ?? 0), 2);
     }
 
     public function sale()

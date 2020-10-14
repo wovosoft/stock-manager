@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Language extends BaseModel
 {
     use HasFactory;
+
 //    use HistoryTrait;
+    protected $guarded = ['id'];
 
     public function definitions()
     {

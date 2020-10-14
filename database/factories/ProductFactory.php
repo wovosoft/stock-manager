@@ -23,15 +23,16 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
+        $count_create=5;
         return [
             "name" => $this->faker->word,
             "barcode_symbology" => "code128",
             "code" => uniqid(),
             "cost" => $this->faker->randomFloat(2, 10, 500),
             "price" => $this->faker->randomFloat(2, 10, 500),
-            "category_id" => random_int(1, 20),
-            "subcategory_id" => random_int(1, 20),
-            "brand_id" => random_int(1, 20),
+            "category_id" => random_int(1, $count_create),
+            "subcategory_id" => random_int(1, $count_create),
+            "brand_id" => random_int(1, $count_create),
             "status" => [true, false][random_int(0, 1)],
             "unit_id" => random_int(1, 4),
             "quantity" => random_int(1, 100),

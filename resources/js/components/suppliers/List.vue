@@ -2,82 +2,102 @@
     <div>
         <b-row class="mb-3">
             <b-col md="4" sm="12">
-                <b-card :title="__('supplier_funds_deposit','Supplier Funds Deposit')">
-                    {{overview.deposit | currency}}
+                <b-card :title="__('purchases_amount','Purchases Amount')">
+                    {{fund_summery.payable | currency}}
                 </b-card>
             </b-col>
             <b-col md="4" sm="12">
-                <b-card :title="__('supplier_funds_withdrawn','Supplier Funds Withdrawn')">
-                    {{overview.withdrawn | currency}}
+                <b-card :title="__('purchases_paid','Purchases Paid')">
+                    {{fund_summery.paid | currency}}
                 </b-card>
             </b-col>
             <b-col md="4" sm="12">
-                <b-card :title="__('supplier_funds_balance','Supplier Funds Balance')">
-                    {{overview.balance | currency}}
+                <b-card :title="__('purchases_balance','Purchases Balance')">
+                    {{fund_summery.balance | currency}}
                 </b-card>
             </b-col>
         </b-row>
-        <dt-table :title="title" v-model="search" :fields="fields" :datatable="datatable"
-                  :custom_buttons="custom_buttons"
-                  enable-date-range
-                  @refreshDatatable="$refs.datatable.refresh()"
-        >
+        <dt-table
+            :title="title"
+            v-model="search"
+            :fields="fields"
+            :datatable="datatable"
+            enable-date-range
+            @refreshDatatable="$refs.datatable.refresh()"
+            :custom_buttons="custom_buttons">
             <template v-slot:table>
-                <b-table ref="datatable" variant="primary" responsive="md" hover bordered small striped
+                <b-table ref="datatable"
+                         @refreshed="fund_summery=JSON.parse(headers.fund_summery||'{}')"
+                         variant="primary"
+                         responsive="md"
+                         hover
+                         bordered
+                         small
+                         striped
                          head-variant="dark"
                          :items="getItems"
                          class="mb-0"
                          :fields="fields"
-                         @refreshed="overview=JSON.parse(headers.fund_summery)"
                          :sort-by.sync="datatable.sortBy"
                          :sort-desc.sync="datatable.sortDesc"
                          :filter="search"
                          :per-page="datatable.per_page"
-                         :current-page="datatable.current_page"
+                         foot-variant="light"
                          foot-clone
-                         foot-variant="light">
-                    <template v-slot:foot(deposit_amount)="row">
-                        {{colSum(datatable.items,'deposit_amount') | currency}}
+                         :current-page="datatable.current_page">
+
+
+                    <template v-slot:foot(payable)="row">
+                        {{colSum(datatable.items,'payable') | currency}}
                     </template>
-                    <template v-slot:foot(withdrawn_amount)="row">
-                        {{colSum(datatable.items,'withdrawn_amount') | currency}}
+                    <template v-slot:foot(paid)="row">
+                        {{colSum(datatable.items,'paid') | currency}}
                     </template>
-                    <template v-slot:foot(funds_balance)="row">
-                        {{colSum(datatable.items,'funds_balance') | currency}}
+                    <template v-slot:foot(balance)="row">
+                        {{colSum(datatable.items,'balance') | currency}}
                     </template>
+
                     <template v-slot:cell(action)="row">
-                        <b-dropdown right size="sm">
-                            <b-dropdown-item
-                                title="Add Fund"
+                        <b-button-group size="sm">
+                            <b-button
+                                variant="dark"
+                                :title="__('take_payment','Take Payment')"
                                 v-b-modal:add_fund_modal
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-hand-holding-usd"></i> Add Fund
-                            </b-dropdown-item>
-                            <b-dropdown-divider></b-dropdown-divider>
-                            <b-dropdown-item
+                                <i class="fa fa-money-bill"></i>
+                            </b-button>
+                            <b-button
+                                variant="primary"
+                                :title="__('view','View')"
                                 :to="{name:'SuppliersView',params:{id:row.item.id}}"
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-eye"></i> View Supplier
-                            </b-dropdown-item>
-                            <b-dropdown-item
+                                <i class="fa fa-eye"></i>
+                            </b-button>
+                            <b-button
+                                variant="warning"
+                                :title="__('edit','Edit')"
                                 :to="{name:'SuppliersAdd',params:{id:row.item.id}}"
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-edit"></i> Edit Supplier
-                            </b-dropdown-item>
-                            <b-dropdown-item @click="trash(row.item.id)">
-                                <i class="fa fa-trash"></i> Delete Supplier
-                            </b-dropdown-item>
-                        </b-dropdown>
+                                <i class="fa fa-edit"></i>
+                            </b-button>
+                            <b-button
+                                variant="danger"
+                                :title="__('delete','Delete')"
+                                @click="trash(row.item.id)">
+                                <i class="fa fa-trash"></i>
+                            </b-button>
+                        </b-button-group>
                     </template>
                 </b-table>
             </template>
         </dt-table>
+
         <b-modal id="add_fund_modal"
                  v-if="currentItem"
                  lazy
                  hide-footer
                  @hidden="currentItem=null"
-                 :title="'Add Fund in '+currentItem.name+'\'s Account'"
+                 :title="__('add_payment','Add Payment')"
                  header-bg-variant="dark"
                  header-text-variant="light">
             <template v-slot:default="{hide}">
@@ -85,25 +105,24 @@
                     @success="v=>{if(v) hide();}"
                     @refresh="v=>$refs.datatable.refresh()"
                     v-if="currentItem && currentItem.id"
+                    :payment-amount="Number(Number(currentItem.balance).toFixed(2))"
                     :supplier_id="currentItem.id"/>
             </template>
         </b-modal>
-        <router-view
-            @reset="currentItem={}"
-            @refreshDatatable="()=>$refs.datatable.refresh()"
-            :item="currentItem"/>
+        <router-view @reset="currentItem={}"
+                     @refreshDatatable="()=>$refs.datatable.refresh()"
+                     :item="currentItem"></router-view>
     </div>
 </template>
 
 <script>
     import DtHeader from '@/partials/DtHeader'
     import DtFooter from '@/partials/DtFooter'
-    import Datatable, {colSum, colCount} from "@/partials/datatable";
+    import Datatable, {colCount, colSum} from "@/partials/datatable";
     import DtTable from "@/partials/DtTable";
     import AddFund from "@/components/suppliers/AddFund";
 
     export default {
-        name: "SuppliersList",
         components: {
             DtHeader,
             DtFooter,
@@ -132,12 +151,12 @@
                 type: Array,
                 default: () => [
                     {
-                        text: 'Add',
+                        text: _t('add', 'Add'),
                         variant: 'dark',
                         to: {name: 'SuppliersAdd'}
                     },
                     {
-                        text: 'History',
+                        text: _t('history', 'History'),
                         variant: 'primary',
                         to: {
                             name: 'ModelHistory',
@@ -150,13 +169,12 @@
             },
         },
         methods: {
-            colCount,
-            colSum
+            colCount, colSum
         },
         data() {
             return {
                 form: {},
-                overview: {},
+                fund_summery: {},
                 fields: [
                     {key: 'id', sortable: true, label: _t('id', 'ID')},
                     {key: 'name', sortable: true, label: _t('name', 'Name')},
@@ -168,24 +186,24 @@
                     {key: 'post_office', sortable: true, label: _t('post_office', 'P.O.')},
                     {key: 'village', sortable: true, label: _t('village', 'Village')},
                     {
-                        key: 'deposit_amount',
-                        sortable: true,
+                        key: 'payable',
                         searchable: false,
-                        label: _t('deposit', 'Deposit'),
+                        sortable: true,
+                        label: _t('payable', 'Payable'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {
-                        key: 'withdrawn_amount',
-                        sortable: true,
+                        key: 'paid',
                         searchable: false,
-                        label: _t('withdrawn', 'Withdrawn'),
+                        sortable: true,
+                        label: _t('paid', 'Paid'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {
-                        key: 'funds_balance',
+                        key: 'balance',
                         sortable: true,
                         searchable: false,
-                        label: _t('funds_balance', 'Funds Balance'),
+                        label: _t('balance', 'Balance'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {

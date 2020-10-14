@@ -23,13 +23,17 @@
 </template>
 <script>
     import dayjs from "dayjs"
-    import {msgBox} from "@/partials/datatable";
+
 
     export default {
         props: {
             supplier_id: {
                 type: Number,
                 required: true
+            },
+            paymentAmount: {
+                type: Number,
+                default: () => 0
             }
         },
 
@@ -42,18 +46,20 @@
                 }
             }
         },
+        mounted() {
+            this.form.payment_amount = this.paymentAmount;
+        },
         methods: {
-            msgBox,
             handleSubmit() {
-                axios.post(route('Backend.Supplier.Funds.Store', {supplier: this.supplier_id}).url(), this.form)
+                axios.post(route('Backend.Suppliers.Payments.Store', {supplier: this.supplier_id}).url(), this.form)
                     .then(res => {
-                        this.msgBox(res.data);
+                        this.$root.msgBox(res.data);
                         this.$emit('success', true);
                         this.$emit('refresh', true);
                     })
                     .catch(err => {
                         this.$emit('success', false);
-                        this.msgBox(err.response.data);
+                        this.$root.msgBox(err.response.data);
                         console.log(err.response);
                     });
             }

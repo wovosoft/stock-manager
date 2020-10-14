@@ -1,6 +1,14 @@
 <template>
     <div>
-        <h4>{{__('total_paid','Total Paid')}}: {{employee.paid_salary | currency}}</h4>
+        <div class="row mb-3">
+            <div class="col-md-6 col-sm-12">
+                <h4>{{__('total_paid','Total Paid')}}: {{employee.paid_salary | currency}}</h4>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <b-select v-model="year" @change="$refs.the_table.refresh()"
+                          :options="rangeIndexed(2010,2030,1)"></b-select>
+            </div>
+        </div>
         <b-table ref="the_table"
                  variant="primary"
                  responsive="md"
@@ -22,7 +30,7 @@
 </template>
 
 <script>
-    import {isTrue} from "@/partials/datatable";
+    import {isTrue, rangeIndexed} from "@/partials/datatable";
     import months from "@/shared/months";
 
     export default {
@@ -36,6 +44,7 @@
         data() {
             return {
                 form: {},
+                year: (new Date()).getFullYear(),
                 fields: [
                     {key: 'id', sortable: true, label: _t('id', 'ID')},
                     {key: 'year', sortable: true, label: _t('year', 'Year')},
@@ -76,6 +85,7 @@
             }
         },
         methods: {
+            rangeIndexed,
             getItems(ctx) {
                 // console.log(ctx)
                 return axios.post(this.api_url + "?page=" + (ctx.currentPage ? ctx.currentPage : 1), {
@@ -83,6 +93,7 @@
                     orderBy: ctx.sortBy || 'id',
                     order: !isTrue(ctx.sortDesc) ? 'desc' : 'asc',
                     filter: ctx.filter,
+                    year: this.year
                 }).then(res => {
                     // console.log(res);
                     this.datatable.total = res.data.total;
@@ -106,10 +117,10 @@
                             axios.post(route('Backend.Employees.Salaries.Delete').url(), {
                                 id: id,
                             }).then(res => {
-                                this.$emit('message', res.data);
+                                this.$root.msgBox(res.data);
                                 this.$refs['the_table'].refresh();
                             }).catch(err => {
-                                this.$emit('message', err.response.data);
+                                this.$root.msgBox(err.response.data);
                                 console.log(err.response)
                             });
                         }

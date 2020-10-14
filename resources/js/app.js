@@ -37,56 +37,6 @@ Vue.prototype.route = (name, params, absolute) => window.route(name, params, abs
 Vue.prototype.__ = (key, fallback) => window._t(key, fallback);
 Vue.prototype._settings = (key, fallback) => window._s(key, fallback);
 
-
-// import CKEditor from '@ckeditor/ckeditor5-vue';
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
-// Vue.use(CKEditor);
-// Vue.prototype.ClassicEditor = ClassicEditor;
-// Vue.prototype.editorConfig = {
-//     ckfinder: {
-//         uploadUrl: route('ckfinder_connector', {
-//             command: 'QuickUpload',
-//             type: 'Files',
-//             responseType: 'json'
-//         }).url(),
-//         filebrowserBrowseUrl: route('ckfinder_connector').url(),
-//         filebrowserImageBrowseUrl: route('ckfinder_browser', {type: 'Images'}).url(),
-//         filebrowserUploadUrl: route('ckfinder_connector', {
-//             command: 'QuickUpload',
-//             type: 'Files'
-//         }).url(),
-//         filebrowserImageUploadUrl: route('ckfinder_connector', {
-//             command: 'QuickUpload',
-//             type: 'Image'
-//         }).url(),
-//         options: {
-//             resourceType: 'Images'
-//         }
-//     },
-//     toolbar: {
-//         items: [
-//             'heading',
-//             '|',
-//             'bold',
-//             'italic',
-//             'link',
-//             'bulletedList',
-//             'numberedList',
-//             '|',
-//             'indent',
-//             'outdent',
-//             '|',
-//             'imageUpload',
-//             'ckFinder',
-//             'blockQuote',
-//             'insertTable',
-//             'mediaEmbed',
-//             'undo',
-//             'redo'
-//         ]
-//     },
-// };
 import {msgBox} from "@/partials/datatable";
 
 export default new Vue({

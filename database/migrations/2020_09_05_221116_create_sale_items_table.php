@@ -21,11 +21,8 @@ class CreateSaleItemsTable extends Migration
             $table->double("quantity")->default(0);
             $table->double("price")->default(0);
             $table->double("total")->default(0);    //quantity*price
-            $table->double("tax")->default(0);  //percentage
-            $table->double("discount")->default(0);  //percentage
-            $table->double("payable")->default(0);
-            $table->double('return_quantity')->default(0);
-            $table->double('return_price')->default(0);
+            $table->double('returned_quantity')->default(0);
+            $table->double('returned_total')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

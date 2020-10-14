@@ -1,21 +1,14 @@
 <template>
     <div>
-        {{headers.sql}}
         <b-row class="mb-3">
-            <b-col md="4" sm="12">
+            <b-col md="6" sm="12">
+                <b-card bg-variant="dark" text-variant="light" :title="__('sales_quantity','Sales Quantity')">
+                    {{overview.sales_quantity | localNumber}}
+                </b-card>
+            </b-col>
+            <b-col md="6" sm="12">
                 <b-card bg-variant="dark" text-variant="light" :title="__('sales_payable','Sales Payable')">
                     {{overview.sales_payable | currency}}
-                </b-card>
-            </b-col>
-            <b-col md="4" sm="12">
-                <b-card bg-variant="dark" text-variant="light" :title="__('sales_paid','Sales Paid')">
-                    {{overview.sales_paid | currency}}
-                </b-card>
-            </b-col>
-
-            <b-col md="4" sm="12">
-                <b-card bg-variant="dark" text-variant="light" :title="__('sales_balance','Sales Balance')">
-                    {{overview.sales_balance | currency}}
                 </b-card>
             </b-col>
         </b-row>
@@ -55,26 +48,17 @@
                     <template v-slot:foot(payable)="row">
                         {{colSum(datatable.items,'payable')|currency}}
                     </template>
-                    <template v-slot:foot(paid)="row">
-                        {{colSum(datatable.items,'paid')|currency}}
+                    <template v-slot:foot(previous_balance)="row">
+                        {{colSum(datatable.items,'previous_balance')|currency}}
                     </template>
-                    <template v-slot:foot(balance)="row">
-                        {{colSum(datatable.items,'balance')|currency}}
+                    <template v-slot:foot(current_balance)="row">
+                        {{colSum(datatable.items,'current_balance')|currency}}
+                    </template>
+                    <template v-slot:foot(returned)="row">
+                        {{colSum(datatable.items,'returned')|currency}}
                     </template>
                     <template v-slot:cell(action)="row">
                         <b-button-group size="sm">
-                            <b-button variant="dark"
-                                      :title="__('take_payment','Take Payment')"
-                                      v-b-modal:add-payment
-                                      @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-money-bill"></i>
-                            </b-button>
-                            <b-button variant="secondary"
-                                      :title="__('payment_history','Payment History')"
-                                      v-b-modal:payment-history
-                                      @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-money-bill-wave"></i>
-                            </b-button>
                             <b-button variant="dark"
                                       :title="__('view_invoice','View Invoice')"
                                       v-b-modal:invoice-modal
@@ -87,12 +71,6 @@
                                       @click="currentItem=JSON.parse(JSON.stringify(row.item))">
                                 <i class="fa fa-eye"></i>
                             </b-button>
-                            <!--                            <b-button variant="warning"-->
-                            <!--                                      :title="__('edit_the_sale','Edit the Sale')"-->
-                            <!--                                      :to="{name:'SalesEdit',params:{id:row.item.id}}"-->
-                            <!--                                      @click="currentItem=JSON.parse(JSON.stringify(row.item))">-->
-                            <!--                                <i class="fa fa-edit"></i>-->
-                            <!--                            </b-button>-->
                             <b-button variant="danger"
                                       :title="__('delete_the_sale','Delete the Sale')"
                                       @click="trash(row.item.id)">
@@ -103,30 +81,7 @@
                 </b-table>
             </template>
         </dt-table>
-        <b-modal id="add-payment"
-                 :title="__('take_payment','Take Payment')"
-                 v-if="currentItem"
-                 hide-footer
-                 header-bg-variant="dark"
-                 header-text-variant="light">
-            <template v-slot:default="{hide}">
-                <add-payment
-                    @msgBox="v=>msgBox(v)"
-                    @success="v=>{if(v) {hide();$refs.datatable.refresh();}}"
-                    :sale="currentItem"/>
-            </template>
-        </b-modal>
-        <b-modal id="payment-history"
-                 size="xl"
-                 body-class="p-1"
-                 :title="__('payment_history','Payment History')"
-                 v-if="currentItem"
-                 header-bg-variant="dark"
-                 header-text-variant="light">
-            <template v-slot:default="{hide}">
-                <payments-history :sale="currentItem"/>
-            </template>
-        </b-modal>
+
         <b-modal id="invoice-modal"
                  size="xl"
                  footer-class="text-right"
@@ -144,9 +99,6 @@
                 allowfullscreen
                 :src="route('Backend.Sales.Invoice.PDF',{sale:currentItem.id,type:'pdf'})"/>
             <template v-slot:modal-footer="{close}">
-                <!--                <b-button variant="primary" @click="invoice_type=invoice_type==='pdf'?'html':'pdf'">-->
-                <!--                    Type : {{invoice_type}}-->
-                <!--                </b-button>-->
                 <b-button @click="printInvoice" variant="primary">Print</b-button>
                 <b-button @click="close" variant="secondary">Close</b-button>
             </template>
@@ -163,16 +115,12 @@
     import DtFooter from '@/partials/DtFooter'
     import Datatable, {colSum, colCount} from "@/partials/datatable";
     import DtTable from "@/partials/DtTable";
-    import AddPayment from "@/components/sales/AddPayment";
-    import Payments from "@/components/sales/Payments";
 
     export default {
         components: {
             DtHeader,
             DtFooter,
-            DtTable,
-            AddPayment,
-            PaymentsHistory: Payments
+            DtTable
         },
         mixins: [Datatable],
         props: {
@@ -243,29 +191,34 @@
                         label: _t('total', 'Total'),
                         formatter: v => this.$options.filters.currency(v || 0)
                     },
-                    {
-                        key: 'tax', sortable: true,
-                        label: _t('tax', 'Tax'),
-                        formatter: v => this.$options.filters.localNumber(v || 0) + "%"
-                    },
-                    {
-                        key: 'discount', sortable: true,
-                        label: _t('discount', 'Discount'),
-                        formatter: v => this.$options.filters.localNumber(v || 0) + "%"
-                    },
+                    // {
+                    //     key: 'tax', sortable: true,
+                    //     label: _t('tax', 'Tax'),
+                    //     formatter: v => this.$options.filters.localNumber(v || 0) + "%"
+                    // },
+                    // {
+                    //     key: 'discount', sortable: true,
+                    //     label: _t('discount', 'Discount'),
+                    //     formatter: v => this.$options.filters.localNumber(v || 0) + "%"
+                    // },
                     {
                         key: 'payable', sortable: true,
                         label: _t('payable', 'Payable'),
                         formatter: v => this.$options.filters.currency(v || 0)
                     },
                     {
-                        key: 'paid', sortable: true,
-                        label: _t('paid', 'Paid'),
+                        key: 'previous_balance', sortable: true,
+                        label: _t('previous_balance', 'Previous Balance'),
                         formatter: v => this.$options.filters.currency(v || 0)
                     },
                     {
-                        key: 'balance', sortable: true,
-                        label: _t('balance', 'Balance'),
+                        key: 'current_balance', sortable: true,
+                        label: _t('current_balance', 'Current Balance'),
+                        formatter: v => this.$options.filters.currency(v || 0)
+                    },
+                    {
+                        key: 'returned', sortable: true,
+                        label: _t('returned', 'Returned'),
                         formatter: v => this.$options.filters.currency(v || 0)
                     },
                     {

@@ -19,12 +19,10 @@ class CreatePurchaseItemsTable extends Migration
             $table->unsignedBigInteger("product_id");
             $table->unsignedBigInteger("supplier_id");
             $table->double("quantity")->default(0);
-            $table->double("price");
-            $table->double("total");    //quantity*price
-            $table->double("tax")->default(0);  //percentage
-            $table->double("discount")->default(0);  //percentage
-            $table->double("payable")->default(0);
-            $table->string("status");   //returned, processed, cancelled
+            $table->double("price")->default(0);
+            $table->double("total")->default(0);    //quantity*price
+            $table->double('returned_quantity')->default(0);
+            $table->double('returned_total')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -2,17 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\CheckOutItem;
+use App\Models\SaleReturn;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-class CheckOutItemFactory extends Factory
+class SaleReturnFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = CheckOutItem::class;
+    protected $model = SaleReturn::class;
 
     /**
      * Define the model's default state.
@@ -22,9 +23,7 @@ class CheckOutItemFactory extends Factory
     public function definition()
     {
         return [
-//        "check_in_id"=>random_int(1,20),
-            "product_id" => random_int(1, 20),
-            "quantity" => random_int(1, 5)
+            //
         ];
     }
 }

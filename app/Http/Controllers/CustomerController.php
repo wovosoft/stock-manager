@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Builders\Reports;
 use App\Models\Customer;
-use App\Models\CustomerFund;
+use App\Models\Sale;
+use App\Models\SaleItem;
+use App\Models\SalePayment;
 use App\Traits\Crud;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
 {
@@ -44,11 +45,15 @@ class CustomerController extends Controller
 
     public static function routes()
     {
-        Route::post("customers/list", '\\' . __CLASS__ . '@list')->name('Customers.List');
-        Route::post("customers/search", '\\' . __CLASS__ . '@search')->name('Customers.Search');
-        Route::post("customers/store", '\\' . __CLASS__ . '@store')->name('Customers.Store');
-        Route::post("customers/delete", '\\' . __CLASS__ . '@delete')->name('Customers.Delete');
-        Route::post("customers/add_fund/{customer}", '\\' . __CLASS__ . '@addFund')->name('Customers.Funds.Add');
+        Route::name('Customers.')->prefix('customers')->group(function () {
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+            Route::post("add_fund/{customer}", [self::class, 'addPayment'])->name('Payments.Add');
+            Route::get("shortFinancialReport/{customer}/{type?}", [self::class, 'shortFinancialReport'])->name('Payments.shortFinancialReport');
+            Route::get("fullFinancialReport/{customer}/{type?}", [self::class, 'fullFinancialReport'])->name('Payments.fullFinancialReport');
+        });
     }
 
     public function store(Request $request)
@@ -56,31 +61,27 @@ class CustomerController extends Controller
         try {
             DB::beginTransaction();
             $item = Customer::query()->findOrNew($request->post('id'));
-            $item->name = $request->post('name');
-            $item->email = $request->post('email');
-            $item->phone = $request->post('phone');
-            $item->company = $request->post('company');
-            $item->district = $request->post('district');
-            $item->thana = $request->post('thana');
-            $item->post_office = $request->post('post_office');
-            $item->village = $request->post('village');
-            $item->shipping_address = $request->post('shipping_address');
-//            $item->balance = $request->post('balance') ?? 0;
+            $item->forceFill([
+                "name" => $request->post('name'),
+                "email" => $request->post('email'),
+                "phone" => $request->post('phone'),
+                "company" => $request->post('company'),
+                "district" => $request->post('district'),
+                "thana" => $request->post('thana'),
+                "post_office" => $request->post('post_office'),
+                "village" => $request->post('village'),
+                "shipping_address" => $request->post('shipping_address')
+            ]);
+
             if ($request->hasFile('photo_upload')) {
                 $item->photo = $request->file('photo_upload')->store('photos', 'public');
             } else {
                 $item->photo = $request->post("photo");
             }
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
+
             $item->saveOrFail();
             DB::commit();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done',
+            return successResponse([
                 "item" => $item
             ]);
         } catch (\Throwable $exception) {
@@ -89,30 +90,21 @@ class CustomerController extends Controller
         }
     }
 
-    public function addFund(Customer $customer, Request $request)
+    public function addPayment(Customer $customer, Request $request)
     {
         try {
-            DB::beginTransaction();
-            if (!$customer) {
-                throw new \Exception("Customer Not Found.", 404);
-            }
-
-            $fund = new  CustomerFund();
-            $fund->customer_id = $customer->id;
-            $fund->payment_amount = $request->post("payment_amount");
-            $fund->payment_method = $request->post("payment_method");
-            $fund->date = $request->post("date");
-            $fund->taken_by = auth()->id();
-            $fund->type = "deposit";
-            $fund->message = $request->post("payment_amount") . " Tk deposited via " . $request->post("payment_method");
-            $fund->saveOrFail();
-            DB::commit();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
+            $request->validate([
+                "payment_amount" => "required"
             ]);
+
+            $customer->addPayment(
+                $request->post('payment_amount'),
+                $request->post('payment_method'),
+                $request->post('bank'),
+                $request->post('check'),
+                $request->post('transaction_no')
+            );
+            return successResponse();
         } catch (\Throwable $exception) {
             DB::rollBack();
             throw $exception;
@@ -122,40 +114,153 @@ class CustomerController extends Controller
     public function list(Request $request)
     {
         try {
-            $funds_deposit = "(SELECT IFNULL(SUM(customer_funds.payment_amount),0) FROM customer_funds WHERE customer_funds.type='deposit' AND customer_id=customers.id)";
-            $funds_withdrawn = "(SELECT IFNULL(SUM(customer_funds.payment_amount),0) FROM customer_funds WHERE customer_funds.type='withdrawn' AND customer_id=customers.id)";
-            $sales_payable = "(SELECT IFNULL(SUM(sales.payable),0) FROM sales WHERE sales.customer_id = customers.id)";
-            $sales_paid = "(SELECT IFNULL(SUM(sales.paid),0) FROM sales WHERE sales.customer_id = customers.id)";
-            $sales_balance = "(SELECT IFNULL(SUM(sales.balance),0) FROM sales WHERE sales.customer_id = customers.id)";
-
+            $payable = "(SELECT IFNULL(SUM(sales.payable),0) FROM sales WHERE sales.customer_id = customers.id)";
+            $paid = "(SELECT IFNULL(SUM(sale_payments.payment_amount),0) FROM sale_payments WHERE sale_payments.customer_id = customers.id)";
+            $returned = "(SELECT IFNULL(SUM(sale_items.returned_total),0) FROM sale_items WHERE sale_items.customer_id = customers.id)";
 
             $items = Customer::query()
                 ->select(["customers.*"])
-                ->selectRaw("$funds_deposit  as deposit_amount")
-                ->selectRaw("$funds_withdrawn  as withdrawn_amount")
-                ->selectRaw("(($funds_deposit) - ($funds_withdrawn)) as funds_balance")
-                ->selectRaw("$sales_payable  as sales_payable")
-                ->selectRaw("$sales_paid  as sales_paid")
-                ->selectRaw("$sales_balance  as sales_balance")
-                ->selectRaw("(($funds_deposit) - ($sales_balance) - ($funds_withdrawn))  as final_balance");
-
-//            throw new \Exception($items->toSql(),404);
+                ->selectRaw("$payable  as payable")
+                ->selectRaw("$paid  as paid")
+                ->selectRaw("$returned  as returned")
+                ->selectRaw("($payable - $paid - $returned) as balance");
             if ($request->has('id')) {
                 return $items->findOrFail($request->post('id'));
             }
-            $result = $items->defaultDatatable($request);
-            $ov = $items->getQuery();
-            $ov->limit = null;
-            $ov->offset = null;
-            $ov->orders = null;
-            $ovr = $ov->select([
-                DB::raw("SUM(IFNULL($funds_deposit,0)) as deposit"),
-                DB::raw("SUM(IFNULL($funds_withdrawn,0))  as withdrawn"),
-                DB::raw("SUM(IFNULL((($funds_deposit) - ($funds_withdrawn)),0)) as balance"),
-            ])->first();
+
             return response()
-                ->json($result)
-                ->header("fund_summery", json_encode($ovr));
+                ->json($items->defaultDatatable($request))
+                ->header("fund_summery", json_encode(resetQueryForOverview($items)->select([
+                    DB::raw("SUM(IFNULL($payable,0)) as payable"),
+                    DB::raw("SUM(IFNULL($paid,0))  as paid"),
+                    DB::raw("SUM(IFNULL($returned,0))  as returned"),
+                    DB::raw("IFNULL(SUM($payable-$paid-$returned),0) as balance"),
+                ])->first()));
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function shortFinancialReport($customer_id, string $type = "pdf", Request $request)
+    {
+        try {
+            $customer = Customer::query()->select(["customers.*"])->findOrFail($customer_id);
+
+            $start_date = ($request->has('start_date') && $request->get('start_date')) ? $request->get('start_date') : null;
+            $end_date = ($request->has('end_date') && $request->get('end_date')) ? $request->get('end_date') : null;
+
+            $payable = $customer->sales();
+            $paid = $customer->salePayments();
+            $returned = $customer->saleItems();
+
+            if ($start_date) {
+                $payable->whereDate('created_at', '>=', $start_date);
+                $paid->whereDate('created_at', '>=', $start_date);
+                $returned->whereDate('created_at', '>=', $start_date);
+            }
+            if ($end_date) {
+                $payable->whereDate('created_at', '<=', $end_date);
+                $paid->whereDate('created_at', '<=', $end_date);
+                $returned->whereDate('created_at', '<=', $end_date);
+            }
+
+
+            $customer->payable = $payable->sum('payable');
+            $customer->paid = $paid->sum('payment_amount');
+            $customer->returned = $returned->sum('returned_total');
+            $customer->balance = $customer->payable - $customer->paid - $customer->returned;
+
+            if ($type == 'html') {
+                return view("pages.customers.short_financial_report", [
+                    "customer" => $customer,
+                    "start_date" => $start_date ? Carbon::parse($start_date)->locale('bn-BD') : null,
+                    "end_date" => $end_date ? Carbon::parse($end_date)->locale('bn-BD') : null
+                ]);
+            }
+
+            return \PDF::loadView('pages.customers.short_financial_report', [
+                "customer" => $customer,
+                "start_date" => $start_date ? Carbon::parse($start_date)->locale('bn-BD') : null,
+                "end_date" => $end_date ? Carbon::parse($end_date)->locale('bn-BD') : null
+            ])->stream("customer_short_financial_report-{$customer->id}.pdf");
+
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function fullFinancialReport(Customer $customer, string $type = 'pdf', Request $request)
+    {
+        $start_date = ($request->has('start_date') && $request->get('start_date')) ? $request->get('start_date') : null;
+        $end_date = ($request->has('end_date') && $request->get('end_date')) ? $request->get('end_date') : null;
+        /**
+         * I am confused about debit & credit. so , the reference are as below:
+         * resource/money goes to customer => to_customer
+         * resource/money coming from customer => from_customer
+         */
+        try {
+            //union fields:  date, to_customer, from_customer
+
+            $payments = $customer
+                ->salePayments()
+                ->select([
+                    DB::raw("'payment' as title"),
+                    DB::raw("created_at as date"),
+                    DB::raw("0 as to_customer"),
+                    DB::raw("payment_amount as from_customer")
+                ]);
+            $returns = $customer
+                ->saleReturns()
+                ->select([
+                    DB::raw("'return' as title"),
+                    DB::raw("created_at as date"),
+                    DB::raw("0 as to_customer"),
+                    DB::raw("amount as from_customer")
+                ]);
+
+            $records = $customer
+                ->sales()
+                ->select([
+                    DB::raw("'sale' as title"),
+                    DB::raw("created_at as date"),
+                    DB::raw("payable as to_customer"),
+                    DB::raw("0 as from_customer")
+                ]);
+            if ($start_date) {
+                $payments->whereDate('created_at', '>=', $start_date);
+                $returns->whereDate('created_at', '>=', $start_date);
+                $records->whereDate('created_at', '>=', $start_date);
+            }
+            if ($end_date) {
+                $payments->whereDate('created_at', '<=', $end_date);
+                $returns->whereDate('created_at', '<=', $end_date);
+                $records->whereDate('created_at', '<=', $end_date);
+            }
+
+            if ($type == 'html') {
+                return view("pages.customers.full_financial_report", [
+                    "customer" => $customer,
+                    "records" => $records
+                        ->union($payments)
+                        ->union($returns)
+                        ->orderBy('date', 'asc')
+                        ->get(),
+                    "start_date" => $start_date ? Carbon::parse($start_date)->locale('bn-BD') : null,
+                    "end_date" => $end_date ? Carbon::parse($end_date)->locale('bn-BD') : null
+                ]);
+            }
+
+            return \PDF::loadView('pages.customers.full_financial_report', [
+                "customer" => $customer,
+                "records" => $records
+                    ->union($payments)
+                    ->union($returns)
+                    ->orderBy('date', 'asc')
+                    ->get(),
+                "start_date" => $start_date ? Carbon::parse($start_date)->locale('bn-BD') : null,
+                "end_date" => $end_date ? Carbon::parse($end_date)->locale('bn-BD') : null
+            ])->stream("customer_short_financial_report-{$customer->id}.pdf");
+
         } catch (\Throwable $exception) {
             throw $exception;
         }

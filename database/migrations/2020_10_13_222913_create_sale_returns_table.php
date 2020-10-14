@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCheckOutItemsTable extends Migration
+class CreateSaleReturnsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreateCheckOutItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('check_out_items', function (Blueprint $table) {
+        Schema::create('sale_returns', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('check_out_id');
+            $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('sale_id');
+            $table->unsignedBigInteger('sale_item_id');
             $table->unsignedBigInteger('product_id');
-            $table->double('quantity', 2)->default(0);
+            $table->double('quantity')->default(0);
+            $table->double('amount')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +33,6 @@ class CreateCheckOutItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('check_out_items');
+        Schema::dropIfExists('sale_returns');
     }
 }

@@ -33,7 +33,6 @@ class SalePaymentController extends Controller
 //            }
             DB::beginTransaction();
             $payment = new SalePayment();
-            $payment->sale_id = $sale->id;
             $payment->customer_id = $sale->customer_id;
             $payment->payment_method = $request->post("payment_method") ?? 'Cash';
             $payment->payment_amount = round($request->post("payment_amount") ?? 0, 2);

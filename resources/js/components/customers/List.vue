@@ -1,18 +1,23 @@
 <template>
     <div>
         <b-row class="mb-3">
-            <b-col md="4" sm="12">
-                <b-card :title="__('customer_funds_deposits','Customer Funds Deposit')">
-                    {{fund_summery.deposit | currency}}
+            <b-col md="3" sm="12">
+                <b-card :title="__('sales_amount','Sales Amount')">
+                    {{fund_summery.payable | currency}}
                 </b-card>
             </b-col>
-            <b-col md="4" sm="12">
-                <b-card :title="__('customer_funds_withdrawn','Customer Funds Withdrawn')">
-                    {{fund_summery.withdrawn | currency}}
+            <b-col md="3" sm="12">
+                <b-card :title="__('sales_paid','Sales Paid')">
+                    {{fund_summery.paid | currency}}
                 </b-card>
             </b-col>
-            <b-col md="4" sm="12">
-                <b-card :title="__('customer_funds_balance','Customer Funds Balance')">
+            <b-col md="3" sm="12">
+                <b-card :title="__('sales_returned','Sales Returned')">
+                    {{fund_summery.returned | currency}}
+                </b-card>
+            </b-col>
+            <b-col md="3" sm="12">
+                <b-card :title="__('sales_balance','Sales Balance')">
                     {{fund_summery.balance | currency}}
                 </b-card>
             </b-col>
@@ -45,54 +50,51 @@
                          foot-variant="light"
                          foot-clone
                          :current-page="datatable.current_page">
-                    <template v-slot:foot(deposit_amount)="row">
-                        {{colSum(datatable.items,'deposit_amount') | currency}}
+
+
+                    <template v-slot:foot(payable)="row">
+                        {{colSum(datatable.items,'payable') | currency}}
                     </template>
-                    <template v-slot:foot(withdrawn_amount)="row">
-                        {{colSum(datatable.items,'withdrawn_amount') | currency}}
+                    <template v-slot:foot(paid)="row">
+                        {{colSum(datatable.items,'paid') | currency}}
                     </template>
-                    <template v-slot:foot(funds_balance)="row">
-                        {{colSum(datatable.items,'funds_balance') | currency}}
+                    <template v-slot:foot(returned)="row">
+                        {{colSum(datatable.items,'returned') | currency}}
                     </template>
-                    <template v-slot:foot(sales_payable)="row">
-                        {{colSum(datatable.items,'sales_payable') | currency}}
+                    <template v-slot:foot(balance)="row">
+                        {{colSum(datatable.items,'balance') | currency}}
                     </template>
-                    <template v-slot:foot(sales_paid)="row">
-                        {{colSum(datatable.items,'sales_paid') | currency}}
-                    </template>
-                    <template v-slot:foot(sales_balance)="row">
-                        {{colSum(datatable.items,'sales_balance') | currency}}
-                    </template>
-                    <template v-slot:foot(final_balance)="row">
-                        {{colSum(datatable.items,'final_balance') | currency}}
-                    </template>
+
                     <template v-slot:cell(action)="row">
-                        <b-dropdown right size="sm">
-                            <b-dropdown-item
-                                :title="__('add_fund','Add Fund')"
+                        <b-button-group size="sm">
+                            <b-button
+                                variant="dark"
+                                :title="__('take_payment','Take Payment')"
                                 v-b-modal:add_fund_modal
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-hand-holding-usd"></i> {{__('add_fund','Add Fund')}}
-                            </b-dropdown-item>
-                            <b-dropdown-divider></b-dropdown-divider>
-                            <b-dropdown-item
+                                <i class="fa fa-money-bill"></i>
+                            </b-button>
+                            <b-button
+                                variant="primary"
                                 :title="__('view','View')"
                                 :to="{name:'CustomersView',params:{id:row.item.id}}"
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-eye"></i> {{__('view_customer','View Customer')}}
-                            </b-dropdown-item>
-                            <b-dropdown-item
+                                <i class="fa fa-eye"></i>
+                            </b-button>
+                            <b-button
+                                variant="warning"
                                 :title="__('edit','Edit')"
                                 :to="{name:'CustomersAdd',params:{id:row.item.id}}"
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-edit"></i> {{__('edit_customer','Edit Customer')}}
-                            </b-dropdown-item>
-                            <b-dropdown-item
+                                <i class="fa fa-edit"></i>
+                            </b-button>
+                            <b-button
+                                variant="danger"
                                 :title="__('delete','Delete')"
                                 @click="trash(row.item.id)">
-                                <i class="fa fa-trash"></i> {{__('delete_customer','Delete Customer')}}
-                            </b-dropdown-item>
-                        </b-dropdown>
+                                <i class="fa fa-trash"></i>
+                            </b-button>
+                        </b-button-group>
                     </template>
                 </b-table>
             </template>
@@ -102,8 +104,8 @@
                  v-if="currentItem"
                  lazy
                  hide-footer
-                 @hidden="currentItem=null"
-                 :title="'Add Fund in '+currentItem.name+'\'s Account'"
+                 @hidden="currentItem={}"
+                 :title="__('add_payment','Add Payment')"
                  header-bg-variant="dark"
                  header-text-variant="light">
             <template v-slot:default="{hide}">
@@ -111,6 +113,7 @@
                     @success="v=>{if(v) hide();}"
                     @refresh="v=>$refs.datatable.refresh()"
                     v-if="currentItem && currentItem.id"
+                    :payment-amount="Number(Number(currentItem.balance).toFixed(2))"
                     :customer_id="currentItem.id"/>
             </template>
         </b-modal>
@@ -192,52 +195,31 @@
                     {key: 'post_office', sortable: true, label: _t('post_office', 'P.O.')},
                     {key: 'village', sortable: true, label: _t('village', 'Village')},
                     {
-                        key: 'deposit_amount',
-                        searchable: false,
-                        sortable: true,
-                        label: _t('deposit', 'Deposit'),
-                        formatter: v => this.$options.filters.currency(v)
-                    },
-                    {
-                        key: 'withdrawn_amount',
-                        searchable: true,
-                        sortable: false,
-                        label: _t('withdrawn', 'Withdrawn'),
-                        formatter: v => this.$options.filters.currency(v)
-                    },
-                    {
-                        key: 'funds_balance',
-                        searchable: false,
-                        sortable: true,
-                        label: _t('funds_balance', 'Funds Balance'),
-                        formatter: v => this.$options.filters.currency(v)
-                    },
-                    {
-                        key: 'sales_payable',
+                        key: 'payable',
                         searchable: false,
                         sortable: true,
                         label: _t('payable', 'Payable'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {
-                        key: 'sales_paid',
+                        key: 'paid',
                         searchable: false,
                         sortable: true,
                         label: _t('paid', 'Paid'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {
-                        key: 'sales_balance',
-                        sortable: true,
+                        key: 'returned',
                         searchable: false,
-                        label: _t('balance', 'Balance'),
+                        sortable: true,
+                        label: _t('returned', 'Returned'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {
-                        key: 'final_balance',
+                        key: 'balance',
                         sortable: true,
                         searchable: false,
-                        label: _t('final_balance', 'Final Balance'),
+                        label: _t('balance', 'Balance'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {

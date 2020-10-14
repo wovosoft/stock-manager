@@ -131,6 +131,14 @@ export function range(step = 10, quantity = 50) {
     return [...Array(quantity).keys()].map(i => i * step + step);
 }
 
+export function rangeIndexed(start = 1, end = 50, step = 1) {
+    let x = [];
+    for (let i = start; i <= end; i = i + step) {
+        x.push(i);
+    }
+    return x;
+}
+
 
 export function isBoolean(value) {
     return value === true || value === false;

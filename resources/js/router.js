@@ -482,58 +482,6 @@ export default new VueRouter({
                     ]
                 },
                 {
-                    path: 'check_ins',
-                    name: 'CheckInsList',
-                    meta: {breadcrumb: 'Check In'},
-                    component: () => import("@/components/check_ins/List"),
-                    children: [
-                        {
-                            path: 'add',
-                            name: 'CheckInsAdd',
-                            meta: {breadcrumb: 'Add'},
-                            component: () => import("@/components/check_ins/Add")
-                        },
-                        {
-                            path: ':id/edit',
-                            name: 'CheckInsEdit',
-                            meta: {breadcrumb: 'Edit'},
-                            component: () => import("@/components/check_ins/Add")
-                        },
-                        {
-                            path: ':id/view',
-                            name: 'CheckInsView',
-                            meta: {breadcrumb: 'View'},
-                            component: () => import("@/components/check_ins/View")
-                        },
-                    ]
-                },
-                {
-                    path: 'check_outs',
-                    name: 'CheckOutsList',
-                    meta: {breadcrumb: 'Check Out'},
-                    component: () => import("@/components/check_outs/List"),
-                    children: [
-                        {
-                            path: 'add',
-                            name: 'CheckOutsAdd',
-                            meta: {breadcrumb: 'Add'},
-                            component: () => import("@/components/check_outs/Add")
-                        },
-                        {
-                            path: ':id/edit',
-                            name: 'CheckOutsEdit',
-                            meta: {breadcrumb: 'Edit'},
-                            component: () => import("@/components/check_outs/Add")
-                        },
-                        {
-                            path: ':id/view',
-                            name: 'CheckOutsView',
-                            meta: {breadcrumb: 'View'},
-                            component: () => import("@/components/check_outs/View")
-                        },
-                    ]
-                },
-                {
                     path: 'categories',
                     name: 'ProductCategories',
                     meta: {breadcrumb: 'Categories'},

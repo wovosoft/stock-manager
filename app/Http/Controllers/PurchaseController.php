@@ -27,77 +27,111 @@ class PurchaseController extends Controller
         Route::post("purchases/list", '\\' . __CLASS__ . '@list')->name('Purchases.List');
         Route::post("purchases/delete", '\\' . __CLASS__ . '@delete')->name('Purchases.Delete');
         Route::post("purchases/due-purchases/{supplier}", '\\' . __CLASS__ . '@duePurchases')->name('Purchases.Due');
+        Route::get("purchases/invoice/pdf/{purchase}/{type?}", [self::class, 'invoicePdf'])->name('Purchases.Invoice.PDF');
+    }
+
+    /**
+     * @param $items
+     * @param int $purchase_tax
+     * @param int $purchase_discount
+     * @return int[]
+     */
+    private function getPurchasesAndItemsPayable($items = [], $tax = 0, $discount = 0)
+    {
+        $items_total = 0;     //sale Total
+        if (is_array($items) && count($items)) {
+            foreach ($items as $sitem) {
+                $items_total += ($sitem['quantity'] ?? 0) * ($sitem['price'] ?? 0);
+            }
+        }
+        return [
+            $items_total,
+            $items_total * (1 + ($tax ?? 0) / 100 - ($discount ?? 0) / 100)
+        ];
+    }
+
+    private function applyPayment(Purchase $purchase, Request $request)
+    {
+        if ($request->post('payment_amount')) {
+            try {
+                DB::beginTransaction();
+                $payment = new PurchasePayment();
+                $payment->supplier_id = $purchase->supplier_id;
+                $payment->payment_amount = round($request->post('payment_amount'), 2);
+                $payment->payment_method = $request->post('payment_method');
+                $payment->bank = $request->post("bank");
+                $payment->check = $request->post("check");
+                $payment->transaction_no = $request->post("transaction_no");
+                $payment->saveOrFail();
+                DB::commit();
+            } catch (\Throwable $exception) {
+                DB::rollBack();
+                throw $exception;
+            }
+        }
+    }
+
+    private function applyItems(Purchase $purchase, Request $request)
+    {
+        try {
+            foreach ($request->post('items') as $si) {
+                DB::beginTransaction();
+                $purchase_item = new PurchaseItem();
+                $purchase_item->forceFill([
+                    "purchase_id" => $purchase->id,
+                    "product_id" => $si['product_id'],
+                    "supplier_id" => $purchase->supplier_id,
+                    "quantity" => $si['quantity'],
+                    "price" => round($si['price'], 2)
+                ]);
+                $purchase_item->saveOrFail();
+                DB::commit();
+            }
+        } catch (\Throwable $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
     }
 
     public function store(Request $request)
     {
         try {
-            /**
-             * Supplier is searched first so that process fails, if supplier not found.
-             */
-            $supplier = Supplier::query()->findOrFail($request->post("supplier_id"));
-
+            $request->validate([
+                "supplier_id" => "required",
+                "items" => "required",
+            ]);
             /**
              * Now we calculate the total and payable
              */
-            $items_payable = 0;     //purchase Total
-            if ($request->has('items') && is_array($request->post("items"))) {
-                foreach ($request->post("items") as $sitem) {
-                    $items_payable += ($sitem['quantity'] * $sitem['price']) * (1 + $sitem['tax'] / 100 - $sitem['discount'] / 100);
-                }
-            }
-            $purchase_payable = $items_payable * (1 + ($request->post('tax') ?? 0) / 100 - ($request->post('discount') ?? 0) / 100);
+            [$items_total, $purchase_payable] = $this->getPurchasesAndItemsPayable(
+                $request->post("items"),
+                $request->post('tax') ?? 0,
+                $request->post('discount') ?? 0
+            );
 
-            $item = Purchase::query()->findOrNew($request->post('id'));
-            $item->supplier_id = $request->post('supplier_id');
-            $item->tax = $request->post('tax') ?? 0;
-            $item->discount = $request->post('discount') ?? 0;
-            $item->date = $request->post('date') ?? Carbon::now()->format('Y-m-d');
-            $item->status = $request->post('status') ?? "Processed";
-            $item->note = $request->post('note') ?? null;
-            $item->total = round($items_payable, 2);
-            $item->payable = round($purchase_payable, 2);
-            $item->saveOrFail();
+            DB::beginTransaction();
+            $purchase = Purchase::query()->findOrNew($request->post('id'));
+            $purchase->forceFill([
+                "supplier_id" => $request->post("supplier_id"),
+                "tax" => $request->post('tax') ?? 0,
+                "discount" => $request->post('discount') ?? 0,
+                "date" => $request->post('date') ?? Carbon::now()->format('Y-m-d'),
+                "status" => $request->post('status') ?? "Processed",
+                "note" => $request->post('note') ?? null,
+                "total" => round($items_total, 2),
+                "payable" => round($purchase_payable, 2),
+            ]);
+            $purchase->saveOrFail();
 
-            $purchase_payment = new PurchasePayment();
-            $purchase_payment->purchase_id = $item->id;
-            $purchase_payment->supplier_id = $item->supplier_id;
-            $purchase_payment->payment_amount = round($request->post('payment_amount'), 2);
-            $purchase_payment->payment_method = $request->post('payment_method');
-            $purchase_payment->bank = $request->post("bank");
-            $purchase_payment->check = $request->post("check");
-            $purchase_payment->transaction_no = $request->post("transaction_no");
-            $purchase_payment->saveOrFail();
+            $this->applyPayment($purchase, $request);
+            $this->applyItems($purchase, $request);
 
-            foreach ($request->post('items') as $si) {
-                $product = Product::query()->findOrFail($si['product_id']);
-                $product->increment('quantity', $si['quantity']);
-
-                $purchase_item = new PurchaseItem();
-                $purchase_item->purchase_id = $item->id;
-                $purchase_item->product_id = $si['product_id'];
-                $purchase_item->supplier_id = $item->supplier_id;
-                $purchase_item->quantity = $si['quantity'];
-                $purchase_item->price = round($si['price'], 2);
-                $purchase_item->total = round($si['quantity'] * $si['price'], 2);
-                $purchase_item->tax = isset($si['tax']) ? $si['tax'] : 0;
-                $purchase_item->discount = isset($si['discount']) ? $si['discount'] : 0;
-                $purchase_item->payable = round($purchase_item->total * (1 - $purchase_item->discount / 100 + $purchase_item->tax / 100), 2);
-                $purchase_item->status = "Processed";
-                $purchase_item->saveOrFail();
-
-            }
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
-
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
+            DB::commit();
+            return successResponse([
+                "purchase_id" => $purchase->id
             ]);
         } catch (\Throwable $exception) {
+            DB::rollBack();
             throw $exception;
         }
     }
@@ -105,7 +139,6 @@ class PurchaseController extends Controller
     public function list(Request $request)
     {
         try {
-//            $paid = "(SELECT IFNULL(SUM(purchase_payments.payment_amount),0) FROM purchase_payments WHERE purchase_payments.purchase_id = purchases.id)";
             $items = Purchase::query()
                 ->leftJoin("suppliers", "suppliers.id", "=", "purchases.supplier_id")
                 ->select(["purchases.*", "suppliers.name as supplier_name"])
@@ -120,24 +153,32 @@ class PurchaseController extends Controller
             if ($request->has('id')) {
                 return $items->findOrFail($request->post('id'));
             }
+
             return response()
-                ->json($items->defaultDatatable($request))
-                ->header("overview", (new Reports())->toJson()->purchasesOverview())
-                ->header("payable", $items->sum("payable"))
-                ->header("paid", $items->sum("paid"));
+                ->json($items->defaultDatatable($request, "purchases.created_at"))
+                ->header("overview", json_encode(
+                    resetQueryForOverview($items)
+                        ->distinct()
+                        ->select([
+                            DB::raw("SUM(purchases.payable) as purchases_payable"),
+                            DB::raw("SUM(purchases.returned) as purchases_returned"),
+                            DB::raw("COUNT(purchases.id) as purchases_quantity"),
+                        ])
+                        ->first()
+                ));
         } catch (\Throwable $exception) {
             throw $exception;
         }
     }
 
     /**
-     * This method returns only the due purchases.
+     * This method returns only the due sales.
      * @param $supplier_id
      * @param Request $request
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
      * @throws \Throwable
      */
-    public function duepurchases($supplier_id, Request $request)
+    public function dueSales($supplier_id, Request $request)
     {
         try {
             $items = Purchase::query()
@@ -159,5 +200,73 @@ class PurchaseController extends Controller
         } catch (\Throwable $exception) {
             throw $exception;
         }
+    }
+
+    public function reports(Request $request)
+    {
+        try {
+            $request->validate([
+                "type" => "required"
+            ]);
+            if ($request->post("type") == "overview") {
+                return response()->json(
+                    (new Reports())->salesOverview([
+                        "starting_date" => $request->post("starting_date"),
+                        "ending_date" => $request->post("ending_date"),
+                    ])->first()
+                );
+            } elseif ($request->post("type") == "list_sales") {
+                return response()->json(
+                    (new Reports())->listSales([
+                        "starting_date" => $request->post("starting_date"),
+                        "ending_date" => $request->post("ending_date"),
+                    ])->get()
+                );
+            } elseif ($request->post("type") == "list_sale_items") {
+                return response()->json(
+                    (new Reports())->listSaleItems([
+                        "starting_date" => $request->post("starting_date"),
+                        "ending_date" => $request->post("ending_date"),
+                    ])->get()
+                );
+            } elseif ($request->post("type") == "products") {
+                return response()->json(
+                    (new Reports())->listSaleProducts([
+                        "starting_date" => $request->post("starting_date"),
+                        "ending_date" => $request->post("ending_date"),
+                    ])->get()
+                );
+            } elseif ($request->post("type") == "customer") {
+                return response()->json(
+                    (new Reports())->listSaleByCustomer([
+                        "starting_date" => $request->post("starting_date"),
+                        "ending_date" => $request->post("ending_date"),
+                    ])->get()
+                );
+            }
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function invoicePdf($purchase_id, $type = "html")
+    {
+        $purchase = Purchase::query()
+            ->with([
+                'items',
+                'supplier'
+            ])
+            ->findOrFail($purchase_id);
+
+
+        if ($type == "html") {
+            return view("pages.purchases.invoice", [
+                "purchase" => $purchase,
+            ]);
+        }
+
+        return \PDF::loadView('pages.purchases.invoice', [
+            "purchase" => $purchase,
+        ])->stream("invoice-$purchase_id.pdf");
     }
 }

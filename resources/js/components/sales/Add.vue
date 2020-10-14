@@ -62,24 +62,13 @@
                         >
                             <template v-slot:cell(price)="row">
                                 <b-input-group size="sm" :append="$options.filters.currencySymbol(0)">
-                                    <b-input
-                                        type="number"
-                                        step="any"
-                                        v-model="row.item.price"
-                                        :placeholder="__('price', 'Price')"
-                                        :required="true"
-                                    />
+                                    <b-input type="number" step="any" v-model="row.item.price"
+                                             :placeholder="__('price', 'Price')" :required="true"/>
                                 </b-input-group>
                             </template>
                             <template v-slot:cell(quantity)="row">
-                                <b-input
-                                    type="number"
-                                    step="any"
-                                    v-model="row.item.quantity"
-                                    :placeholder="__('quantity', 'Quantity')"
-                                    :required="true"
-                                    size="sm"
-                                />
+                                <b-input type="number" step="any" v-model="row.item.quantity"
+                                         :placeholder="__('quantity', 'Quantity')" :required="true" size="sm"/>
                             </template>
                             <template v-slot:cell(total)="row">
                                 {{ (row.item.quantity * row.item.price) | currency }}
@@ -87,34 +76,22 @@
                             <template v-slot:cell(tax)="row">
                                 <b-input-group append="%" size="sm">
                                     <b-input
-                                        type="number"
-                                        step="any"
-                                        v-model="row.item.tax"
-                                        :placeholder="__('tax', 'Tax')"
-                                        :required="true"
-                                    />
+                                        type="number" step="any" v-model="row.item.tax"
+                                        :placeholder="__('tax', 'Tax')" :required="true"/>
                                 </b-input-group>
                             </template>
                             <template v-slot:cell(discount)="row">
                                 <b-input-group append="%" size="sm">
                                     <b-input
-                                        type="number"
-                                        step="any"
-                                        v-model="row.item.discount"
-                                        :placeholder="__('discount', 'Discount')"
-                                        :required="true"
-                                    />
+                                        type="number" step="any" v-model="row.item.discount"
+                                        :placeholder="__('discount', 'Discount')" :required="true"/>
                                 </b-input-group>
                             </template>
                             <template v-slot:cell(payable)="row">
                                 {{ getItemPayable(row.item) | currency }}
                             </template>
                             <template v-slot:cell(action)="row">
-                                <b-button
-                                    size="sm"
-                                    variant="danger"
-                                    @click="removeCartItem(row)"
-                                >
+                                <b-button size="sm" variant="danger" @click="removeCartItem(row)">
                                     <b-icon-trash/>
                                 </b-button>
                             </template>
@@ -135,17 +112,11 @@
                                 <b-form-group :label="__('payment_amount', 'Payment Amount')">
                                     <b-input-group>
                                         <b-input
-                                            step="any"
-                                            type="number"
-                                            :placeholder="__('payment_amount', 'Payment Amount')"
-                                            :required="true"
-                                            v-model="form.payment_amount"
-                                        />
+                                            step="any" type="number"
+                                            :placeholder="__('payment_amount', 'Payment Amount')" :required="true"
+                                            v-model="form.payment_amount"/>
                                         <template #append>
-                                            <b-button
-                                                variant="dark"
-                                                @click="form.payment_amount = getPayable"
-                                            >
+                                            <b-button variant="dark" @click="form.payment_amount = getPayable">
                                                 {{ __("full", "Full") }}
                                             </b-button>
                                         </template>
@@ -175,34 +146,6 @@
                             <b-form-textarea :rows="4" :placeholder="__('sales_note', 'Sales Note')"
                                              v-model="form.note"/>
                         </b-form-group>
-                        <!--
-                                     <b-form-row>
-                                         <b-col>
-                                             <b-form-group :label="__('tax','Tax')">
-                                                 <b-input-group append="%">
-                                                     <b-form-input
-                                                         :required="true"
-                                                         type="number"
-                                                         step="any"
-                                                         :placeholder="__('tax','Tax')"
-                                                         v-model="form.tax"/>
-                                                 </b-input-group>
-                                             </b-form-group>
-                                         </b-col>
-                                         <b-col>
-                                             <b-form-group :label="__('discount','Discount')">
-                                                 <b-input-group append="%">
-                                                     <b-form-input
-                                                         :required="true"
-                                                         type="number"
-                                                         step="any"
-                                                         :placeholder="__('discount','Discount')"
-                                                         v-model="form.discount"/>
-                                                 </b-input-group>
-                                             </b-form-group>
-                                         </b-col>
-                                     </b-form-row>
-                                    -->
                         <b-button type="submit" block variant="dark">
                             {{ __("submit", "SUBMIT") }}
                         </b-button>
@@ -289,10 +232,13 @@
                 </b-card>
             </b-col>
         </b-form-row>
-
+        <!--        <pre v-html="form"></pre>-->
         <customer-add
             :visibility="customer_add_modal_visible"
-            @created=" (v) => {form.customer = v.item;form.customer_id = v.id;}"
+            @created=" (v) => {
+                $set(form,'customer',v.item);
+                $set(form,'customer_id',v.item.id);
+            }"
             :hidden-callback="() => {customer_add_modal_visible = false;}"
         />
         <b-modal

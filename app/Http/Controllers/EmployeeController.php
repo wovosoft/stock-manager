@@ -128,7 +128,11 @@ class EmployeeController extends Controller
     public function salaries(Employee $employee, Request $request)
     {
         try {
-            return $employee->salaries()->defaultDatatable($request);
+            $items = $employee->salaries();
+            if ($request->post('year')) {
+                $items->where('year', '=', $request->post('year'));
+            }
+            return $items->defaultDatatable($request);
         } catch (\Throwable $exception) {
             throw $exception;
         }

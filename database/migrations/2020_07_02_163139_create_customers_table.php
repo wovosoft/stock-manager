@@ -24,7 +24,6 @@ class CreateCustomersTable extends Migration
             $table->string('post_office')->nullable();
             $table->string('village')->nullable();
             $table->text('shipping_address')->nullable();
-//            $table->double('balance')->default(0);  //cash balance
             $table->string("photo")->nullable();
             $table->timestamps();
             $table->softDeletes();

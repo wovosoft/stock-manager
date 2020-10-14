@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->command->info('Default Permissions added.');
-
+        $count_create=5;
         foreach ($roles as $role) {
             $role = Roles::query()->firstOrCreate($role);
 
@@ -56,12 +56,12 @@ class DatabaseSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         $this->command->warn('All done Role & Permissions created :)');
-        \Database\Factories\CategoryFactory::new()->count(20)->create();
-        \Database\Factories\SupplierFactory::new()->count(20)->create();
-        \Database\Factories\CustomerFactory::new()->count(20)->create();
-        \Database\Factories\EmployeeFactory::new()->count(20)->create();
-        \Database\Factories\BrandFactory::new()->count(20)->create();
-//        \Database\Factories\SubcategoryFactory::new()->count(20)->create();
+        \Database\Factories\CategoryFactory::new()->count($count_create)->create();
+        \Database\Factories\SupplierFactory::new()->count($count_create)->create();
+        \Database\Factories\CustomerFactory::new()->count($count_create)->create();
+        \Database\Factories\EmployeeFactory::new()->count($count_create)->create();
+        \Database\Factories\BrandFactory::new()->count($count_create)->create();
+//        \Database\Factories\SubcategoryFactory::new()->count($count_create)->create();
         $units = [
             'kg' => 'kilogram',
             'cm' => 'centimeter',
@@ -72,8 +72,8 @@ class DatabaseSeeder extends Seeder
             \Database\Factories\UnitFactory::new()->create(['name' => $key, 'description' => $value]);
         }
 
-        \Database\Factories\ProductFactory::new()->count(20)->create();
-        \Database\Factories\ExpenseCategoryFactory::new()->count(5)->create();
+        \Database\Factories\ProductFactory::new()->count($count_create)->create();
+        \Database\Factories\ExpenseCategoryFactory::new()->count($count_create)->create();
 
 //        factory(\App\Models\CheckIn::class, 20)
 //            ->create()

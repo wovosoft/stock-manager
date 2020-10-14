@@ -39,31 +39,36 @@ class SaleController extends Controller
      */
     private function getSalesAndItemsPayable($items = [], $tax = 0, $discount = 0)
     {
-        $items_payable = 0;     //sale Total
+        $items_total = 0;     //sale Total
         if (is_array($items) && count($items)) {
             foreach ($items as $sitem) {
-                $items_payable += (($sitem['quantity'] ?? 0) * ($sitem['price'] ?? 0)) * (1 + ($sitem['tax'] ?? 0) / 100 - ($sitem['discount'] ?? 0) / 100);
+                $items_total += ($sitem['quantity'] ?? 0) * ($sitem['price'] ?? 0);
             }
         }
-        $sale_payable = $items_payable * (1 + ($tax ?? 0) / 100 - ($discount ?? 0) / 100);
         return [
-            $items_payable,
-            $sale_payable
+            $items_total,
+            $items_total * (1 + ($tax ?? 0) / 100 - ($discount ?? 0) / 100)
         ];
     }
 
     private function applySalePayment(Sale $sale, Request $request)
     {
         if ($request->post('payment_amount')) {
-            $sale_payment = new SalePayment();
-            $sale_payment->sale_id = $sale->id;
-            $sale_payment->customer_id = $sale->customer_id;
-            $sale_payment->payment_amount = round($request->post('payment_amount'), 2);
-            $sale_payment->payment_method = $request->post('payment_method');
-            $sale_payment->bank = $request->post("bank");
-            $sale_payment->check = $request->post("check");
-            $sale_payment->transaction_no = $request->post("transaction_no");
-            return $sale_payment->saveOrFail();
+            try {
+                DB::beginTransaction();
+                $customer = Customer::query()->findOrFail($sale->customer_id);
+                $customer->addPayment(
+                    round($request->post('payment_amount'), 2),
+                    $request->post('payment_method'),
+                    $request->post("bank"),
+                    $request->post("check"),
+                    $request->post("transaction_no")
+                );
+                DB::commit();
+            } catch (\Throwable $exception) {
+                DB::rollBack();
+                throw $exception;
+            }
         }
     }
 
@@ -78,8 +83,6 @@ class SaleController extends Controller
                 $sale_item->customer_id = $sale->customer_id;
                 $sale_item->quantity = $si['quantity'];
                 $sale_item->price = round($si['price'], 2);
-                $sale_item->tax = isset($si['tax']) ? $si['tax'] : 0;
-                $sale_item->discount = isset($si['discount']) ? $si['discount'] : 0;
                 $sale_item->saveOrFail();
                 DB::commit();
             }
@@ -105,17 +108,17 @@ class SaleController extends Controller
             $sale->date = $request->post('date') ?? Carbon::now()->format('Y-m-d');
             $sale->status = $request->post('status') ?? "Processed";
             $sale->note = $request->post('note') ?? null;
-
+            $sale->paid = round($request->post('payment_amount'), 2);
 
             /**
              * Now we calculate the total and payable
              */
-            [$items_payable, $sale_payable] = $this->getSalesAndItemsPayable(
+            [$items_total, $sale_payable] = $this->getSalesAndItemsPayable(
                 $request->post("items"),
                 $request->post('tax') ?? 0,
                 $request->post('discount') ?? 0
             );
-            $sale->total = round($items_payable, 2);
+            $sale->total = round($items_total, 2);
             $sale->payable = round($sale_payable, 2);
             $sale->saveOrFail();
 
@@ -123,11 +126,7 @@ class SaleController extends Controller
             $this->applySaleItems($sale, $request);
 
             DB::commit();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done',
+            return successResponse([
                 "sale_id" => $sale->id
             ]);
         } catch (\Throwable $exception) {
@@ -156,11 +155,15 @@ class SaleController extends Controller
 
             return response()
                 ->json($items->defaultDatatable($request, "sales.created_at"))
-                ->header("overview", json_encode(resetQueryForOverview($items)->select([
-                    DB::raw("SUM(payable) as sales_payable"),
-                    DB::raw("SUM(paid) as sales_paid"),
-                    DB::raw("(SUM(payable) - SUM(paid)) as sales_balance"),
-                ])->first()));
+                ->header("overview", json_encode(
+                    resetQueryForOverview($items)
+                        ->distinct()
+                        ->select([
+                            DB::raw("SUM(sales.payable) as sales_payable"),
+                            DB::raw("COUNT(sales.id) as sales_quantity"),
+                        ])
+                        ->first()
+                ));
         } catch (\Throwable $exception) {
             throw $exception;
         }
@@ -249,31 +252,19 @@ class SaleController extends Controller
         $sale = Sale::query()
             ->with([
                 'items',
-//                'payments',
                 'customer'
             ])
             ->findOrFail($sale_id);
 
-        $previous_balance = Sale::query()
-            ->where('customer_id', '=', $sale->customer_id)
-            ->where('id', '<', $sale->id)
-            ->select([
-                DB::raw("SUM(payable) as total_payable"),
-                DB::raw("SUM(paid) as total_paid"),
-                DB::raw("(SUM(payable)-SUM(paid)) as calculated_balance"),
-                DB::raw("SUM(balance) as total_balance"),
-            ])->first();
 
         if ($type == "html") {
-            return view("pages.invoice", [
+            return view("pages.sales.invoice", [
                 "sale" => $sale,
-                "previous_balance" => $previous_balance
             ]);
         }
 
-        return \PDF::loadView('pages.invoice', [
+        return \PDF::loadView('pages.sales.invoice', [
             "sale" => $sale,
-            "previous_balance" => $previous_balance
         ])->stream("invoice-$sale_id.pdf");
     }
 }

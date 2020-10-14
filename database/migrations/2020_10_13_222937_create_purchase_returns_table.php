@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCheckInsTable extends Migration
+class CreatePurchaseReturnsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateCheckInsTable extends Migration
      */
     public function up()
     {
-        Schema::create('check_ins', function (Blueprint $table) {
+        Schema::create('purchase_returns', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('created_by');
-            $table->dateTime('datetime');
-            $table->string('reference')->nullable();
             $table->unsignedBigInteger('supplier_id');
-            $table->string('attachment')->nullable();
-            $table->text('note')->nullable();
+            $table->unsignedBigInteger('purchase_id');
+            $table->unsignedBigInteger('purchase_item_id');
+            $table->unsignedBigInteger('product_id');
+            $table->double('quantity')->default(0);
+            $table->double('amount')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,6 +33,6 @@ class CreateCheckInsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('check_ins');
+        Schema::dropIfExists('purchase_returns');
     }
 }

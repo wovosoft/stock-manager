@@ -76,7 +76,7 @@
     <thead class="bg-dark text-white">
     <tr>
         <td>বর্ণনা</td>
-        <td>বিক্রয়মূল্য</td>
+        <td>দর</td>
         <td>পরিমাণ</td>
         <td>মোট</td>
     </tr>
@@ -94,32 +94,35 @@
                 {{\App\Drivers\BanglaConverter::en2bn($sale_item->quantity)}} টি
             </td>
             <td>
-                {{\App\Drivers\BanglaConverter::en2bn(number_format($sale_item->payable,2))}} টাকা
+                {{\App\Drivers\BanglaConverter::en2bn(number_format($sale_item->total,2))}} টাকা
             </td>
         </tr>
     @endforeach
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="2" class="text-right">
-            মোটঃ
+        <td colspan="3" class="text-right">
+            মোট পণ্যঃ
         </td>
         <td>
             {{\App\Drivers\BanglaConverter::en2bn($sale->items->sum('quantity'))}} টি
         </td>
+    </tr>
+    <tr>
+        <td colspan="3" class="text-right">
+            মোট বিক্রয়মূল্যঃ
+        </td>
         <td>
-            {{\App\Drivers\BanglaConverter::en2bn($sale->items->sum('payable'))}} টাকা
+            {{\App\Drivers\BanglaConverter::en2bn($sale->payable)}} টাকা
         </td>
     </tr>
+
     <tr>
         <td colspan="3" class="text-right">
             পূর্বের জেরঃ
         </td>
         <td>
-            @php
-                //$account_balance =$sale->customer->accountBalance($sale->customer_id);
-            @endphp
-            {{\App\Drivers\BanglaConverter::en2bn(number_format($previous_balance->calculated_balance ,2))}}
+            {{\App\Drivers\BanglaConverter::en2bn(number_format($sale->previous_balance ,2))}}
             টাকা
         </td>
     </tr>
@@ -132,18 +135,23 @@
         </td>
     </tr>
     <tr>
+        <td colspan="3" class="text-right">
+            বর্তমান জেরঃ
+        </td>
+        <td>
+            {{\App\Drivers\BanglaConverter::en2bn(number_format($sale->current_balance - $sale->paid,2))}}
+            টাকা
+        </td>
+    </tr>
+
+
+    <tr>
         <td>
             @php($date=\Carbon\Carbon::now()->locale('bn-BD'))
             আজকের তারিখঃ {{\App\Drivers\BanglaConverter::en2bn($date->format('d-m-Y'))}},
             {{$date->dayName}}
         </td>
-        <td colspan="2" class="text-right">
-            অবশিষ্টঃ
-        </td>
-        <td>
-            {{\App\Drivers\BanglaConverter::en2bn(number_format($sale->payable+$previous_balance->calculated_balance-$sale->paid,2))}}
-            টাকা
-        </td>
+
     </tr>
 
     </tfoot>
