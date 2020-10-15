@@ -11,14 +11,20 @@
         <b-card body-class="p-0">
             <template #header>
                 <b-row>
-                    <b-col md="4" sm="12">
+                    <b-col md="3" sm="12">
                         <b-input-group :prepend="__('per_page','Per Page')" size="sm">
                             <b-select
                                 v-model="dt.per_page"
                                 :options="[10,30,50,100,150,200,300,500,1000]"/>
                         </b-input-group>
                     </b-col>
-                    <b-col md="8" sm="12">
+                    <b-col md="9" sm="12">
+                        <b-button variant="dark" size="sm"
+                                  target="_blank"
+                                  :href="route('Backend.Reports.Products.Daily', { date:date,export:'pdf'}).url()"
+                                  :title="__('export_todays_report','Export Today\'s Report')">
+                            {{__('export_todays_report',"Export Today's Report")}}
+                        </b-button>
                         <div class="float-right">
                             <b-input-group :prepend="__('date','Date')" size="sm">
                                 <b-input v-model="date" type="date"/>
@@ -89,6 +95,7 @@
                     orderBy: ctx.sortBy || 'id',
                     order: isTrue(ctx.sortDesc) ? 'desc' : 'asc',
                 }).then(res => {
+                    console.log(res.data)
                     this.$set(this, 'dt', res.data);
                     return res.data.data;
                 }).catch(err => {
@@ -110,28 +117,47 @@
                         key: 'code', label: _t('code', 'Code')
                     },
                     {
-                        key: 'sales_payable', label: _t('sales_payable', 'Sales Payable'),
-                        formatter: v => this.$options.filters.currency(v)
-                    },
-                    {
-                        key: 'previous_quantity', label: _t('previous_day_quantity', 'Previous Day Quantity'),
-                        formatter: (v, r, row) => {
-                            return this.$options.filters.localNumber(v) + ' ' + (row.unit ? row.unit.name : '');
+                        key: 'current_stock',
+                        label: _t('current_stock', 'Current Stock'),
+                        formatter: (v, i, r) => {
+                            let vv = ((r.prev_purchased_items - r.prev_purchase_returned_items) - (r.prev_sold_items - r.prev_sold_returned_items));
+                            return this.$options.filters.localNumber(vv || 0)
                         }
                     },
                     {
-                        key: 'sales_quantity', label: _t('sales_quantity', 'Sales Quantity'),
-                        formatter: (v, r, row) => {
-                            return this.$options.filters.localNumber(v) + ' ' + (row.unit ? row.unit.name : '');
+                        key: 'addition',
+                        label: _t('addition', 'Addition'),
+                        formatter: (v, i, r) => {
+                            let vv = (r.purchased_items - r.purchase_returned_items);
+                            return this.$options.filters.localNumber(vv || 0)
+                        }
+                    },
+                    {
+                        key: 'subtraction',
+                        label: _t('subtraction', 'Subtraction'),
+                        formatter: (v, i, r) => {
+                            let vv = (r.sold_items - r.sold_returned_items);
+                            return this.$options.filters.localNumber(vv || 0)
+                        }
+                    },
+                    {
+                        key: 'remains',
+                        label: _t('remains', 'Remains'),
+                        formatter: (v, i, r) => {
+                            let vv = ((r.purchased_items - r.purchase_returned_items) - (r.sold_items - r.sold_returned_items));
+                            return this.$options.filters.localNumber(vv || 0)
+                        }
+                    },
+                    {
+                        key: 'stock',
+                        label: _t('Stock', 'Stock'),
+                        formatter: (v, i, r) => {
+                            let previous_stock = ((r.prev_purchased_items - r.prev_purchase_returned_items) - (r.prev_sold_items - r.prev_sold_returned_items));
+                            let todays_stock = ((r.purchased_items - r.purchase_returned_items) - (r.sold_items - r.sold_returned_items));
+                            return this.$options.filters.localNumber(previous_stock + todays_stock || 0)
                         }
                     },
 
-                    {
-                        key: 'quantity', label: _t('available', 'Available'),
-                        formatter: (v, r, row) => {
-                            return this.$options.filters.localNumber(v) + ' ' + (row.unit ? row.unit.name : '');
-                        }
-                    },
                 ]
             }
         }

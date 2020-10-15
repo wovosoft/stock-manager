@@ -26,6 +26,7 @@ class CreatePurchasesTable extends Migration
             $table->text("note")->nullable();
             $table->double('previous_balance', 2)->default(0);
             $table->double('current_balance', 2)->default(0);
+            $table->double('paid', 2)->default(0);  //if any amount is paid during creation.
             $table->timestamps();
             $table->softDeletes();
         });

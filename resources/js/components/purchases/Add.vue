@@ -2,7 +2,7 @@
     <div>
         <b-form-row>
             <b-col sm="12" md="6">
-                <b-card body-class="p-2" class="h-100">
+                <b-card body-class="p-2" class="h-100  overflow-auto">
                     <b-form @submit.prevent="handleSubmit" ref="theForm">
                         <b-form-group>
                             <b-input-group>

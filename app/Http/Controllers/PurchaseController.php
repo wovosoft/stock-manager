@@ -120,6 +120,7 @@ class PurchaseController extends Controller
                 "note" => $request->post('note') ?? null,
                 "total" => round($items_total, 2),
                 "payable" => round($purchase_payable, 2),
+                "paid" => round($request->post('payment_amount'), 2),
             ]);
             $purchase->saveOrFail();
 

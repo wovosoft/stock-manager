@@ -595,16 +595,22 @@ export default new VueRouter({
                     component: () => import("@/components/reports/products/daily/List")
                 },
                 {
-                    path: 'customer_collection',
-                    name: 'DailyCustomerCollectionReport',
-                    meta: {breadcrumb: 'Daily Customer Collection Report'},
-                    component: () => import("@/components/reports/customers/collection/List")
-                },
-                {
                     path: 'customer_sales',
                     name: 'DailyCustomerSalesReport',
-                    meta: {breadcrumb: 'Daily Customer Sales Report'},
+                    meta: {breadcrumb: 'Sales Report'},
                     component: () => import("@/components/reports/customers/sales/List")
+                },
+                {
+                    path: 'supplier_purchases',
+                    name: 'DailySupplierPurchasesReport',
+                    meta: {breadcrumb: 'Purchases Report'},
+                    component: () => import("@/components/reports/suppliers/purchases/List")
+                },
+                {
+                    path: 'income_expense',
+                    name: 'IncomeExpenseReport',
+                    meta: {breadcrumb: 'Income - Expense Report'},
+                    component: () => import("@/components/reports/collection/InvomeExpense")
                 }
             ]
         },

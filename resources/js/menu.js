@@ -31,30 +31,12 @@ export default [
                 icon: 'nav-icon fas fa-chevron-right',
                 active: false
             },
-            // {
-            //     name: _t('check_ins', 'Check Ins'),
-            //     url: {name: 'CheckInsList'},
-            //     icon: 'nav-icon fas fa-chevron-right',
-            //     active: false
-            // },
-            // {
-            //     name: _t('check_outs', 'Check Outs'),
-            //     url: {name: 'CheckOutsList'},
-            //     icon: 'nav-icon fas fa-chevron-right',
-            //     active: false
-            // },
             {
                 name: _t('categories', 'Categories'),
                 url: {name: 'ProductCategories'},
                 icon: 'nav-icon fas fa-chevron-right',
                 active: false
             },
-            // {
-            //     name: _t('sub_categories', 'Sub Categories'),
-            //     url: {name: 'ProductSubcategories'},
-            //     icon: 'nav-icon fas fa-chevron-right',
-            //     active: false
-            // },
             {
                 name: _t('brands', 'Brands'),
                 url: {name: 'ProductBrands'},
@@ -156,26 +138,6 @@ export default [
             },
         ]
     },
-    // {
-    //     name: _t('balance_sheet', 'Balance Sheet'),
-    //     url: false,
-    //     icon: 'fa fa-money-check-alt',
-    //     active: false,
-    //     children: [
-    //         {
-    //             name: _t('customers_balance', 'Customers Balance'),
-    //             url: {name: 'CustomersBalanceSheet'},
-    //             icon: 'nav-icon fas fa-chevron-right',
-    //             active: false
-    //         },
-    //         {
-    //             name: _t('suppliers_balance', 'Suppliers Balance'),
-    //             url: {name: 'SuppliersBalanceSheet'},
-    //             icon: 'nav-icon fas fa-chevron-right',
-    //             active: false
-    //         }
-    //     ]
-    // },
     {
         name: _t('capital_funds', 'Capital Funds'),
         url: false,
@@ -273,14 +235,20 @@ export default [
                 active: false,
             },
             {
-                name: _t('customer_collection', 'Customer Collection'),
-                url: {name: 'DailyCustomerCollectionReport'},
+                name: _t('customer_sales', 'Customer Sales'),
+                url: {name: 'DailyCustomerSalesReport'},
                 icon: 'nav-icon fas fa-chevron-right',
                 active: false,
             },
             {
-                name: _t('customer_sales', 'Customer Sales'),
-                url: {name: 'DailyCustomerSalesReport'},
+                name: _t('supplier_purchases', 'Supplier Purchases'),
+                url: {name: 'DailySupplierPurchasesReport'},
+                icon: 'nav-icon fas fa-chevron-right',
+                active: false,
+            },
+            {
+                name: _t('income_expense', 'Income - Expense'),
+                url: {name: 'IncomeExpenseReport'},
                 icon: 'nav-icon fas fa-chevron-right',
                 active: false,
             },
@@ -304,7 +272,6 @@ export default [
                 icon: 'nav-icon fas fa-chevron-right',
                 active: false
             },
-
         ]
     },
 ]

@@ -1,5 +1,13 @@
 <?php
 
+use Database\Factories\BrandFactory;
+use Database\Factories\CategoryFactory;
+use Database\Factories\CustomerFactory;
+use Database\Factories\EmployeeFactory;
+use Database\Factories\ExpenseCategoryFactory;
+use Database\Factories\ProductFactory;
+use Database\Factories\SupplierFactory;
+use Database\Factories\UnitFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Wovosoft\LaravelPermissions\Models\Permissions;
@@ -34,7 +42,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->command->info('Default Permissions added.');
-        $count_create=5;
+        $count_create = 5;
         foreach ($roles as $role) {
             $role = Roles::query()->firstOrCreate($role);
 
@@ -56,12 +64,7 @@ class DatabaseSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         $this->command->warn('All done Role & Permissions created :)');
-        \Database\Factories\CategoryFactory::new()->count($count_create)->create();
-        \Database\Factories\SupplierFactory::new()->count($count_create)->create();
-        \Database\Factories\CustomerFactory::new()->count($count_create)->create();
-        \Database\Factories\EmployeeFactory::new()->count($count_create)->create();
-        \Database\Factories\BrandFactory::new()->count($count_create)->create();
-//        \Database\Factories\SubcategoryFactory::new()->count($count_create)->create();
+
         $units = [
             'kg' => 'kilogram',
             'cm' => 'centimeter',
@@ -69,36 +72,19 @@ class DatabaseSeeder extends Seeder
             'qty' => 'Quantity'
         ];
         foreach ($units as $key => $value) {
-            \Database\Factories\UnitFactory::new()->create(['name' => $key, 'description' => $value]);
+            UnitFactory::new()->create(['name' => $key, 'description' => $value]);
         }
 
-        \Database\Factories\ProductFactory::new()->count($count_create)->create();
-        \Database\Factories\ExpenseCategoryFactory::new()->count($count_create)->create();
+        CategoryFactory::new()->count($count_create)->create();
+        BrandFactory::new()->count($count_create)->create();
+        ProductFactory::new()->count(10)->create([
+            "quantity" => 0
+        ]);
+        SupplierFactory::new()->count($count_create)->create();
+        CustomerFactory::new()->count($count_create)->create();
+        EmployeeFactory::new()->count($count_create)->create();
+        ExpenseCategoryFactory::new()->count($count_create)->create();
 
-//        factory(\App\Models\CheckIn::class, 20)
-//            ->create()
-//            ->each(function ($checkIn) {
-//                for ($x = 0; $x <= random_int(1, 3); $x++) {
-//                    $checkIn
-//                        ->items()
-//                        ->create([
-//                            "product_id" => random_int(1, 20),
-//                            "quantity" => random_int(1, 5)
-//                        ]);
-//                }
-//            });
-//        factory(\App\Models\CheckOut::class, 20)
-//            ->create()
-//            ->each(function ($checkOut) {
-//                for ($x = 0; $x <= random_int(1, 3); $x++) {
-//                    $checkOut
-//                        ->items()
-//                        ->create([
-//                            "product_id" => random_int(1, 20),
-//                            "quantity" => random_int(1, 5)
-//                        ]);
-//                }
-//            });
 
         refreshLanguages();
         refreshCachedSettings();

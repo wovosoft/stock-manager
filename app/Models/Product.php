@@ -14,18 +14,18 @@ class Product extends BaseModel
     {
         parent::boot();
         static::created(function ($product) {
-//            Artisan::call("record:products");
-            updateOrGenerateProductRecords($product->id);
+            Artisan::call("record:products");
+//            updateOrGenerateProductRecords($product->id);
         });
 
         static::updated(function ($product) {
-//            Artisan::call("record:products");
-            updateOrGenerateProductRecords($product->id);
+            Artisan::call("record:products");
+//            updateOrGenerateProductRecords($product->id);
         });
 
         static::deleted(function ($product) {
-//            Artisan::call("record:products");
-            updateOrGenerateProductRecords($product->id);
+            Artisan::call("record:products");
+//            updateOrGenerateProductRecords($product->id);
         });
 
     }
