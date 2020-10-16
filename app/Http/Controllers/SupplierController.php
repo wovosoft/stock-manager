@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Mpdf\Tag\Sup;
 
 class SupplierController extends Controller
 {
@@ -44,12 +45,14 @@ class SupplierController extends Controller
     {
         Route::name("Suppliers.")->prefix("suppliers")->group(function () {
             Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("{supplier}/payments", [self::class, 'payments'])->name('Payments');
+            Route::post("{supplier}/returns", [self::class, 'returns'])->name('Returns');
             Route::post("search", [self::class, 'search'])->name('Search');
             Route::post("store", [self::class, 'store'])->name('Store');
             Route::post("delete", [self::class, 'delete'])->name('Delete');
-            Route::post("add_fund/{supplier}", [self::class, 'addPayment'])->name('Payments.Store');
-            Route::get("shortFinancialReport/{supplier}/{type?}", [self::class, 'shortFinancialReport'])->name('Payments.shortFinancialReport');
-            Route::get("fullFinancialReport/{supplier}/{type?}", [self::class, 'fullFinancialReport'])->name('Payments.fullFinancialReport');
+            Route::post("{supplier}/add_fund", [self::class, 'addPayment'])->name('Payments.Store');
+            Route::get("{supplier}/shortFinancialReport/{type?}", [self::class, 'shortFinancialReport'])->name('Payments.shortFinancialReport');
+            Route::get("{supplier}/fullFinancialReport/{type?}", [self::class, 'fullFinancialReport'])->name('Payments.fullFinancialReport');
         });
     }
 
@@ -132,6 +135,7 @@ class SupplierController extends Controller
             throw $exception;
         }
     }
+
     public function shortFinancialReport($supplier_id, string $type = "pdf", Request $request)
     {
         try {
@@ -252,6 +256,39 @@ class SupplierController extends Controller
                 "end_date" => $end_date ? Carbon::parse($end_date)->locale('bn-BD') : null
             ])->stream("supplier_short_financial_report-{$supplier->id}.pdf");
 
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function payments(Supplier $supplier, Request $request)
+    {
+        try {
+            return $supplier->purchasePayments()
+                ->leftJoin("suppliers", 'suppliers.id', '=', 'purchase_payments.supplier_id')
+                ->select([
+                    "suppliers.name",
+                    "purchase_payments.*"
+                ])
+                ->defaultDatatable($request);
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function returns(Supplier $supplier, Request $request)
+    {
+        try {
+            return $supplier
+                ->purchaseReturns()
+                ->leftJoin("suppliers", "suppliers.id", "=", "purchase_returns.supplier_id")
+                ->leftJoin("products", "products.id", "=", "purchase_returns.product_id")
+                ->select([
+                    "purchase_returns.*",
+                    DB::raw("suppliers.name as supplier_name"),
+                    DB::raw("products.name as product_name"),
+                ])
+                ->defaultDatatable($request);
         } catch (\Throwable $exception) {
             throw $exception;
         }

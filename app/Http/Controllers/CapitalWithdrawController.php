@@ -33,10 +33,12 @@ class CapitalWithdrawController extends Controller
 
     public static function routes()
     {
-        Route::post("capital/withdraws/list", '\\' . __CLASS__ . '@list')->name('Capital.Withdraws.List');
-        Route::post("capital/withdraws/search", '\\' . __CLASS__ . '@search')->name('Capital.Withdraws.Search');
-        Route::post("capital/withdraws/store", '\\' . __CLASS__ . '@store')->name('Capital.Withdraws.Store');
-        Route::post("capital/withdraws/delete", '\\' . __CLASS__ . '@delete')->name('Capital.Withdraws.Delete');
+        Route::name('Capital.Withdraws.')->prefix('capital/withdraws')->group(function (){
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+        });
     }
 
     public function store(Request $request)
@@ -44,24 +46,18 @@ class CapitalWithdrawController extends Controller
         try {
             DB::beginTransaction();
             $item = CapitalWithdraw::query()->findOrNew($request->post('id'));
-            $item->payment_amount = $request->post('payment_amount');
-            $item->payment_method = $request->post('payment_method');
-            $item->bank = $request->post('bank') ?? null;
-            $item->check_no = $request->post('check_no') ?? null;
-            $item->transaction_no = $request->post('transaction_no') ?? null;
-            $item->withdrawn_by = auth()->id();
+            $item->forceFill([
+                "payment_amount" => $request->post('payment_amount'),
+                "payment_method" => $request->post('payment_method'),
+                "bank" => $request->post('bank') ?? null,
+                "check_no" => $request->post('check_no') ?? null,
+                "transaction_no" => $request->post('transaction_no') ?? null,
+                "withdrawn_by" => auth()->id(),
+            ]);
 
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
             $item->saveOrFail();
             DB::commit();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
-            ]);
+            return successResponse();
         } catch (\Throwable $exception) {
             DB::rollBack();
             throw $exception;

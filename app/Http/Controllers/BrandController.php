@@ -16,29 +16,25 @@ class BrandController extends Controller
 
     public static function routes()
     {
-        Route::post("brands/list", '\\' . __CLASS__ . '@list')->name('Brands.List');
-        Route::post("brands/search", '\\' . __CLASS__ . '@search')->name('Brands.Search');
-        Route::post("brands/store", '\\' . __CLASS__ . '@store')->name('Brands.Store');
-        Route::post("brands/delete", '\\' . __CLASS__ . '@delete')->name('Brands.Delete');
+        Route::name("Brands.")->prefix("brands")->group(function () {
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+        });
     }
 
     public function store(Request $request)
     {
         try {
             $item = Brand::query()->findOrNew($request->post('id'));
-            $item->name = $request->post('name');
-            $item->description = $request->post('description');
-
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
-            $item->saveOrFail();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
+            $item->forceFill([
+                "name" => $request->post('name'),
+                "description" => $request->post('description'),
             ]);
+
+            $item->saveOrFail();
+            return successResponse();
         } catch (\Throwable $exception) {
             throw $exception;
         }

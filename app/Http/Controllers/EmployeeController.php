@@ -48,11 +48,13 @@ class EmployeeController extends Controller
 
     public static function routes()
     {
-        Route::post("employees/list", '\\' . __CLASS__ . '@list')->name('Employees.List');
-        Route::post("employees/search", '\\' . __CLASS__ . '@search')->name('Employees.Search');
-        Route::post("employees/store", '\\' . __CLASS__ . '@store')->name('Employees.Store');
-        Route::post("employees/delete", '\\' . __CLASS__ . '@delete')->name('Employees.Delete');
-        Route::post("employees/paid/salaries/{employee}", '\\' . __CLASS__ . '@salaries')->name('Employees.Paid.Salaries');
+        Route::name('Employees.')->prefix('employees')->group(function (){
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+            Route::post("paid/salaries/{employee}", [self::class, 'salaries'])->name('Paid.Salaries');
+        });
     }
 
     public function store(Request $request)
@@ -64,35 +66,29 @@ class EmployeeController extends Controller
                 "joining_date" => "required",
             ]);
             $item = Employee::query()->findOrNew($request->post('id'));
-            $item->name = $request->post('name');
-            $item->email = $request->post('email');
-            $item->phone = $request->post('phone');
-            $item->company = $request->post('company');
-            $item->district = $request->post('district');
-            $item->thana = $request->post('thana');
-            $item->post_office = $request->post('post_office');
-            $item->village = $request->post('village');
-            $item->joining_date = $request->post('joining_date');
-            $item->leaving_date = $request->post('leaving_date');
-            $item->is_active = !!($request->post('is_active'));
-            $item->position = $request->post('position');
-            $item->salary = $request->post('salary') ?? 0;
+            $item->forceFill([
+                "name" => $request->post('name'),
+                "email" => $request->post('email'),
+                "phone" => $request->post('phone'),
+                "company" => $request->post('company'),
+                "district" => $request->post('district'),
+                "thana" => $request->post('thana'),
+                "post_office" => $request->post('post_office'),
+                "village" => $request->post('village'),
+                "joining_date" => $request->post('joining_date'),
+                "leaving_date" => $request->post('leaving_date'),
+                "is_active" => !!($request->post('is_active')),
+                "position" => $request->post('position'),
+                "salary" => $request->post('salary') ?? 0,
+            ]);
 //            $item->balance = $request->post('balance') ?? 0;
             if ($request->hasFile('photo_upload')) {
                 $item->photo = $request->file('photo_upload')->store('photos', 'public');
             } else {
                 $item->photo = $request->post("photo");
             }
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
             $item->saveOrFail();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
-            ]);
+            return successResponse();
         } catch (\Throwable $exception) {
             throw $exception;
         }

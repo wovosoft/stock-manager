@@ -159,6 +159,37 @@ if (!function_exists("successResponse")) {
         ], $options));
     }
 }
+if (!function_exists("failedResponse")) {
+    function failedResponse(array $options = [])
+    {
+        return response()->json(array_merge([
+            "status" => false,
+            "title" => 'FAILED!',
+            "type" => "danger",
+            "msg" => 'Operation Failed'
+        ], $options));
+    }
+}
+if (!function_exists("failedResponseWithException")) {
+    function failedResponseWithException(Throwable $exception, array $options = [])
+    {
+        $main = [
+            "status" => false,
+            "title" => 'FAILED!',
+            "type" => "danger",
+            "msg" => 'Operation Failed'
+        ];
+        if (app()->environment() !== "production") {
+            $main = array_merge($main, [
+                "msg" => $exception->getMessage(),
+                "code" => $exception->getCode(),
+                "file" => $exception->getFile(),
+                "line" => $exception->getLine()
+            ]);
+        }
+        return response()->json(array_merge($main, $options));
+    }
+}
 if (!function_exists('resetQueryForOverview')) {
     function resetQueryForOverview(\Illuminate\Database\Eloquent\Builder $query, array $options = ['limit' => null, 'offset' => null, 'orders' => null])
     {
@@ -178,8 +209,8 @@ if (!function_exists('updateOrGenerateProductRecords')) {
         } else {
             $data = json_decode(\Illuminate\Support\Facades\Storage::get($file));
             $index = 0;
-            \Illuminate\Support\Arr::first($data,function ($value,$key) use ($product_id) {
-               return $value->id===$product_id;
+            \Illuminate\Support\Arr::first($data, function ($value, $key) use ($product_id) {
+                return $value->id === $product_id;
             });
             foreach ($data as $d) {
                 if ($d->id === $product_id) {

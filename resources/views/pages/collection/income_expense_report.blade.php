@@ -58,6 +58,7 @@
     <thead>
     <tr>
         <th>ক্রঃনং</th>
+        <th>শিরোনাম</th>
         <th>বিবরণ</th>
         <th>আয়</th>
         <th>ব্যয়</th>
@@ -72,6 +73,7 @@
         <tr>
             <td>{{\App\Drivers\BanglaConverter::en2bn($index++)}}</td>
             <td>{{isset($types[$item->title])?$types[$item->title]:$item->title}}</td>
+            <td>{{$item->description}}</td>
             <td>{{$item->income?\App\Drivers\BanglaConverter::en2bn(number_format($item->income,2)).' টাকা':''}}</td>
             <td>{{$item->expense?\App\Drivers\BanglaConverter::en2bn(number_format($item->expense,2)).' টাকা':''}}</td>
             <td>{{\App\Drivers\BanglaConverter::en2bn(\Carbon\Carbon::parse($item->date)->format('h:i A'))}}</td>

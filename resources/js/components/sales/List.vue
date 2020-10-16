@@ -65,17 +65,39 @@
                                       @click="currentItem=JSON.parse(JSON.stringify(row.item))">
                                 <i class="fa fa-file-invoice"></i>
                             </b-button>
-                            <b-button variant="primary"
-                                      :title="__('view_sale_history','View Sale\'s Details')"
-                                      :to="{name:'SalesView',params:{id:row.item.id}}"
-                                      @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-eye"></i>
+                            <b-button variant="warning"
+                                      :title="__('delivery_slip','Delivery Slip')"
+                                      v-b-modal:invoice-modal
+                                      @click="invoice_is_delivery=true,currentItem=JSON.parse(JSON.stringify(row.item))">
+                                <i class="fa fa-shopping-cart"></i>
                             </b-button>
-                            <b-button variant="danger"
-                                      :title="__('delete_the_sale','Delete the Sale')"
-                                      @click="trash(row.item.id)">
-                                <i class="fa fa-trash"></i>
-                            </b-button>
+                            <b-dropdown right text="More" size="sm">
+                                <b-dropdown-item
+                                    :title="__('cash_and_delivery_memo','Cash & Delivery')"
+                                    v-b-modal:invoice-modal
+                                    @click="invoice_both=true,currentItem=JSON.parse(JSON.stringify(row.item))">
+                                    <i class="fa fa-file-invoice"></i>
+                                    {{__('cash_and_delivery_memo','Cash & Delivery')}}
+                                </b-dropdown-item>
+                                <b-dropdown-item
+                                    :title="__('returns_history','Returns History')"
+                                    v-b-modal:returns-modal
+                                    @click="currentItem=JSON.parse(JSON.stringify(row.item))">
+                                    <i class="fa fa-retweet"></i>
+                                    {{__('returns_history','Returns History')}}
+                                </b-dropdown-item>
+                                <b-dropdown-item
+                                    :title="__('view_sale_history','View Sale\'s Details')"
+                                    :to="{name:'SalesView',params:{id:row.item.id}}"
+                                    @click="currentItem=JSON.parse(JSON.stringify(row.item))">
+                                    <i class="fa fa-eye"></i> {{__('view','View')}}
+                                </b-dropdown-item>
+                                <b-dropdown-item
+                                    :title="__('delete_the_sale','Delete the Sale')"
+                                    @click="trash(row.item.id)">
+                                    <i class="fa fa-trash"></i> {{__('delete','Delete')}}
+                                </b-dropdown-item>
+                            </b-dropdown>
                         </b-button-group>
                     </template>
                 </b-table>
@@ -83,25 +105,25 @@
         </dt-table>
 
         <b-modal id="invoice-modal"
-                 size="xl"
-                 footer-class="text-right"
-                 body-class="p-0"
+                 v-bind="BasicModalOptions"
                  :title="__('sale_invoice','Sale Invoice')"
                  v-if="currentItem"
-                 @hidden="currentItem=null"
-                 header-bg-variant="dark"
-                 header-text-variant="light"
-                 footer-bg-variant="dark"
-                 footer-text-variant="light">
+                 @hidden="currentItem=null,invoice_is_delivery=false,invoice_both=false">
             <b-embed
                 id="print_invoice"
                 aspect="16by9"
                 allowfullscreen
-                :src="route('Backend.Sales.Invoice.PDF',{sale:currentItem.id,type:'pdf'})"/>
+                :src="route('Backend.Sales.Invoice.PDF',{sale:currentItem.id,type:'pdf',is_delivery:invoice_is_delivery?'yes':'no',invoice_both:invoice_both?'yes':'no'})"/>
             <template v-slot:modal-footer="{close}">
                 <b-button @click="printInvoice" variant="primary">Print</b-button>
                 <b-button @click="close" variant="secondary">Close</b-button>
             </template>
+        </b-modal>
+        <b-modal id="returns-modal"
+                 v-bind="BasicModalOptions"
+                 @hidden="currentItem={}"
+                 :title="__('returns_history','Returns History')">
+            <returns :sale-id="currentItem.id"></returns>
         </b-modal>
         <router-view
             @reset="currentItem={}"
@@ -113,14 +135,16 @@
 <script>
     import DtHeader from '@/partials/DtHeader'
     import DtFooter from '@/partials/DtFooter'
-    import Datatable, {colSum, colCount} from "@/partials/datatable";
+    import Datatable, {colSum, colCount, BasicModalOptions} from "@/partials/datatable";
     import DtTable from "@/partials/DtTable";
+    import Returns from "@/components/sales/Returns";
 
     export default {
         components: {
             DtHeader,
             DtFooter,
-            DtTable
+            DtTable,
+            Returns
         },
         mixins: [Datatable],
         props: {
@@ -172,6 +196,9 @@
         },
         data() {
             return {
+                BasicModalOptions,
+                invoice_is_delivery: false,
+                invoice_both: false,
                 invoice_type: 'html',
                 form: {},
                 fields: [

@@ -39,10 +39,12 @@ class EmployeeSalaryController extends Controller
 
     public static function routes()
     {
-        Route::post("employees/salaries/list", '\\' . __CLASS__ . '@list')->name('Employees.Salaries.List');
-        Route::post("employees/salaries/search", '\\' . __CLASS__ . '@search')->name('Employees.Salaries.Search');
-        Route::post("employees/salaries/store/{employee}", '\\' . __CLASS__ . '@store')->name('Employees.Salaries.Store');
-        Route::post("employees/salaries/delete", '\\' . __CLASS__ . '@delete')->name('Employees.Salaries.Delete');
+        Route::name('Employees.')->prefix('employees/salaries')->group(function (){
+            Route::post("list", [self::class, 'list'])->name('Salaries.List');
+            Route::post("search", [self::class, 'search'])->name('Salaries.Search');
+            Route::post("store/{employee}", [self::class, 'store'])->name('Salaries.Store');
+            Route::post("delete", [self::class, 'delete'])->name('Salaries.Delete');
+        });
     }
 
     public function store(Employee $employee, Request $request)
@@ -57,29 +59,22 @@ class EmployeeSalaryController extends Controller
             ]);
             DB::beginTransaction();
             $item = EmployeeSalary::query()->findOrNew($request->post('id'));
+            $item->forceFill([
+                "employee_id"       => $employee->id,
+                "payment_amount"    => $request->post('payment_amount'),
+                "payment_method"    => $request->post('payment_method'),
+                "bank"              => $request->post('bank'),
+                "check"             => $request->post('check'),
+                "transaction_no"    => $request->post('transaction_no'),
+                "date"              => $request->post('date') ?? Carbon::now()->format('Y-m-d'),
+                "year"              => $request->post('year') ?? Carbon::now()->format('Y'),
+                "month"             => $request->post('month') ?? Carbon::now()->format('m'),
+                "given_by"          => auth()->id(),
+            ]);
 
-            $item->employee_id = $employee->id;
-            $item->payment_amount = $request->post('payment_amount');
-            $item->payment_method = $request->post('payment_method');
-            $item->bank = $request->post('bank');
-            $item->check = $request->post('check');
-            $item->transaction_no = $request->post('transaction_no');
-            $item->date = $request->post('date') ?? Carbon::now()->format('Y-m-d');
-            $item->year = $request->post('year') ?? Carbon::now()->format('Y');
-            $item->month = $request->post('month') ?? Carbon::now()->format('m');
-            $item->given_by = auth()->id();
-
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
             $item->saveOrFail();
             DB::commit();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
-            ]);
+            return successResponse();
         } catch (\Throwable $exception) {
             DB::rollBack();
             throw $exception;

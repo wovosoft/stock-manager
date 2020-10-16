@@ -6,6 +6,7 @@ use App\Models\Language;
 use App\Traits\Crud;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 class LanguageController extends Controller
@@ -26,10 +27,12 @@ class LanguageController extends Controller
 
     public static function routes()
     {
-        Route::post("languages/list", '\\' . __CLASS__ . '@list')->name('Languages.List');
-        Route::post("languages/search", '\\' . __CLASS__ . '@search')->name('Languages.Search');
-        Route::post("languages/store", '\\' . __CLASS__ . '@store')->name('Languages.Store');
-        Route::post("languages/delete", '\\' . __CLASS__ . '@delete')->name('Languages.Delete');
+        Route::name('Languages.')->prefix('languages')->group(function (){
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+        });
     }
 
     public function store(Request $request)
@@ -39,23 +42,22 @@ class LanguageController extends Controller
                 "name" => ["required", "min:2"],
                 "definitions" => ["required", "array"]
             ]);
+            DB::beginTransaction();
             $item = Language::query()->findOrNew($request->post('id'));
-            $item->name = $request->post('name');
-            $item->description = $request->post("description");
+            $item->forceFill([
+                "name" => $request->post('name'),
+                "description" => $request->post("description"),
+            ]);
             if ($request->hasFile('photo_upload')) {
                 $item->photo = $request->file('photo_upload')->store('photos', 'public');
             } else {
                 $item->photo = $request->post("photo");
             }
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
-
             if (!($request->has("definitions") && is_array($request->post("definitions")))) {
                 throw new \Exception("Definitions Not Provided");
             }
             $item->saveOrFail();
-
+            DB::commit();
             foreach ($request->post("definitions") as $definition) {
                 if (isset($definition['key'])) {
                     $def = $item->definitions()->firstOrNew([
@@ -65,11 +67,10 @@ class LanguageController extends Controller
                     $def->saveOrFail();
                 }
             }
-
             refreshLanguages();
-
             return successResponse();
         } catch (\Throwable $exception) {
+            DB::rollBack();
             throw $exception;
         }
     }

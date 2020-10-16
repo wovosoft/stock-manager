@@ -318,6 +318,43 @@ export const cleanWhere = (obj, filters = [null, undefined, '']) => Object.entri
     .map(([k, v]) => [k, v && typeof v === "object" ? cleanWhere(v) : v])
     .reduce((a, [k, v]) => (filters.includes(v) ? a : (a[k] = v, a)), {});
 
+export const commonDtOptions = (ctx) => {
+    return {
+        items: ctx.getItems,
+        fields: ctx.fields,
+        filter: ctx.search,
+        perPage: ctx.datatable.per_page,
+        currentPage: ctx.datatable.current_page,
+        // 'sortBy.sync': ctx.datatable.sortBy,
+        sortBy: ctx.datatable.sortBy,
+        // 'sortDesc.sync': ctx.datatable.sortDesc,
+        sortDesc: ctx.datatable.sortDesc,
+        footVariant: 'light',
+        footClone: true,
+        showEmpty: true,
+        class: 'mb-0',
+        hover: true,
+        bordered: true,
+        small: true,
+        striped: true,
+        headVariant: 'dark',
+        variant: 'primary',
+        responsive: 'md',
+    }
+}
+export const BasicModalOptions = {
+    size: 'xl',
+    footerClass: 'text-right p-2',
+    bodyClass: 'p-2',
+    headerBgVariant: 'dark',
+    headerTextVariant: 'light',
+    okTitle: _t('ok', 'Ok'),
+    cancelTitle: _t('cancel', 'Cancel'),
+    // footerBgVariant: 'dark',
+    // footerTextVariant: 'light',
+    lazy: true
+}
+
 export default {
     data() {
         return {
@@ -346,7 +383,7 @@ export default {
     methods: {
         getItems(ctx) {
             // console.log(ctx)
-            return axios.post(this.api_url + "?page=" + (ctx.currentPage ? ctx.currentPage : 1), {
+            return axios.post((this.api_url || ctx.apiUrl) + "?page=" + (ctx.currentPage ? ctx.currentPage : 1), {
                 per_page: this.datatable.per_page,
                 orderBy: ctx.sortBy || 'id',
                 order: isTrue(ctx.sortDesc) ? 'desc' : 'asc',
@@ -399,9 +436,11 @@ export default {
                             id: id,
                         }).then(res => {
                             this.msgBox(res.data);
-                            this.$refs[datatable].refresh();
+                            if (this.$refs[datatable]) {
+                                this.$refs[datatable].refresh();
+                            }
                         }).catch(err => {
-                            this.msgBox(err.response);
+                            this.msgBox(err.response.data);
                             console.log(err.response)
                         });
                     }

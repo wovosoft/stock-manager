@@ -20,10 +20,12 @@ class CategoryController extends Controller
 
     public static function routes()
     {
-        Route::post("categories/list", '\\' . __CLASS__ . '@list')->name('Categories.List');
-        Route::post("categories/search", '\\' . __CLASS__ . '@search')->name('Categories.Search');
-        Route::post("categories/store", '\\' . __CLASS__ . '@store')->name('Categories.Store');
-        Route::post("categories/delete", '\\' . __CLASS__ . '@delete')->name('Categories.Delete');
+        Route::name("Categories.")->prefix("categories")->group(function () {
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+        });
     }
 
     public function store(Request $request)
@@ -35,12 +37,12 @@ class CategoryController extends Controller
             DB::beginTransaction();
 
             $item = Category::query()->findOrNew($request->post('id'));
-            $item->name = $request->post('name');
-            $item->code = $request->post('code') ?? null;
-            $item->description = $request->post('description') ?? null;
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
+            $item->forceFill([
+                "name" => $request->post('name'),
+                "code" => $request->post('code'),
+                "description" => $request->post('description'),
+            ]);
+
             $item->saveOrFail();
             $subcatids = [];
             if ($request->post("subcategories") && is_array($request->post("subcategories"))) {
@@ -65,12 +67,7 @@ class CategoryController extends Controller
                 }
             });
             DB::commit();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
-            ]);
+            return successResponse();
         } catch (\Throwable $exception) {
             DB::rollBack();
             throw $exception;

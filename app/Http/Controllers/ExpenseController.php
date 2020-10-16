@@ -18,10 +18,12 @@ class ExpenseController extends Controller
 
     public static function routes()
     {
-        Route::post("expenses/list", '\\' . __CLASS__ . '@list')->name('Expenses.List');
-        Route::post("expenses/search", '\\' . __CLASS__ . '@search')->name('Expenses.Search');
-        Route::post("expenses/store", '\\' . __CLASS__ . '@store')->name('Expenses.Store');
-        Route::post("expenses/delete", '\\' . __CLASS__ . '@delete')->name('Expenses.Delete');
+        Route::name('Expenses.')->prefix('expenses')->group(function (){
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+        });
     }
 
     public function store(Request $request)
@@ -33,14 +35,13 @@ class ExpenseController extends Controller
             ]);
             DB::beginTransaction();
             $item = Expense::query()->findOrNew($request->post('id'));
-            $item->expense_category_id = $request->post('expense_category_id');
-            $item->amount = $request->post('amount');
-            $item->reference = $request->post('reference');
-            $item->description = $request->post('description') ?? null;
-            $item->taken_by = auth()->id();
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
+            $item->forceFill([
+                "expense_category_id" => $request->post('expense_category_id'),
+                "amount" => $request->post('amount'),
+                "reference" => $request->post('reference'),
+                "description" => $request->post('description') ?? null,
+                "taken_by" => auth()->id(),
+            ]);
             $item->saveOrFail();
             DB::commit();
             return successResponse();

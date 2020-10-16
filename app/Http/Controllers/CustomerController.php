@@ -8,6 +8,7 @@ use App\Models\SaleItem;
 use App\Models\SalePayment;
 use App\Traits\Crud;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -47,12 +48,14 @@ class CustomerController extends Controller
     {
         Route::name('Customers.')->prefix('customers')->group(function () {
             Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("{customer}/returns", [self::class, 'returns'])->name('Returns');
+            Route::post("{customer}/payments", [self::class, 'payments'])->name('Payments');
             Route::post("search", [self::class, 'search'])->name('Search');
             Route::post("store", [self::class, 'store'])->name('Store');
             Route::post("delete", [self::class, 'delete'])->name('Delete');
-            Route::post("add_fund/{customer}", [self::class, 'addPayment'])->name('Payments.Add');
-            Route::get("shortFinancialReport/{customer}/{type?}", [self::class, 'shortFinancialReport'])->name('Payments.shortFinancialReport');
-            Route::get("fullFinancialReport/{customer}/{type?}", [self::class, 'fullFinancialReport'])->name('Payments.fullFinancialReport');
+            Route::post("{customer}/add_fund", [self::class, 'addPayment'])->name('Payments.Add');
+            Route::get("{customer}/shortFinancialReport/{type?}", [self::class, 'shortFinancialReport'])->name('Payments.shortFinancialReport');
+            Route::get("{customer}/fullFinancialReport/{type?}", [self::class, 'fullFinancialReport'])->name('Payments.fullFinancialReport');
         });
     }
 
@@ -119,11 +122,33 @@ class CustomerController extends Controller
             $returned = "(SELECT IFNULL(SUM(sale_items.returned_total),0) FROM sale_items WHERE sale_items.customer_id = customers.id)";
 
             $items = Customer::query()
-                ->select(["customers.*"])
-                ->selectRaw("$payable  as payable")
-                ->selectRaw("$paid  as paid")
-                ->selectRaw("$returned  as returned")
-                ->selectRaw("($payable - $paid - $returned) as balance");
+                ->select([
+                    "customers.*",
+                    "payable" => function (Builder $builder) {
+                        $builder
+                            ->from("sales")
+                            ->where("sales.customer_id", "=", DB::raw("customers.id"))
+                            ->whereNull("sales.deleted_at")
+                            ->selectRaw("IFNULL(SUM(sales.payable),0)");
+                    },
+                    "paid" => function (Builder $builder) {
+                        $builder
+                            ->from("sale_payments")
+                            ->where("sale_payments.customer_id", "=", DB::raw("customers.id"))
+                            ->whereNull("sale_payments.deleted_at")
+                            ->selectRaw("IFNULL(SUM(sale_payments.payment_amount),0)");
+                    },
+                    "returned" => function (Builder $builder) {
+                        $builder
+                            ->from("sale_returns")
+                            ->where("sale_returns.customer_id", "=", DB::raw("customers.id"))
+                            ->whereNull("sale_returns.deleted_at")
+                            ->selectRaw("IFNULL(SUM(sale_returns.amount),0)");
+                    },
+                    "balance" => function (Builder $builder) {
+                        $builder->selectRaw("payable - paid - returned");
+                    }
+                ]);
             if ($request->has('id')) {
                 return $items->findOrFail($request->post('id'));
             }
@@ -136,6 +161,21 @@ class CustomerController extends Controller
                     DB::raw("SUM(IFNULL($returned,0))  as returned"),
                     DB::raw("IFNULL(SUM($payable-$paid-$returned),0) as balance"),
                 ])->first()));
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function payments(Customer $customer, Request $request)
+    {
+        try {
+            return $customer->salePayments()
+                ->leftJoin("customers", 'customers.id', '=', 'sale_payments.customer_id')
+                ->select([
+                    "customers.name",
+                    "sale_payments.*"
+                ])
+                ->defaultDatatable($request);
         } catch (\Throwable $exception) {
             throw $exception;
         }
@@ -261,6 +301,24 @@ class CustomerController extends Controller
                 "end_date" => $end_date ? Carbon::parse($end_date)->locale('bn-BD') : null
             ])->stream("customer_short_financial_report-{$customer->id}.pdf");
 
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function returns(Customer $customer, Request $request)
+    {
+        try {
+            return $customer
+                ->saleReturns()
+                ->leftJoin("customers", "customers.id", "=", "sale_returns.customer_id")
+                ->leftJoin("products", "products.id", "=", "sale_returns.product_id")
+                ->select([
+                    "sale_returns.*",
+                    DB::raw("customers.name as customer_name"),
+                    DB::raw("products.name as product_name"),
+                ])
+                ->defaultDatatable($request);
         } catch (\Throwable $exception) {
             throw $exception;
         }

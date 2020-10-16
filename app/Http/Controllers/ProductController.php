@@ -36,12 +36,14 @@ class ProductController extends Controller
 
     public static function routes()
     {
-        Route::post("products/list", '\\' . __CLASS__ . '@list')->name('Products.List');
-        Route::post("products/search", '\\' . __CLASS__ . '@search')->name('Products.Search');
-        Route::post("products/store", '\\' . __CLASS__ . '@store')->name('Products.Store');
-        Route::post("products/delete", '\\' . __CLASS__ . '@delete')->name('Products.Delete');
-        Route::post("products/get/categories_units", '\\' . __CLASS__ . '@categoryAndUnits')->name('Products.Get.Category.Unit');
-        Route::post("products/pst/items", '\\' . __CLASS__ . '@getPosProducts')->name('Products.POS.Items');
+        Route::name("Products.")->prefix("products")->group(function () {
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+            Route::post("get/categories_units", [self::class, 'categoryAndUnits'])->name('Get.Category.Unit');
+            Route::post("pst/items", [self::class, 'getPosProducts'])->name('POS.Items');
+        });
     }
 
     public function store(Request $request)
@@ -49,38 +51,30 @@ class ProductController extends Controller
         try {
             DB::beginTransaction();
             $item = Product::query()->findOrNew($request->post('id'));
-            $item->name = $request->post('name');
-            $item->barcode_symbology = $request->post('barcode_symbology') ?? 'code128';
-            $item->code = $request->post('code') ?? 'code128';
-            $item->cost = $request->post('cost') ?? 0;
-            $item->price = $request->post('price') ?? 0;
-            $item->category_id = $request->post('category_id');
-            $item->subcategory_id = $request->post('subcategory_id');
-            $item->brand_id = $request->post('brand_id');
-            $item->status = $request->post('status') ?? true;
-            $item->unit_id = $request->post('unit_id');
-            $item->quantity = $request->post('quantity') ?? 0;
-            $item->alert_quantity = $request->post('alert_quantity') ?? 0;
-            $item->description = $request->post('description');
+
+            $item->forceFill([
+                "name" => $request->post('name'),
+                "barcode_symbology" => $request->post('barcode_symbology') ?? 'code128',
+                "code" => $request->post('code') ?? 'code128',
+                "cost" => $request->post('cost') ?? 0,
+                "price" => $request->post('price') ?? 0,
+                "category_id" => $request->post('category_id'),
+                "subcategory_id" => $request->post('subcategory_id'),
+                "brand_id" => $request->post('brand_id'),
+                "status" => $request->post('status') ?? true,
+                "unit_id" => $request->post('unit_id'),
+                "alert_quantity" => $request->post('alert_quantity') ?? 0,
+                "description" => $request->post('description')
+            ]);
 
             if ($request->hasFile('photo_upload')) {
                 $item->photo = $request->file('photo_upload')->store('products', 'public');
             } else {
                 $item->photo = $request->post('photo');
             }
-
-
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
             $item->saveOrFail();
             DB::commit();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
-            ]);
+            return successResponse();
         } catch (\Throwable $exception) {
             DB::rollBack();
             throw $exception;

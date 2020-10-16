@@ -23,11 +23,13 @@ class PurchaseController extends Controller
 
     public static function routes()
     {
-        Route::post("purchases/store", '\\' . __CLASS__ . '@store')->name('Purchases.Store');
-        Route::post("purchases/list", '\\' . __CLASS__ . '@list')->name('Purchases.List');
-        Route::post("purchases/delete", '\\' . __CLASS__ . '@delete')->name('Purchases.Delete');
-        Route::post("purchases/due-purchases/{supplier}", '\\' . __CLASS__ . '@duePurchases')->name('Purchases.Due');
-        Route::get("purchases/invoice/pdf/{purchase}/{type?}", [self::class, 'invoicePdf'])->name('Purchases.Invoice.PDF');
+        Route::name('Purchases.')->prefix('purchases')->group(function (){
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+            Route::post("due-purchases/{supplier}", [self::class, 'duePurchases'])->name('Due');
+            Route::get("invoice/pdf/{purchase}/{type?}", [self::class, 'invoicePdf'])->name('Invoice.PDF');
+        });
     }
 
     /**
@@ -56,14 +58,17 @@ class PurchaseController extends Controller
             try {
                 DB::beginTransaction();
                 $payment = new PurchasePayment();
-                $payment->supplier_id = $purchase->supplier_id;
-                $payment->payment_amount = round($request->post('payment_amount'), 2);
-                $payment->payment_method = $request->post('payment_method');
-                $payment->bank = $request->post("bank");
-                $payment->check = $request->post("check");
-                $payment->transaction_no = $request->post("transaction_no");
+                $payment->forceFill([
+                    "supplier_id" => $purchase->supplier_id,
+                    "payment_amount" => round($request->post('payment_amount'), 2),
+                    "payment_method" => $request->post('payment_method'),
+                    "bank" => $request->post("bank"),
+                    "check" => $request->post("check"),
+                    "transaction_no" => $request->post("transaction_no"),
+                ]);
                 $payment->saveOrFail();
                 DB::commit();
+                return successResponse();
             } catch (\Throwable $exception) {
                 DB::rollBack();
                 throw $exception;

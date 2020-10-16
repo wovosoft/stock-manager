@@ -31,27 +31,10 @@
             @refreshDatatable="$refs.datatable.refresh()"
             :custom_buttons="custom_buttons">
             <template v-slot:table>
-                <b-table ref="datatable"
-                         @refreshed="fund_summery=JSON.parse(headers.fund_summery||'{}')"
-                         variant="primary"
-                         responsive="md"
-                         hover
-                         bordered
-                         small
-                         striped
-                         head-variant="dark"
-                         :items="getItems"
-                         class="mb-0"
-                         :fields="fields"
-                         :sort-by.sync="datatable.sortBy"
-                         :sort-desc.sync="datatable.sortDesc"
-                         :filter="search"
-                         :per-page="datatable.per_page"
-                         foot-variant="light"
-                         foot-clone
-                         :current-page="datatable.current_page">
-
-
+                <b-table
+                    ref="datatable"
+                    @refreshed="fund_summery=JSON.parse(headers.fund_summery||'{}')"
+                    v-bind="commonDtOptions(the)">
                     <template v-slot:foot(payable)="row">
                         {{colSum(datatable.items,'payable') | currency}}
                     </template>
@@ -76,24 +59,37 @@
                             </b-button>
                             <b-button
                                 variant="primary"
-                                :title="__('view','View')"
-                                :to="{name:'CustomersView',params:{id:row.item.id}}"
+                                :title="__('payment_history','Payment History')"
+                                v-b-modal:payment_history
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-eye"></i>
+                                <i class="fa fa-money-check"></i>
                             </b-button>
-                            <b-button
-                                variant="warning"
-                                :title="__('edit','Edit')"
-                                :to="{name:'CustomersAdd',params:{id:row.item.id}}"
-                                @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-edit"></i>
-                            </b-button>
-                            <b-button
-                                variant="danger"
-                                :title="__('delete','Delete')"
-                                @click="trash(row.item.id)">
-                                <i class="fa fa-trash"></i>
-                            </b-button>
+                            <b-dropdown right text="More" size="sm">
+                                <b-dropdown-item
+                                    :title="__('returns_history','Returns History')"
+                                    v-b-modal:returns-modal
+                                    @click="currentItem=JSON.parse(JSON.stringify(row.item))">
+                                    <i class="fa fa-retweet"></i>
+                                    {{__('returns_history','Returns History')}}
+                                </b-dropdown-item>
+                                <b-dropdown-item
+                                    :title="__('view','View')"
+                                    :to="{name:'CustomersView',params:{id:row.item.id}}"
+                                    @click="currentItem=JSON.parse(JSON.stringify(row.item))">
+                                    <i class="fa fa-eye"></i> {{__('view','View')}}
+                                </b-dropdown-item>
+                                <b-dropdown-item
+                                    :title="__('edit','Edit')"
+                                    :to="{name:'CustomersAdd',params:{id:row.item.id}}"
+                                    @click="currentItem=JSON.parse(JSON.stringify(row.item))">
+                                    <i class="fa fa-edit"></i> {{__('edit','Edit')}}
+                                </b-dropdown-item>
+                                <b-dropdown-item
+                                    :title="__('delete','Delete')"
+                                    @click="trash(row.item.id)">
+                                    <i class="fa fa-trash"></i> {{__('delete','Delete')}}
+                                </b-dropdown-item>
+                            </b-dropdown>
                         </b-button-group>
                     </template>
                 </b-table>
@@ -102,12 +98,9 @@
 
         <b-modal id="add_fund_modal"
                  v-if="currentItem"
-                 lazy
-                 hide-footer
+                 v-bind="{...BasicModalOptions,size:'sm',bodyClass:'p-2',hideFooter:true}"
                  @hidden="currentItem={}"
-                 :title="__('add_payment','Add Payment')"
-                 header-bg-variant="dark"
-                 header-text-variant="light">
+                 :title="__('add_payment','Add Payment')">
             <template v-slot:default="{hide}">
                 <add-fund
                     @success="v=>{if(v) hide();}"
@@ -116,6 +109,18 @@
                     :payment-amount="Number(Number(currentItem.balance).toFixed(2))"
                     :customer_id="currentItem.id"/>
             </template>
+        </b-modal>
+        <b-modal id="payment_history"
+                 v-bind="{...BasicModalOptions,bodyClass:'p-2'}"
+                 @hidden="currentItem={}"
+                 :title="__('payment_history','Payment History')">
+            <payments :customer-id="currentItem.id"></payments>
+        </b-modal>
+        <b-modal id="returns-modal"
+                 v-bind="BasicModalOptions"
+                 @hidden="currentItem={}"
+                 :title="__('returns_history','Returns History')">
+            <returns :customer-id="currentItem.id"></returns>
         </b-modal>
         <router-view @reset="currentItem={}"
                      @refreshDatatable="()=>$refs.datatable.refresh()"
@@ -126,9 +131,11 @@
 <script>
     import DtHeader from '@/partials/DtHeader'
     import DtFooter from '@/partials/DtFooter'
-    import Datatable, {colCount, colSum} from "@/partials/datatable";
+    import Datatable, {colCount, colSum, commonDtOptions, BasicModalOptions} from "@/partials/datatable";
     import DtTable from "@/partials/DtTable";
     import AddFund from "@/components/customers/AddFund";
+    import Payments from "@/components/customers/Payments";
+    import Returns from "@/components/customers/Returns";
 
     export default {
         name: "CustomersList",
@@ -136,7 +143,9 @@
             DtHeader,
             DtFooter,
             DtTable,
-            AddFund
+            AddFund,
+            Payments,
+            Returns
         },
         mixins: [Datatable],
         props: {
@@ -178,10 +187,12 @@
             },
         },
         methods: {
-            colCount, colSum
+            colCount, colSum, commonDtOptions
         },
         data() {
             return {
+                the: this,
+                BasicModalOptions,
                 form: {},
                 fund_summery: {},
                 fields: [

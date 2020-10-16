@@ -1,16 +1,13 @@
 <template>
-    <div>
-        {{saleId}}
-    </div>
-</template>
-<script>
 
+</template>
+
+<script>
     export default {
-        props: {
-            saleId: {
-                type: Number,
-                default: () => null
-            }
-        }
+        name: "Invoice"
     }
 </script>
+
+<style scoped>
+
+</style>

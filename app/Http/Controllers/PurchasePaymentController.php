@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -12,8 +13,12 @@ class PurchasePaymentController extends Controller
 {
     public static function routes()
     {
-        Route::post("payments/purchases/take/{purchase}", '\\' . __CLASS__ . '@store')->name('Payments.Purchases.Store');
-        Route::post("payments/purchases/{purchase}/list", '\\' . __CLASS__ . '@purchasePayments')->name('Payments.Single.Purchases.Payments');
+        Route::name('Payments.')->prefix('payments/purchases')->group(function () {
+            Route::post("take/{purchase}", [self::class, 'store'])->name('Purchases.Store');
+            Route::post("{purchase}/list", [self::class, 'purchasePayments'])->name('Single.Purchases.Payments');
+            Route::match(['get', 'post'], "{purchasePayment}/invoice/{pdf?}", [static::class, 'purchasePaymentInvoice'])->name('Purchases.Invoice');
+        });
+
     }
 
     public function store(Purchase $purchase, Request $request)
@@ -23,31 +28,24 @@ class PurchasePaymentController extends Controller
                 "payment_amount" => "required",
                 "payment_method" => "required",
             ]);
-            if (!$purchase) {
-                throw new \Exception("The Purchase not Found", 404);
-            }
-//            if ($request->post("payment_amount") > $sale->payable) {
-//                throw new \Exception("Payment Amount Should not be greater than Payable Amount");
-//            }
+
+            DB::beginTransaction();
             $payment = new PurchasePayment();
-            $payment->purchase_id = $purchase->id;
-            $payment->supplier_id = $purchase->supplier_id;
-            $payment->payment_method = $request->post("payment_method") ?? 0;
-            $payment->payment_amount = round($request->post("payment_amount") ?? 0, 2);
-            $payment->bank = $request->post("bank") ?? 0;
-            $payment->check = $request->post("check") ?? 0;
-            $payment->transaction_no = $request->post("transaction_no") ?? 0;
-            $payment->saveOrFail();
-
-
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
+            $payment->forceFill([
+                "purchase_id" => $purchase->id,
+                "supplier_id" => $purchase->supplier_id,
+                "payment_method" => $request->post("payment_method") ?? 0,
+                "payment_amount" => round($request->post("payment_amount") ?? 0, 2),
+                "bank" => $request->post("bank") ?? 0,
+                "check" => $request->post("check") ?? 0,
+                "transaction_no" => $request->post("transaction_no") ?? 0,
             ]);
+            $payment->saveOrFail();
+            DB::commit();
+            return successResponse();
 
         } catch (\Throwable $exception) {
+            DB::rollBack();
             throw $exception;
         }
     }
@@ -72,6 +70,57 @@ class PurchasePaymentController extends Controller
                 ->leftJoin("suppliers", "suppliers.id", "=", "purchase_payments.supplier_id")
                 ->leftJoin("users", "users.id", "=", "purchase_payments.given_by")
                 ->latest()->get();
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function purchasePaymentInvoice($purchasePayment, string $pdf = 'pdf', Request $request)
+    {
+        try {
+            $payment = PurchasePayment::query()
+                ->select([
+                    "purchase_payments.*",
+                    "payable" => function (Builder $builder) {
+                        $builder
+                            ->from('purchase_items')
+                            ->where('purchase_items.supplier_id', '=', DB::raw('purchase_payments.supplier_id'))
+                            ->where("purchase_items.created_at", '<', DB::raw('purchase_payments.created_at'))
+                            ->whereNull("purchase_items.deleted_at")
+                            ->selectRaw("IFNULL(SUM(purchase_items.total),0)");
+                    },
+                    "paid" => function (Builder $builder) {
+                        $builder
+                            ->from(DB::raw('purchase_payments as prev_purchase_payments'))
+                            ->where('prev_purchase_payments.supplier_id', '=', DB::raw('purchase_payments.supplier_id'))
+                            ->where("prev_purchase_payments.created_at", '<', DB::raw('purchase_payments.created_at'))
+                            ->whereNull("prev_purchase_payments.deleted_at")
+                            ->selectRaw("IFNULL(SUM(prev_purchase_payments.payment_amount),0)");
+                    },
+                    "returned" => function (Builder $builder) {
+                        $builder
+                            ->from('purchase_returns')
+                            ->where('purchase_returns.supplier_id', '=', DB::raw('purchase_payments.supplier_id'))
+                            ->whereNull("purchase_returns.deleted_at")
+                            ->where("purchase_returns.created_at", '<', DB::raw('purchase_payments.created_at'))
+                            ->selectRaw("IFNULL(SUM(purchase_returns.amount),0)");
+                    },
+                    "previous_balance" => function (Builder $builder) {
+                        $builder->selectRaw("SUM(payable - paid - returned)");
+                    }
+                ])
+                ->with(["supplier"])
+                ->findOrFail($purchasePayment);
+            if ($pdf == 'pdf') {
+                return app('PDF')::loadView("pages.suppliers.payment_invoice", [
+                    "payment" => $payment,
+                    "pdf" => $pdf == 'pdf'
+                ])->stream("payment_invoice_$purchasePayment.pdf");
+            }
+            return view("pages.suppliers.payment_invoice", [
+                "payment" => $payment,
+                "pdf" => $pdf == 'pdf'
+            ]);
         } catch (\Throwable $exception) {
             throw $exception;
         }

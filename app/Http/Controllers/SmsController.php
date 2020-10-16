@@ -12,16 +12,18 @@ use Illuminate\Support\Facades\Route;
 class SmsController extends Controller
 {
     protected string $model = Sms::class;
-    public array $search_selects = ['id',];
-    public array $search_fields = ['id',];
+    public array $search_selects = ['id','type','sender','message','contacts','delivery'];
+    public array $search_fields = ['id','type','sender','message','contacts','delivery'];
     use Crud;
 
     public static function routes()
     {
-        Route::post("sms/store", [static::class, 'store'])->name('SMS.Store');
-        Route::post("sms/list", [static::class, 'list'])->name('SMS.List');
-        Route::post("sms/search", [static::class, 'search'])->name('SMS.Search');
-        Route::post("sms/delete", [static::class, 'delete'])->name('SMS.Delete');
+        Route::name('SMS.')->prefix('sms')->group(function (){
+            Route::post("store", [static::class, 'store'])->name('Store');
+            Route::post("list", [static::class, 'list'])->name('List');
+            Route::post("search", [static::class, 'search'])->name('Search');
+            Route::post("delete", [static::class, 'delete'])->name('Delete');
+        });
     }
 
     public function store(Request $request): JsonResponse
@@ -33,13 +35,15 @@ class SmsController extends Controller
             ]);
             DB::beginTransaction();
             $sms = Sms::query()->findOrNew($request->post('id'));
-            $sms->provider = "MIMSMS";
-            $sms->sms_id = null;
-            $sms->type = $request->post("type") ?? "text";
-            $sms->sender = env("MIMSMS_SENDERID");
-            $sms->contacts = $request->post("contacts");
-            $sms->message = $request->post("message");
-            $sms->delivery = "created";
+            $sms->forceFill([
+                "provider" => "MIMSMS",
+                "sms_id" => null,
+                "type" => $request->post("type") ?? "text",
+                "sender" => env("MIMSMS_SENDERID"),
+                "contacts" => $request->post("contacts"),
+                "message" => $request->post("message"),
+                "delivery" => "created",
+            ]);
             $sms->saveOrFail();
             if ($request->post('resend') || !$request->has('id')) {
                 $sms->send();

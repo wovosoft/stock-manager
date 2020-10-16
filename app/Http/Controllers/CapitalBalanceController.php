@@ -13,8 +13,10 @@ class CapitalBalanceController extends Controller
 {
     public static function routes()
     {
-        Route::post("capital/balance", '\\' . __CLASS__ . '@balance')->name('Capital.Balance');
-        Route::post("capital/fullFinancialSummery", '\\' . __CLASS__ . '@fullFinancialSummery')->name('Capital.FullFinancialSummery');
+        Route::name('Capital')->prefix('capital')->group(function (){
+            Route::post("balance", [self::class, 'balance'])->name('Balance');
+            Route::post("fullFinancialSummery", [self::class, 'fullFinancialSummery'])->name('FullFinancialSummery');
+        });
     }
 
     public function balance(Request $request)

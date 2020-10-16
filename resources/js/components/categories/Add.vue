@@ -1,12 +1,8 @@
 <template>
     <b-modal @hidden="$router.go(-1),$emit('reset',true)"
              v-model="visible"
-             size="xl"
-             header-bg-variant="dark"
-             header-text-variant="light"
-             no-body
-             :title="__((form.id?'edit':'add ')+'_category',(form.id?'Edit ':'Add ')+'Category')"
-             lazy>
+             v-bind="{...BasicModalOptions}"
+             :title="__((form.id?'edit':'add ')+'_category',(form.id?'Edit ':'Add ')+'Category')">
         <form @submit.prevent="hitSubmit" ref="theForm">
             <b-form-row>
                 <b-col md="4" sm="12">
@@ -63,6 +59,7 @@
 
 <script>
     import add_form from "@/partials/add_form";
+    import {BasicModalOptions} from "@/partials/datatable";
 
     export default {
         mixins: [add_form],
@@ -94,6 +91,11 @@
         mounted() {
             if (!this.form.subcategories) {
                 this.$set(this.form, 'subcategories', []);
+            }
+        },
+        data() {
+            return {
+                BasicModalOptions
             }
         }
     }

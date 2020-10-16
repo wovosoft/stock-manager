@@ -1,12 +1,8 @@
 <template>
     <b-modal @hidden="$router.go(-1),$emit('reset',true)"
              v-model="visible"
-             header-bg-variant="dark"
-             header-text-variant="light"
-             body-class="p-2"
-             footer-class="p-2"
-             :title="__((form.id?'edit':'add')+'_unit',(form.id?'Edit ':'Add ')+'Unit')"
-             lazy>
+             v-bind="{...BasicModalOptions,size:'md'}"
+             :title="__((form.id?'edit':'add')+'_unit',(form.id?'Edit ':'Add ')+'Unit')">
         <form @submit.prevent="hitSubmit" ref="theForm">
             <b-form-group :label="__('name','Name')+' *'">
                 <b-form-input v-model="form.name" :placeholder="__('name','Name')" :required="true"/>
@@ -30,6 +26,7 @@
 
 <script>
     import add_form from "@/partials/add_form";
+    import {BasicModalOptions} from "@/partials/datatable";
 
     export default {
         mixins: [add_form],
@@ -37,6 +34,11 @@
             submit_url: {
                 type: String,
                 default: () => route('Backend.Units.Store').url()
+            }
+        },
+        data() {
+            return {
+                BasicModalOptions
             }
         }
     }

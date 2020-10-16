@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Builders\Reports;
 use App\Models\Customer;
-use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
-use App\Models\SalePayment;
 use App\Traits\Crud;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -23,12 +21,15 @@ class SaleController extends Controller
 
     public static function routes()
     {
-        Route::post("sales/store", '\\' . __CLASS__ . '@store')->name('Sales.Store');
-        Route::post("sales/list", '\\' . __CLASS__ . '@list')->name('Sales.List');
-        Route::post("sales/delete", '\\' . __CLASS__ . '@delete')->name('Sales.Delete');
-        Route::post("sales/due-sales/{customer}", '\\' . __CLASS__ . '@dueSales')->name('Sales.Due');
-        Route::post("sales/reports", '\\' . __CLASS__ . '@reports')->name('Sales.Reports');
-        Route::get("sales/invoice/pdf/{sale}/{type?}", '\\' . __CLASS__ . '@invoicePdf')->name('Sales.Invoice.PDF');
+        Route::name('Sales.')->prefix('sales')->group(function () {
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+            Route::post("due-sales/{customer}", [self::class, 'dueSales'])->name('Due');
+            Route::post("reports", [self::class, 'reports'])->name('Reports');
+            Route::post("{sale}/returns", [self::class, 'returns'])->name('Returns');
+            Route::get("invoice/pdf/{sale}/{type?}", [self::class, 'invoicePdf'])->name('Invoice.PDF');
+        });
     }
 
     /**
@@ -78,13 +79,16 @@ class SaleController extends Controller
             foreach ($request->post('items') as $si) {
                 DB::beginTransaction();
                 $sale_item = new SaleItem();
-                $sale_item->sale_id = $sale->id;
-                $sale_item->product_id = $si['product_id'];
-                $sale_item->customer_id = $sale->customer_id;
-                $sale_item->quantity = $si['quantity'];
-                $sale_item->price = round($si['price'], 2);
+                $sale_item->forceFill([
+                    "sale_id" => $sale->id,
+                    "product_id" => $si['product_id'],
+                    "customer_id" => $sale->customer_id,
+                    "quantity" => $si['quantity'],
+                    "price" => round($si['price'], 2),
+                ]);
                 $sale_item->saveOrFail();
                 DB::commit();
+                return successResponse();
             }
         } catch (\Throwable $exception) {
             DB::rollBack();
@@ -102,14 +106,15 @@ class SaleController extends Controller
             DB::beginTransaction();
 
             $sale = Sale::query()->findOrNew($request->post('id'));
-            $sale->customer_id = $request->post("customer_id");
-            $sale->tax = $request->post('tax') ?? 0;
-            $sale->discount = $request->post('discount') ?? 0;
-            $sale->date = $request->post('date') ?? Carbon::now()->format('Y-m-d');
-            $sale->status = $request->post('status') ?? "Processed";
-            $sale->note = $request->post('note') ?? null;
-            $sale->paid = round($request->post('payment_amount'), 2);
-
+            $sale->forceFill([
+                "customer_id" => $request->post("customer_id"),
+                "tax" => $request->post('tax') ?? 0,
+                "discount" => $request->post('discount') ?? 0,
+                "date" => $request->post('date') ?? Carbon::now()->format('Y-m-d'),
+                "status" => $request->post('status') ?? "Processed",
+                "note" => $request->post('note') ?? null,
+                "paid" => round($request->post('payment_amount'), 2),
+            ]);
             /**
              * Now we calculate the total and payable
              */
@@ -247,7 +252,7 @@ class SaleController extends Controller
         }
     }
 
-    public function invoicePdf($sale_id, $type = "html")
+    public function invoicePdf($sale_id, $type = "html", Request $request)
     {
         $sale = Sale::query()
             ->with([
@@ -260,11 +265,33 @@ class SaleController extends Controller
         if ($type == "html") {
             return view("pages.sales.invoice", [
                 "sale" => $sale,
+                "is_delivery" => $request->get('is_delivery'),
+                "invoice_both" => $request->get('invoice_both'),
             ]);
         }
 
         return \PDF::loadView('pages.sales.invoice', [
             "sale" => $sale,
+            "is_delivery" => $request->get('is_delivery') == "yes",
+            "invoice_both" => $request->get('invoice_both') == "yes",
         ])->stream("invoice-$sale_id.pdf");
+    }
+
+    public function returns(Sale $sale, Request $request)
+    {
+        try {
+            return $sale
+                ->returns()
+                ->leftJoin("customers", "customers.id", "=", "sale_returns.customer_id")
+                ->leftJoin("products", "products.id", "=", "sale_returns.product_id")
+                ->select([
+                    "sale_returns.*",
+                    DB::raw("customers.name as customer_name"),
+                    DB::raw("products.name as product_name"),
+                ])
+                ->defaultDatatable($request);
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
     }
 }

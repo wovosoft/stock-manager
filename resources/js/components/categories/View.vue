@@ -1,20 +1,10 @@
 <template>
-    <b-modal @hidden="$router.go(-1)" visible
-             size="lg"
-             header-bg-variant="dark"
-             header-text-variant="light"
-             body-class="p-0"
-             footer-class="p-2"
-             :cancel-title="__('cancel','Cancel')"
-             :ok-title="__('ok','Ok')"
-             :title="__('view_category','View Category')"
-             lazy>
-        <b-row>
-            <b-col>
-                <b-table small bordered hover striped
-                         head-variant="dark"
-                         :items="obj2Table(the_item,['deleted_at'])"
-                         :fields="[
+    <b-modal @hidden="$router.go(-1)" visible :title="__('categories','Categories')"
+             v-bind="{...BasicModalOptions,size:'lg'}">
+        <b-table small bordered hover striped
+                 head-variant="dark"
+                 :items="obj2Table(the_item,['deleted_at'])"
+                 :fields="[
                             {
                                 key: 'key', sortable: true,
                                 label:__('key','Key'),
@@ -26,27 +16,31 @@
                                 sortable: true
                             }
                        ]">
-                    <template v-slot:cell(value)="row">
-                        <template v-if="['created_at','updated_at'].includes(row.item.key)">
-                            {{row.item.value | localDateTime}}
-                        </template>
-                        <template v-else-if="['description'].includes(row.item.key)">
-                            <div v-html="row.item.value"></div>
-                        </template>
-                        <template v-else-if="['subcategories'].includes(row.item.key)">
-                            {{(row.item.value ||[]).map(i=>i.name).join(", ")}}
-                        </template>
-                        <template v-else>{{row.item.value}}</template>
-                    </template>
-                </b-table>
-            </b-col>
-        </b-row>
+            <template v-slot:cell(value)="row">
+                <template v-if="['created_at','updated_at'].includes(row.item.key)">
+                    {{row.item.value | localDateTime}}
+                </template>
+                <template v-else-if="['description'].includes(row.item.key)">
+                    <div v-html="row.item.value"></div>
+                </template>
+                <template v-else-if="['subcategories'].includes(row.item.key)">
+                    {{(row.item.value ||[]).map(i=>i.name).join(", ")}}
+                </template>
+                <template v-else>{{row.item.value}}</template>
+            </template>
+        </b-table>
     </b-modal>
 </template>
 <script>
     import view from "@/partials/view"
+    import {BasicModalOptions} from "@/partials/datatable";
 
     export default {
-        mixins: [view]
+        mixins: [view],
+        data() {
+            return {
+                BasicModalOptions
+            }
+        }
     }
 </script>

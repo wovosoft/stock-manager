@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 class SettingController extends Controller
@@ -58,17 +59,15 @@ class SettingController extends Controller
             $request->validate([
                 "language_id" => "required"
             ]);
+            DB::beginTransaction();
             $language_setting = Setting::query()->where('key', 'language')->firstOrFail();
             $language_setting->value = $request->post("language_id") ?? 1;
             $language_setting->saveOrFail();
+            DB::commit();
             refreshCachedSettings();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
-            ]);
+            return successResponse();
         } catch (\Throwable $exception) {
+            DB::rollBack();
             throw  $exception;
         }
     }

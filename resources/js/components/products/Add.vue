@@ -60,6 +60,7 @@
                         <b-col md="6" sm="12">
                             <b-form-group :label="__('quantity','Quantity')">
                                 <b-form-input
+                                    :disabled="true"
                                     type="number"
                                     step="any"
                                     :placeholder="__('product_quantity','Product Quantity')"

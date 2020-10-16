@@ -54,10 +54,12 @@ class HistoryController extends Controller
 
     public static function routes()
     {
-        Route::post("history/list", '\\' . __CLASS__ . '@list')->name('History.List');
-        Route::post("history/search", '\\' . __CLASS__ . '@search')->name('History.Search');
-        Route::post("history/store", '\\' . __CLASS__ . '@store')->name('History.Store');
-        Route::post("history/delete", '\\' . __CLASS__ . '@delete')->name('History.Delete');
+        Route::name('History.')->prefix('history')->group(function (){
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+        });
     }
 
     public function list(Request $request)

@@ -4,16 +4,7 @@
                   :custom_buttons="custom_buttons"
         >
             <template v-slot:table>
-                <b-table ref="datatable" variant="primary" responsive="md" hover bordered small striped
-                         head-variant="dark"
-                         :items="getItems"
-                         class="mb-0"
-                         :fields="fields"
-                         :sort-by.sync="datatable.sortBy"
-                         :sort-desc.sync="datatable.sortDesc"
-                         :filter="search"
-                         :per-page="datatable.per_page" :current-page="datatable.current_page"
-                >
+                <b-table ref="datatable" v-bind="commonDtOptions()">
                     <template v-slot:cell(action)="row">
                         <b-button-group size="sm">
                             <b-button variant="primary"
@@ -46,10 +37,10 @@
 </template>
 
 <script>
-    import DtHeader from '../../partials/DtHeader'
-    import DtFooter from '../../partials/DtFooter'
-    import Datatable from "../../partials/datatable";
-    import DtTable from "../../partials/DtTable";
+    import DtHeader from '@/partials/DtHeader'
+    import DtFooter from '@/partials/DtFooter'
+    import Datatable, {commonDtOptions} from "@/partials/datatable";
+    import DtTable from "@/partials/DtTable";
 
     export default {
         name: "BrandsList",
@@ -96,6 +87,11 @@
                     }
                 ]
             },
+        },
+        methods: {
+            commonDtOptions() {
+                return commonDtOptions(this);
+            }
         },
         data() {
             return {

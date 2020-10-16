@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Subcategory;
 use App\Traits\Crud;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 class SubcategoryController extends Controller
@@ -16,30 +17,28 @@ class SubcategoryController extends Controller
 
     public static function routes()
     {
-        Route::post("subcategories/list", '\\' . __CLASS__ . '@list')->name('Subcategories.List');
-        Route::post("subcategories/search", '\\' . __CLASS__ . '@search')->name('Subcategories.Search');
-        Route::post("subcategories/store", '\\' . __CLASS__ . '@store')->name('Subcategories.Store');
-        Route::post("subcategories/delete", '\\' . __CLASS__ . '@delete')->name('Subcategories.Delete');
+        Route::name('Subcategories.')->prefix('subcategories')->group(function (){
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+        });
     }
 
     public function store(Request $request)
     {
         try {
+            DB::beginTransaction();
             $item = Subcategory::query()->findOrNew($request->post('id'));
-            $item->name = $request->post('name');
-            $item->description = $request->post('description');
-
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
-            $item->saveOrFail();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
+            $item->forceFill([
+                "name" => $request->post('name'),
+                "description" => $request->post('description'),
             ]);
+            $item->saveOrFail();
+            DB::commit();
+            return successResponse();
         } catch (\Throwable $exception) {
+            DB::rollBack();
             throw $exception;
         }
     }

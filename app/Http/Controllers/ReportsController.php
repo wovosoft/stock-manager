@@ -357,57 +357,69 @@ class ReportsController extends Controller
     {
         try {
             $expenses = Expense::query()
+                ->leftJoin("expense_categories", "expense_categories.id", "=", "expenses.expense_category_id")
                 ->select([
                     DB::raw("'expense' as title"),
-                    DB::raw("amount as expense"),
+                    DB::raw('expense_categories.name as description'),
+                    DB::raw("expenses.amount as expense"),
                     DB::raw("0 as income"),
-                    DB::raw("created_at as date")
+                    DB::raw("expenses.created_at as date")
                 ])
                 ->whereDate("expenses.created_at", "=", $date);
 
             $purchase_payments = PurchasePayment::query()
+                ->leftJoin("suppliers", 'suppliers.id', '=', 'purchase_payments.supplier_id')
                 ->select([
                     DB::raw("'purchase_payment' as title"),
-                    DB::raw("payment_amount as expense"),
+                    DB::raw('suppliers.name as description'),
+                    DB::raw("purchase_payments.payment_amount as expense"),
                     DB::raw("0 as income"),
-                    DB::raw("created_at as date")
+                    DB::raw("purchase_payments.created_at as date")
                 ])
                 ->whereDate("purchase_payments.created_at", "=", $date);
 
             $purchase_returns = PurchaseReturn::query()
+                ->leftJoin("suppliers", 'suppliers.id', '=', 'purchase_returns.supplier_id')
                 ->select([
                     DB::raw("'purchase_return' as title"),
+                    DB::raw('suppliers.name as description'),
                     DB::raw("0 as expense"),
-                    DB::raw("amount as income"),
-                    DB::raw("created_at as date")
+                    DB::raw("purchase_returns.amount as income"),
+                    DB::raw("purchase_returns.created_at as date")
                 ])
                 ->whereDate("purchase_returns.created_at", "=", $date);
 
             $employee_salaries = EmployeeSalary::query()
+                ->leftJoin("employees", 'employees.id', '=', 'employee_salaries.employee_id')
                 ->select([
                     DB::raw("'employee_salary' as title"),
-                    DB::raw("payment_amount as expense"),
+                    DB::raw('employees.name as description'),
+                    DB::raw("employee_salaries.payment_amount as expense"),
                     DB::raw("0 as income"),
-                    DB::raw("created_at as date")
+                    DB::raw("employee_salaries.created_at as date")
                 ])
                 ->whereDate("employee_salaries.created_at", "=", $date);
 
 
             $sale_returns = SaleReturn::query()
+                ->leftJoin("customers", 'customers.id', '=', 'sale_returns.customer_id')
                 ->select([
                     DB::raw("'sale_return' as title"),
-                    DB::raw("amount as expense"),
+                    DB::raw('customers.name as description'),
+                    DB::raw("sale_returns.amount as expense"),
                     DB::raw("0 as income"),
-                    DB::raw("created_at as date")
+                    DB::raw("sale_returns.created_at as date")
                 ])
                 ->whereDate("sale_returns.created_at", "=", $date);
 
             return SalePayment::query()
+                ->leftJoin("customers", 'customers.id', '=', 'sale_payments.customer_id')
                 ->select([
                     DB::raw("'sale_payment' as title"),
+                    DB::raw('customers.name as description'),
                     DB::raw("0 as expense"),
-                    DB::raw("payment_amount as income"),
-                    DB::raw("created_at as date")
+                    DB::raw("sale_payments.payment_amount as income"),
+                    DB::raw("sale_payments.created_at as date")
                 ])
                 ->whereDate("sale_payments.created_at", "=", $date)
                 ->union($expenses)

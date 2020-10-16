@@ -13,26 +13,27 @@ class TransactionController extends Controller
 {
     public static function routes()
     {
-        Route::post("transactions/list/in", '\\' . __CLASS__ . '@listIn')->name('Transactions.List.In');
-        Route::post("transactions/list/out", '\\' . __CLASS__ . '@listOut')->name('Transactions.List.Out');
-        Route::post("transactions/search", '\\' . __CLASS__ . '@search')->name('Transactions.Search');
-        Route::post("transactions/store", '\\' . __CLASS__ . '@store')->name('Transactions.Store');
-        Route::post("transactions/delete", '\\' . __CLASS__ . '@delete')->name('Transactions.Delete');
-        Route::post("transactions/transactionByCustomer", [static::class, 'transactionByCustomer'])->name('Transactions.By.Customers');
-        Route::post("transactions/setTransactionByCustomer", [static::class, 'setTransactionByCustomer'])->name('Transactions.Set.By.Customers');
-        Route::post("transactions/transactionCollectionByCustomer", [static::class, 'transactionCollectionByCustomer'])->name('Transactions.Collections.By.Customers');
+        Route::name('Transactions.')->prefix('transactions')->group(function (){
+            Route::post("list/in", [self::class, 'listIn'])->name('List.In');
+            Route::post("list/out", [self::class, 'listOut'])->name('List.Out');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+            Route::post("transactionByCustomer", [static::class, 'transactionByCustomer'])->name('By.Customers');
+            Route::post("setTransactionByCustomer", [static::class, 'setTransactionByCustomer'])->name('Set.By.Customers');
+            Route::post("transactionCollectionByCustomer", [static::class, 'transactionCollectionByCustomer'])->name('Collections.By.Customers');
+        });
     }
 
     public function store(Request $request)
     {
         try {
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
-            ]);
+            DB::beginTransaction();
+
+            DB::commit();
+            return successResponse();
         } catch (\Throwable $exception) {
+            DB::rollBack();
             throw $exception;
         }
     }

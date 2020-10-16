@@ -1,13 +1,7 @@
 <template>
     <b-modal @hidden="$router.go(-1)" visible
-             header-bg-variant="dark"
-             header-text-variant="light"
-             body-class="p-0"
-             footer-class="p-2"
-             :cancel-title="__('cancel','Cancel')"
-             :ok-title="__('ok','Ok')"
-             :title="__('view_unit','View Unit')"
-             lazy>
+             v-bind="{...BasicModalOptions,size:'md'}"
+             :title="__('view_unit','View Unit')">
         <b-row>
             <b-col>
                 <b-table small bordered hover striped
@@ -42,7 +36,14 @@
 <script>
     import view from "@/partials/view"
 
+    import {BasicModalOptions} from '@/partials/datatable';
+
     export default {
-        mixins: [view]
+        mixins: [view],
+        data() {
+            return {
+                BasicModalOptions
+            }
+        }
     }
 </script>

@@ -27,10 +27,12 @@ class ExpenseCategoryController extends Controller
 
     public static function routes()
     {
-        Route::post("expense/categories/list", '\\' . __CLASS__ . '@list')->name('Expenses.Categories.List');
-        Route::post("expense/categories/search", '\\' . __CLASS__ . '@search')->name('Expenses.Categories.Search');
-        Route::post("expense/categories/store", '\\' . __CLASS__ . '@store')->name('Expenses.Categories.Store');
-        Route::post("expense/categories/delete", '\\' . __CLASS__ . '@delete')->name('Expenses.Categories.Delete');
+        Route::name('Expenses.Categories.')->prefix('expense/categories')->group(function (){
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("delete", [self::class, 'delete'])->name('Delete');
+        });
     }
 
     public function store(Request $request)
@@ -41,19 +43,13 @@ class ExpenseCategoryController extends Controller
             ]);
             DB::beginTransaction();
             $item = ExpenseCategory::query()->findOrNew($request->post('id'));
-            $item->name = $request->post('name');
-            $item->description = $request->post('description') ?? null;
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
+            $item->forceFill([
+                "name" => $request->post('name'),
+                "description" => $request->post('description') ?? null,
+            ]);
             $item->saveOrFail();
             DB::commit();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
-            ]);
+            return successResponse();
         } catch (\Throwable $exception) {
             DB::rollBack();
             throw $exception;

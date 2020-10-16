@@ -61,7 +61,7 @@
                 small
                 bordered
                 :per-page="dt.per_page"
-                :fields="['sl','title','income','expense',{key:'date',label:'Time'}]"
+                :fields="['sl','title','description','income','expense',{key:'date',label:'Time'}]"
                 head-variant="dark"
                 foot-clone
                 :api-url="route('Backend.Reports.IncomeExpense',{date:date}).url()"
