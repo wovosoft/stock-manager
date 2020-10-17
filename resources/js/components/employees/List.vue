@@ -43,13 +43,13 @@
                                 :title="__('send_salary','Send Salary')"
                                 v-b-modal:add_salary_modal
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-eye"></i> {{__('send_salary','Send Salary')}}
+                                <i class="fa fa-money-bill-wave"></i> {{__('send_salary','Send Salary')}}
                             </b-dropdown-item>
                             <b-dropdown-item
                                 :title="__('paid_salaries','Paid Salaries')"
                                 v-b-modal:list_paid_salaries
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-eye"></i> {{__('paid_salaries','Paid Salaries')}}
+                                <i class="fa fa-money-check"></i> {{__('paid_salaries','Paid Salaries')}}
                             </b-dropdown-item>
                             <b-dropdown-item
                                 :title="__('view','View')"

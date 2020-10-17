@@ -23,6 +23,7 @@ class CapitalDepositFactory extends Factory
     public function definition()
     {
         return [
+            "reference" => $this->faker->sentence,
             "payment_amount" => $this->faker->randomFloat(2, 100, 1000000),
             "payment_method" => "Cash",
             "deposited_by" => 1,

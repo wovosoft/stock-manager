@@ -9,7 +9,7 @@
                 </b-input-group>
             </b-col>
             <b-col class="text-right">
-                <b-button size="sm" variant="dark" v-b-modal:add-sale-payment>
+                <b-button size="sm" variant="dark" v-b-modal:add-payment>
                     <i class="fa fa-plus"></i>
                     {{ __("add", "Add") }}
                 </b-button>
@@ -34,30 +34,30 @@
                 {{colSum(dt.data,'payment_amount') | currency}}
             </template>
         </b-table>
-        <b-modal id="add-sale-payment"
+        <b-modal id="add-payment"
                  header-bg-variant="dark"
                  header-text-variant="light"
                  hide-footer
                  @hidden="resetForm"
-                 :title="__('take_payment','Take Payment')">
+                 :title="__('deposit_payment','Deposit Payment')">
             <template #default="{hide}">
                 <b-form @submit.prevent="handleSubmit(hide)">
-                    <b-form-group :label="__('customer','Customer')">
+                    <b-form-group :label="__('supplier','Supplier')">
                         <vue-select
                             :required="true"
                             v-model="employee"
                             :init-options="true"
                             @input="e=>{
-                                $set(form,'payment_amount',Number(Number(e.balance).toFixed(2)));
+                                $set(form,'payment_amount',e.balance);
                                 employeeId=e.id;
                             }"
                             :tag-text="o=>o?[o.id,o.name].join(' # '):__('not_selected','Not Selected')"
                             :option-text="o=>o?o.id+' | ' + o.name + ' | ' + o.company +' | ' + ($options.filters.currency(o.balance)):''"
-                            :api_url="route('Backend.Customers.SearchWithDues').url()"/>
+                            :api_url="route('Backend.Suppliers.SearchWithDues').url()"/>
                     </b-form-group>
                     <b-form-row>
                         <b-col md="6" sm="12">
-                            <b-form-group :label="__('transaction.income','Amount')">
+                            <b-form-group :label="__('payment_amount','Payment Amount')">
                                 <b-input
                                     type="number"
                                     step="any"
@@ -123,24 +123,24 @@
                 dt, payment_options,
                 form: {...form_data},
                 fields: [
-                    {key: 'id', label: _t('id', 'ID'), name: 'sale_payments.id', sortable: true},
+                    {key: 'id', label: _t('id', 'ID'), name: 'purchase_payments.id', sortable: true},
                     {
-                        key: 'customer',
-                        label: _t('customer', 'Customer'),
-                        name: 'customers.name',
+                        key: 'supplier',
+                        label: _t('supplier', 'Supplier'),
+                        name: 'suppliers.name',
                         sortable: true
                     },
                     {
                         key: 'payment_amount',
-                        label: _t('transaction.income', 'Amount'),
-                        name: 'sale_payments.payment_amount',
+                        label: _t('payment_amount', 'Amount'),
+                        name: 'purchase_payments.payment_amount',
                         sortable: true,
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {
                         key: 'created_at',
                         label: _t('date', 'Date'),
-                        name: 'sale_payments.created_at',
+                        name: 'purchase_payments.created_at',
                         formatter: v => this.$options.filters.localTime(v),
                         sortable: true
                     }
@@ -158,7 +158,7 @@
                 }
             },
             getItems(ctx) {
-                return axios.post(route('Backend.Payments.Sales.List', {page: ctx.currentPage}).url(), {
+                return axios.post(route('Backend.Payments.Purchases.List', {page: ctx.currentPage}).url(), {
                     date: this.date,
                     per_page: ctx.perPage || 10,
                     orderBy: ctx.sortBy || 'id',
@@ -175,7 +175,7 @@
             msgBox,
             handleSubmit(hide) {
                 axios
-                    .post(route('Backend.Customers.Payments.Add', {customer: this.employeeId}).url(), this.form)
+                    .post(route('Backend.Suppliers.Payments.Store', {supplier: this.employeeId}).url(), this.form)
                     .then(res => {
                         hide();
                         this.msgBox(res.data);

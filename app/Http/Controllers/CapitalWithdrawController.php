@@ -13,6 +13,7 @@ class CapitalWithdrawController extends Controller
     protected string $model = CapitalWithdraw::class;
     public array $search_selects = [
         'id',
+        'reference',
         'payment_amount',
         'payment_method',
         'bank',
@@ -22,6 +23,7 @@ class CapitalWithdrawController extends Controller
     ];
     public array $search_fields = [
         'id',
+        'reference',
         'payment_amount',
         'payment_method',
         'bank',
@@ -47,6 +49,7 @@ class CapitalWithdrawController extends Controller
             DB::beginTransaction();
             $item = CapitalWithdraw::query()->findOrNew($request->post('id'));
             $item->forceFill([
+                "reference" => $request->post('reference'),
                 "payment_amount" => $request->post('payment_amount'),
                 "payment_method" => $request->post('payment_method'),
                 "bank" => $request->post('bank') ?? null,

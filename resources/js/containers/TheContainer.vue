@@ -28,8 +28,8 @@
 <script>
     import TheNavbar from "./TheNavbar";
     import TheSidebar from "./TheSidebar";
-    import menu from "../menu";
-    import Breadcrumb from "../components/Breadcrumb";
+    import menu from "@/menu";
+    import Breadcrumb from "@/components/Breadcrumb";
     import TheFooter from "@/containers/TheFooter";
     // import('@/../sass/app.scss')
     export default {

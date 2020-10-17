@@ -47,7 +47,16 @@
             if (!fallback) {
                 fallback = key;
             }
-            const t =<?php echo json_encode(currentLangTranslations());?>;
+                {{--const t =<?php echo json_encode(currentLangTranslations());?>;--}}
+
+                <?php
+                $local_trans = json_decode(\Illuminate\Support\Facades\File::get(resource_path("lang/full.json")));
+                $tt = [];
+                foreach ($local_trans as $key => $value) {
+                    $tt[$key] = $value->bn;
+                }
+                ?>
+            const t =<?php echo json_encode($tt);?>;
             // if (!translation_collector) {
             //     translation_collector = t;
             // }
@@ -66,7 +75,7 @@
     @routes
 
 
-    <script defer src="{{ mix('js/app-client.js') }}"></script>
+    <script defer src="{{ mix('js/app.js') }}"></script>
 </head>
 <body class="h-100" style="overflow-x: hidden;">
 <div id="app"></div>

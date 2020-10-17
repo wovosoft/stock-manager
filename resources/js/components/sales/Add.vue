@@ -63,7 +63,7 @@
                             <template v-slot:cell(price)="row">
                                 <b-input-group size="sm" :append="$options.filters.currencySymbol(0)">
                                     <b-input type="number" step="any" v-model="row.item.price"
-                                             :placeholder="__('price', 'Price')" :required="true"/>
+                                             :placeholder="__('sales.price', 'Price')" :required="true"/>
                                 </b-input-group>
                             </template>
                             <template v-slot:cell(quantity)="row">
@@ -314,7 +314,7 @@
                     {key: "product_id", label: _t("pid", "PID")},
                     {key: "name", label: _t("name", "Name")},
                     {key: "code", label: _t("code", "Code")},
-                    {key: "price", label: _t("price", "Price")},
+                    {key: "price", label: _t("sales.price", "Price")},
                     {key: "quantity", label: _t("quantity", "Quantity")},
                     // {key:'total',label:_t('total','Total')},
                     // {key:'tax',label:_t('tax','Tax')},

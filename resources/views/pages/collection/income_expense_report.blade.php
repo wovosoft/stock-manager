@@ -1,11 +1,13 @@
 @php
     $types=[
       "expense"=>"দৈনিক খরচ",
-      "purchase_payment"=>"ক্রয়মূল্য জমা",
+      "purchase_payment"=>"বকেয়া পরিশোধ (দেনা)",
       "purchase_return"=>"ক্রয়কৃত মাল ফেরত",
-      "employee_salary"=>"কর্মচারী ও কর্মকর্তা বেতন",
+      "employee_salary"=>"কর্মকর্তা/কর্মচারী বেতন",
       "sale_return"=>"বিক্রিত মাল ফেরত",
-      "sale_payment"=>"বিক্রয়মূল্য জমা",
+      "sale_payment"=>"বকেয়া আদায় (পাওনা)",
+      "capital_deposit"=>"মূলধন জমা",
+      "capital_withdraw"=>"মূলধন উত্তোলন",
     ];
 @endphp
     <!doctype html>
@@ -41,6 +43,13 @@
         thead tr {
             background-color: lightgray;
         }
+
+        @if($html)
+            body {
+            max-width: 1024px;
+            margin: auto;
+        }
+        @endif
     </style>
 </head>
 <body>
@@ -62,7 +71,7 @@
         <th>বিবরণ</th>
         <th>আয়</th>
         <th>ব্যয়</th>
-        <th>সময়</th>
+        {{--        <th>সময়</th>--}}
     </tr>
     </thead>
     <tbody>
@@ -76,13 +85,23 @@
             <td>{{$item->description}}</td>
             <td>{{$item->income?\App\Drivers\BanglaConverter::en2bn(number_format($item->income,2)).' টাকা':''}}</td>
             <td>{{$item->expense?\App\Drivers\BanglaConverter::en2bn(number_format($item->expense,2)).' টাকা':''}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn(\Carbon\Carbon::parse($item->date)->format('h:i A'))}}</td>
+            {{--            <td>{{\App\Drivers\BanglaConverter::en2bn(\Carbon\Carbon::parse($item->date)->format('h:i A'))}}</td>--}}
         </tr>
     @endforeach
     </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="3" style="text-align: right;">মোট</td>
+        <td>{{\App\Drivers\BanglaConverter::en2bn(number_format($items->sum('income'),2))}} টাকা</td>
+        <td>{{\App\Drivers\BanglaConverter::en2bn(number_format($items->sum('expense'),2))}} টাকা</td>
+    </tr>
+    </tfoot>
 </table>
 
 {!! _s('invoice_footer') !!}
-
+<div style="margin-top: 3px;font-size: small;">
+    আজকের তারিখঃ
+    {{\App\Drivers\BanglaConverter::en2bn(\Carbon\Carbon::now()->locale(_s('locale'))->format('d-m-Y h:i A'))}}
+</div>
 </body>
 </html>

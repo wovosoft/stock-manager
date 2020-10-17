@@ -6,6 +6,7 @@
                     $emit('refreshDatatable',true);
                 }
              }"
+             v-if="the_item"
              visible
              size="xl"
              header-bg-variant="dark"
@@ -152,12 +153,6 @@
                         key: 'price', label: _t('price', 'Price'),
                         formatter: v => this.$options.filters.currency(v)
                     },
-                    // {
-                    //     key: 'total', label: _t('total', 'Total'),
-                    //     formatter: v => this.$options.filters.currency(v)
-                    // },
-                    // {key: 'tax', label: _t('tax', 'Tax')},
-                    // {key: 'discount', label: _t('discount', 'Discount')},
                     {
                         key: 'payable',
                         label: _t('payable', 'Payable'),

@@ -18,17 +18,9 @@
                   @refreshDatatable="$refs.datatable.refresh()"
         >
             <template v-slot:table>
-                <b-table ref="datatable" variant="primary" responsive="md" hover bordered small striped
-                         head-variant="dark"
-                         :items="getItems"
-                         class="mb-0"
-                         :fields="fields"
+                <b-table ref="datatable"
                          @refreshed="overview=JSON.parse(headers.overview||'{}')"
-                         :sort-by.sync="datatable.sortBy"
-                         :sort-desc.sync="datatable.sortDesc"
-                         :filter="search"
-                         :per-page="datatable.per_page"
-                         :current-page="datatable.current_page"
+                         v-bind="commonDtOptions()"
                          foot-clone
                          foot-variant="light"
                 >
@@ -105,10 +97,10 @@
         </dt-table>
 
         <b-modal id="invoice-modal"
-                 v-bind="BasicModalOptions"
+                 v-bind="{...BasicModalOptions,bodyClass:'p-0'}"
                  :title="__('sale_invoice','Sale Invoice')"
                  v-if="currentItem"
-                 @hidden="currentItem=null,invoice_is_delivery=false,invoice_both=false">
+                 @hidden="currentItem={},invoice_is_delivery=false,invoice_both=false">
             <b-embed
                 id="print_invoice"
                 aspect="16by9"
@@ -120,7 +112,7 @@
             </template>
         </b-modal>
         <b-modal id="returns-modal"
-                 v-bind="BasicModalOptions"
+                 v-bind="{...BasicModalOptions,bodyClass:'p-0'}"
                  @hidden="currentItem={}"
                  :title="__('returns_history','Returns History')">
             <returns :sale-id="currentItem.id"></returns>
@@ -230,7 +222,7 @@
                     // },
                     {
                         key: 'payable', sortable: true,
-                        label: _t('payable', 'Payable'),
+                        label: _t('sales.payable', 'Payable'),
                         formatter: v => this.$options.filters.currency(v || 0)
                     },
                     {

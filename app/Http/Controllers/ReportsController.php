@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CapitalDeposit;
 use App\Models\Customer;
 use App\Models\EmployeeSalary;
 use App\Models\Expense;
@@ -412,6 +413,26 @@ class ReportsController extends Controller
                 ])
                 ->whereDate("sale_returns.created_at", "=", $date);
 
+            $capital_deposits = CapitalDeposit::query()
+                ->select([
+                    DB::raw("'capital_deposit' as title"),
+                    DB::raw('reference as description'),
+                    DB::raw("0 as expense"),
+                    DB::raw("payment_amount as income"),
+                    DB::raw("created_at as date")
+                ])
+                ->whereDate("created_at", "=", $date);
+
+            $capital_withdraws = CapitalDeposit::query()
+                ->select([
+                    DB::raw("'capital_withdraw' as title"),
+                    DB::raw("reference as description"),
+                    DB::raw("payment_amount as expense"),
+                    DB::raw("0 as income"),
+                    DB::raw("created_at as date")
+                ])
+                ->whereDate("created_at", "=", $date);
+
             return SalePayment::query()
                 ->leftJoin("customers", 'customers.id', '=', 'sale_payments.customer_id')
                 ->select([
@@ -427,6 +448,8 @@ class ReportsController extends Controller
                 ->union($purchase_returns)
                 ->union($sale_returns)
                 ->union($employee_salaries)
+                ->union($capital_deposits)
+                ->union($capital_withdraws)
                 ->orderBy("date");
         } catch (\Throwable $exception) {
             throw $exception;
@@ -441,7 +464,14 @@ class ReportsController extends Controller
                 return \PDF::loadView("pages.collection.income_expense_report", [
                     "items" => $this->getIncomeExpenseReport($date, $request)->get(),
                     "date" => Carbon::parse($date),
+                    "html" => false
                 ])->stream("supplier_purchases_report.pdf");
+            } elseif ($pdf == 'html') {
+                return view("pages.collection.income_expense_report", [
+                    "items" => $this->getIncomeExpenseReport($date, $request)->get(),
+                    "date" => Carbon::parse($date),
+                    "html" => true
+                ]);
             }
             return $this->getIncomeExpenseReport($date, $request)
                 ->paginate($request->post('per_page') ?? 30);

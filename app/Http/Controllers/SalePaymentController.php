@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CustomerFund;
+
 use App\Models\Sale;
 use App\Models\SalePayment;
 use App\Traits\Crud;
@@ -20,7 +20,7 @@ class SalePaymentController extends Controller
     {
         Route::name("Payments.")->prefix("payments/sales")->group(function () {
             Route::post("{sale}/take", [static::class, 'store'])->name('Sales.Store');
-            Route::post("{sale}/list", [static::class, 'salePayments'])->name('Single.Sales.Payments');
+            Route::post("list", [static::class, 'salePayments'])->name('Sales.List');
             Route::match(['get', 'post'], "{salePayment}/invoice/{pdf?}", [static::class, 'salePaymentInvoice'])->name('Sales.Invoice');
             Route::post("delete", [static::class, 'delete'])->name('Sales.Delete');
         });
@@ -55,15 +55,14 @@ class SalePaymentController extends Controller
         }
     }
 
-    public function salePayments(Sale $sale, Request $request)
+    public function salePayments(Request $request)
     {
         try {
-            $items = $sale->payments()
+            $items = SalePayment::query()
                 ->select([
                     'sale_payments.id',
-                    'sale_payments.sale_id',
                     'sale_payments.customer_id',
-                    DB::raw("CONCAT(customers.id,' # ',customers.name) as customer"),
+                    DB::raw("customers.name as customer"),
                     'sale_payments.payment_method',
                     'sale_payments.payment_amount',
                     'sale_payments.bank',
@@ -77,7 +76,7 @@ class SalePaymentController extends Controller
             if ($request->post("date")) {
                 $items->whereDate("sale_payments.created_at", "=", $request->post("date"));
             }
-            return $items->latest()->get();
+            return $items->defaultDatatable($request);
         } catch (\Throwable $exception) {
             throw $exception;
         }

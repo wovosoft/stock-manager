@@ -33,9 +33,9 @@ class PurchaseController extends Controller
     }
 
     /**
-     * @param $items
-     * @param int $purchase_tax
-     * @param int $purchase_discount
+     * @param array $items
+     * @param int $tax
+     * @param int $discount
      * @return int[]
      */
     private function getPurchasesAndItemsPayable($items = [], $tax = 0, $discount = 0)

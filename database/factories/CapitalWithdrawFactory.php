@@ -25,6 +25,7 @@ class CapitalWithdrawFactory extends Factory
     {
 
         return [
+            "reference" => $this->faker->sentence,
             "payment_amount" => $this->faker->randomFloat(2, 100, 1000000),
             "payment_method" => "Cash",
             "withdrawn_by" => 1,

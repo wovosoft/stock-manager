@@ -15,7 +15,7 @@ class PurchasePaymentController extends Controller
     {
         Route::name('Payments.')->prefix('payments/purchases')->group(function () {
             Route::post("take/{purchase}", [self::class, 'store'])->name('Purchases.Store');
-            Route::post("{purchase}/list", [self::class, 'purchasePayments'])->name('Single.Purchases.Payments');
+            Route::post("list", [self::class, 'purchasePayments'])->name('Purchases.List');
             Route::match(['get', 'post'], "{purchasePayment}/invoice/{pdf?}", [static::class, 'purchasePaymentInvoice'])->name('Purchases.Invoice');
         });
 
@@ -25,6 +25,7 @@ class PurchasePaymentController extends Controller
     {
         try {
             $request->validate([
+                "supplier_id" => "required",
                 "payment_amount" => "required",
                 "payment_method" => "required",
             ]);
@@ -32,7 +33,7 @@ class PurchasePaymentController extends Controller
             DB::beginTransaction();
             $payment = new PurchasePayment();
             $payment->forceFill([
-                "purchase_id" => $purchase->id,
+//                "purchase_id" => $purchase->id,
                 "supplier_id" => $purchase->supplier_id,
                 "payment_method" => $request->post("payment_method") ?? 0,
                 "payment_amount" => round($request->post("payment_amount") ?? 0, 2),
@@ -50,13 +51,12 @@ class PurchasePaymentController extends Controller
         }
     }
 
-    public function purchasePayments(Purchase $purchase, Request $request)
+    public function purchasePayments(Request $request)
     {
         try {
-            return $purchase->payments()
+            return PurchasePayment::query()
                 ->select([
                     'purchase_payments.id',
-                    'purchase_payments.purchase_id',
                     'purchase_payments.supplier_id',
                     DB::raw("CONCAT(suppliers.id,' # ',suppliers.name) as supplier"),
                     'purchase_payments.payment_method',
@@ -69,7 +69,7 @@ class PurchasePaymentController extends Controller
                 ])
                 ->leftJoin("suppliers", "suppliers.id", "=", "purchase_payments.supplier_id")
                 ->leftJoin("users", "users.id", "=", "purchase_payments.given_by")
-                ->latest()->get();
+                ->defaultDatatable($request);
         } catch (\Throwable $exception) {
             throw $exception;
         }

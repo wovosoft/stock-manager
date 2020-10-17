@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Builders\Reports;
 use App\Models\Employee;
 use App\Traits\Crud;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -48,12 +49,12 @@ class EmployeeController extends Controller
 
     public static function routes()
     {
-        Route::name('Employees.')->prefix('employees')->group(function (){
+        Route::name('Employees.')->prefix('employees')->group(function () {
             Route::post("list", [self::class, 'list'])->name('List');
             Route::post("search", [self::class, 'search'])->name('Search');
             Route::post("store", [self::class, 'store'])->name('Store');
             Route::post("delete", [self::class, 'delete'])->name('Delete');
-            Route::post("paid/salaries/{employee}", [self::class, 'salaries'])->name('Paid.Salaries');
+            Route::post("{employee}/paid/salaries", [self::class, 'salaries'])->name('Paid.Salaries');
         });
     }
 
@@ -81,7 +82,6 @@ class EmployeeController extends Controller
                 "position" => $request->post('position'),
                 "salary" => $request->post('salary') ?? 0,
             ]);
-//            $item->balance = $request->post('balance') ?? 0;
             if ($request->hasFile('photo_upload')) {
                 $item->photo = $request->file('photo_upload')->store('photos', 'public');
             } else {
@@ -97,25 +97,33 @@ class EmployeeController extends Controller
     public function list(Request $request)
     {
         try {
-            $salary = "(SELECT IFNULL(SUM(employee_salaries.payment_amount),0) FROM employee_salaries WHERE employees.id = employee_salaries.employee_id AND employee_salaries.deleted_at IS NULL)";
+            $paid_salary = function (Builder $builder) {
+                $builder
+                    ->from('employee_salaries')
+                    ->where("employee_salaries.employee_id", "=", DB::raw("employees.id"))
+                    ->whereNull("employee_salaries.deleted_at")
+                    ->selectRaw("IFNULL(SUM(employee_salaries.payment_amount),0)");
+            };
             $items = Employee::query()
-                ->select(["employees.*"])
-                ->selectRaw("$salary AS paid_salary");
+                ->select([
+                    "employees.*",
+                    "paid_salary" => $paid_salary
+                ]);
             if ($request->has('id')) {
                 return $items->findOrFail($request->post('id'));
             }
-            $result = $items->defaultDatatable($request);
-            $ov = $items->getQuery();
-            $ov->limit = null;
-            $ov->offset = null;
-            $ov->orders = null;
-            $ovr = $ov->select([
-                DB::raw("SUM($salary) as paid_salary"),
-                DB::raw("COUNT(id) as total_employees"),
-            ])->first();
+
             return response()
-                ->json($result)
-                ->header("employee_summery", json_encode($ovr));
+                ->json($items->defaultDatatable($request))
+                ->header("employee_summery", json_encode(resetQueryForOverview($items)->select([
+                    "paid_salary" => function (Builder $builder) {
+                        $builder->from('employee_salaries')
+                            ->where("employee_salaries.employee_id", "=", "employees.id")
+                            ->whereNull("employee_salaries.deleted_at")
+                            ->selectRaw("SUM(employee_salaries.payment_amount)");
+                    },
+                    DB::raw("COUNT(id) as total_employees"),
+                ])->first()));
         } catch (\Throwable $exception) {
             throw $exception;
         }

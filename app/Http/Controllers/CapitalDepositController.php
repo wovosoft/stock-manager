@@ -13,6 +13,7 @@ class CapitalDepositController extends Controller
     protected string $model = CapitalDeposit::class;
     public array $search_selects = [
         'id',
+        'reference',
         'payment_amount',
         'payment_method',
         'bank',
@@ -22,6 +23,7 @@ class CapitalDepositController extends Controller
     ];
     public array $search_fields = [
         'id',
+        'reference',
         'payment_amount',
         'payment_method',
         'bank',
@@ -44,6 +46,7 @@ class CapitalDepositController extends Controller
         try {
             DB::beginTransaction();
             $item = CapitalDeposit::query()->findOrNew($request->post('id'));
+            $item->reference = $request->post('reference');
             $item->payment_amount = $request->post('payment_amount');
             $item->payment_method = $request->post('payment_method');
             $item->bank = $request->post('bank') ?? null;

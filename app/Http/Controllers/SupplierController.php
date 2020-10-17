@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Mpdf\Tag\Sup;
+
 
 class SupplierController extends Controller
 {
@@ -39,6 +39,15 @@ class SupplierController extends Controller
         'shipping_address',
         'shipping_address',
     ];
+
+    private string $payable = "(SELECT IFNULL(SUM(purchases.payable),0) FROM purchases
+                        WHERE purchases.supplier_id = suppliers.id and purchases.deleted_at is null)";
+
+    private string $returned = "(SELECT IFNULL(SUM(purchase_returns.amount),0) FROM purchase_returns
+                        WHERE purchase_returns.supplier_id = suppliers.id and purchase_returns.deleted_at is null)";
+
+    private string $paid = "(SELECT IFNULL(SUM(purchase_payments.payment_amount),0) FROM purchase_payments
+                        WHERE purchase_payments.supplier_id = suppliers.id and purchase_payments.deleted_at is null)";
     use Crud;
 
     public static function routes()
@@ -48,6 +57,7 @@ class SupplierController extends Controller
             Route::post("{supplier}/payments", [self::class, 'payments'])->name('Payments');
             Route::post("{supplier}/returns", [self::class, 'returns'])->name('Returns');
             Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("search/with/dues", [self::class, 'searchWithDues'])->name('SearchWithDues');
             Route::post("store", [self::class, 'store'])->name('Store');
             Route::post("delete", [self::class, 'delete'])->name('Delete');
             Route::post("{supplier}/add_fund", [self::class, 'addPayment'])->name('Payments.Store');
@@ -111,15 +121,16 @@ class SupplierController extends Controller
     public function list(Request $request)
     {
         try {
-            $payable = "(SELECT IFNULL(SUM(purchases.payable),0) FROM purchases WHERE purchases.supplier_id = suppliers.id)";
-            $paid = "(SELECT IFNULL(SUM(purchase_payments.payment_amount),0) FROM purchase_payments WHERE purchase_payments.supplier_id = suppliers.id)";
 
 
             $items = Supplier::query()
-                ->select(["suppliers.*"])
-                ->selectRaw("$payable  as payable")
-                ->selectRaw("$paid  as paid")
-                ->selectRaw("(($payable) - ($paid)) as balance");
+                ->select([
+                    "suppliers.*",
+                    DB::raw("($this->payable) as payable"),
+                    DB::raw("($this->paid) as paid"),
+                    DB::raw("($this->returned) as returned"),
+                    DB::raw("(select (payable - returned - paid)) as balance")
+                ]);
             if ($request->has('id')) {
                 return $items->findOrFail($request->post('id'));
             }
@@ -127,9 +138,10 @@ class SupplierController extends Controller
             return response()
                 ->json($items->defaultDatatable($request))
                 ->header("fund_summery", json_encode(resetQueryForOverview($items)->select([
-                    DB::raw("SUM(IFNULL($payable,0)) as payable"),
-                    DB::raw("SUM(IFNULL($paid,0))  as paid"),
-                    DB::raw("SUM(IFNULL((($payable) - ($paid)),0)) as balance"),
+                    DB::raw("SUM(IFNULL($this->payable,0)) as payable"),
+                    DB::raw("SUM(IFNULL($this->returned,0))  as returned"),
+                    DB::raw("SUM(IFNULL($this->paid,0))  as paid"),
+                    DB::raw("SUM(IFNULL($this->payable - $this->returned - $this->paid,0))  as balance"),
                 ])->first()));
         } catch (\Throwable $exception) {
             throw $exception;
@@ -289,6 +301,32 @@ class SupplierController extends Controller
                     DB::raw("products.name as product_name"),
                 ])
                 ->defaultDatatable($request);
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function searchWithDues(Request $request)
+    {
+        try {
+            $items = Supplier::query()
+                ->select([
+                    "suppliers.id",
+                    "suppliers.name",
+                    "suppliers.phone",
+                    "suppliers.company",
+                    DB::raw("($this->payable - $this->paid - $this->returned) as balance")
+                ])
+                ->limit($request->post('limit') ?? 30);
+
+            if ($request->post('query')) {
+                $items
+                    ->where('id', '=', $request->post('query'))
+                    ->orWhere('name', 'like', '%' . $request->post('query') . '%')
+                    ->orWhere('company', 'like', '%' . $request->post('query') . '%')
+                    ->orWhere('phone', 'like', '%' . $request->post('query') . '%');
+            }
+            return $items->get();
         } catch (\Throwable $exception) {
             throw $exception;
         }

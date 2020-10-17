@@ -6,20 +6,6 @@ export default [
         active: false,
     },
     {
-        name: _t('transactions', 'Transactions'),
-        url: false,
-        icon: 'fa fa-warehouse',
-        active: false,
-        children: [
-            {
-                name: _t('add', 'Add'),
-                url: {name: 'TransactionsAdd'},
-                icon: 'nav-icon fas fa-chevron-right',
-                active: false
-            },
-        ]
-    },
-    {
         name: _t('main_inventory', 'Main Inventory'),
         url: false,
         icon: 'fa fa-warehouse',
@@ -69,13 +55,7 @@ export default [
                 url: {name: 'SalesList'},
                 icon: 'nav-icon fas fa-chevron-right',
                 active: false
-            },
-            {
-                name: _t('reports', "Reports"),
-                url: {name: 'SalesReport'},
-                icon: 'nav-icon fas fa-chevron-right',
-                active: false
-            },
+            }
         ]
     },
     {

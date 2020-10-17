@@ -26,6 +26,8 @@
             foot-variant="light"
             :items="getItems"
             :fields="fields"
+            :sort-desc="dt.sortDesc"
+            :sort-by="dt.sortBy"
             :per-page="dt.per_page"
             :current-page="dt.current_page">
             <template #foot(payment_amount)="row">
@@ -102,7 +104,6 @@
 </template>
 
 <script>
-    import months from "@/shared/months";
     import dt from "@/shared/dt"
     import {isTrue, msgBox, colSum} from "@/partials/datatable";
     import {monthOptions} from "@/shared/months";
@@ -143,18 +144,7 @@
                 form: {...form_data},
                 fields: [
                     {key: 'id', sortable: true, label: _t('id', 'ID')},
-                    {key: 'name', sortable: true, label: _t('employee', 'Employee')},
-                    // {
-                    //     key: 'year',
-                    //     sortable: true,
-                    //     label: _t('year', 'Year'),
-                    //     formatter: v => this.$options.filters.localNumber(v)
-                    // },
-                    // {
-                    //     key: 'month', sortable: true,
-                    //     label: _t('month', 'Month'),
-                    //     formatter: v => months[v - 1]
-                    // },
+                    {key: 'name', sortable: true, label: _t('name', 'Name')},
                     {
                         key: 'payment_amount', sortable: true,
                         formatter: v => this.$options.filters.currency(v),
@@ -186,15 +176,11 @@
                     orderBy: ctx.sortBy || 'id',
                     order: isTrue(ctx.sortDesc) ? 'desc' : 'asc',
                 }).then(res => {
-                    this.$set(this, 'dt', res.data);
+                    this.dt = {...this.dt, ...res.data};
                     return res.data.data;
                 }).catch(err => {
                     console.log(err.response);
-                    this.$set(this, 'dt', {
-                        data: [],
-                        per_page: 30,
-                        current_page: 1
-                    });
+                    this.$set(this, 'dt', dt);
                     return [];
                 });
             },
@@ -215,11 +201,5 @@
         }
     }
 </script>
-<style>
-   @level components{
-       .card{
-           @apply
-       }
-   }
-</style>
+
 

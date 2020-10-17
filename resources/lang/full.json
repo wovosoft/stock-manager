@@ -60,7 +60,7 @@
         "en": "Customers"
     },
     "suppliers": {
-        "bn": "সরবরাহকারীর ",
+        "bn": "সরবরাহকারীর তালিকা",
         "en": "Suppliers"
     },
     "balance_sheet": {
@@ -80,8 +80,16 @@
         "en": "Capital Funds"
     },
     "balance": {
-        "bn": "ব্যালান্স",
+        "bn": "জের",
         "en": "Balance"
+    },
+    "previous_balance": {
+        "bn": "পূর্বের জের",
+        "en": "Previous Balance"
+    },
+    "current_balance": {
+        "bn": "বর্তমান জের",
+        "en": "Current Balance"
     },
     "deposits": {
         "bn": "জমা",
@@ -109,6 +117,10 @@
     },
     "price": {
         "bn": "বিক্রয়মূল্য",
+        "en": "Price"
+    },
+    "sales.price": {
+        "bn": "দর",
         "en": "Price"
     },
     "barcode_symbology": {
@@ -152,7 +164,7 @@
         "en": "Status"
     },
     "quantity": {
-        "bn": "পরিমান.",
+        "bn": "সংখ্যা",
         "en": "Quantity"
     },
     "alert_quantity": {
@@ -192,7 +204,7 @@
         "en": "Note"
     },
     "amount": {
-        "bn": "পরিমান",
+        "bn": "অর্থের পরিমান",
         "en": "Amount"
     },
     "taken_by": {
@@ -200,11 +212,11 @@
         "en": "Taken By"
     },
     "total_deposit": {
-        "bn": "সর্বমোট বিনিয়োগ",
+        "bn": "সোট জমা",
         "en": "Total Deposit"
     },
     "total_withdrawals": {
-        "bn": "সর্বোমট উত্তোলন",
+        "bn": "মোট উত্তোলন",
         "en": "Total Withdrawals"
     },
     "overview": {
@@ -216,7 +228,7 @@
         "en": "Funding Overview"
     },
     "deposit_amount": {
-        "bn": "বিনোয়োগকৃত অর্থের পরিমান",
+        "bn": "আমানত অর্থের পরিমান",
         "en": "Deposit Amount"
     },
     "withdrawal_amount": {
@@ -224,7 +236,11 @@
         "en": "Withdrawal Amount"
     },
     "payment_amount": {
-        "bn": "পরিশোধিত অর্থ",
+        "bn": "অর্থের পরিমাণ",
+        "en": "Payment Amount"
+    },
+    "employment_salaries.payment_amount": {
+        "bn": "প্রদত্ত অর্থ",
         "en": "Payment Amount"
     },
     "payment_method": {
@@ -264,11 +280,27 @@
         "en": "Withdrawn"
     },
     "payable": {
-        "bn": "প্রদেয়",
+        "bn": "মোট",
+        "en": "Payable"
+    },
+    "sales.payable": {
+        "bn": "মোট",
         "en": "Payable"
     },
     "paid": {
         "bn": "পরিশোধিত",
+        "en": "Paid"
+    },
+    "customers.paid": {
+        "bn": "জমা",
+        "en": "Paid"
+    },
+    "method": {
+        "bn": "মাধ্যম",
+        "en": "Method"
+    },
+    "suppliers.paid": {
+        "bn": "জমা",
         "en": "Paid"
     },
     "final_balance": {
@@ -312,8 +344,16 @@
         "en": "Main Inventory"
     },
     "products": {
-        "bn": "পণ্যসমূহ",
+        "bn": "পণ্যের তালিকা",
         "en": "Products"
+    },
+    "product_id": {
+        "bn": "পণ্যের আইডি",
+        "en": "Product ID"
+    },
+    "send_salary": {
+        "bn": "বেতন প্রদান করুন",
+        "en": "Send Salary"
     },
     "check_ins": {
         "bn": "চেক-ইন সমূহ",
@@ -424,7 +464,7 @@
         "en": "Key"
     },
     "action": {
-        "bn": "ক্রিয়াকলাপ",
+        "bn": "ক্রিয়া",
         "en": "Action"
     },
     "value": {
@@ -624,8 +664,16 @@
         "en": "Date"
     },
     "returned": {
-        "bn": "ফিরে এসেছে",
+        "bn": "ফেরত",
         "en": "Returned"
+    },
+    "returned_total": {
+        "bn": "মোট ফেরত",
+        "en": "Returned Total"
+    },
+    "returned_quantity": {
+        "bn": "ফেরতের পরিমাণ",
+        "en": "Returned Qty."
     },
     "processed": {
         "bn": "প্রক্রিয়াজাত",
@@ -824,11 +872,15 @@
         "en": "Withdrawn Amount"
     },
     "sales_payable": {
-        "bn": "বিক্রয়মূল্য প্রদেয়",
+        "bn": "মোট বিক্রিয়",
         "en": "Sales Payable"
     },
     "sales_paid": {
-        "bn": "বিক্রয়মূল্য পরিশোধিত",
+        "bn": "বিক্রয়মূল্য পরিশোধ",
+        "en": "Sales Paid"
+    },
+    "sales_returned": {
+        "bn": "বিক্রিত পণ্য ফেরত",
         "en": "Sales Paid"
     },
     "sales_balance": {
@@ -1140,7 +1192,7 @@
         "en": "Definition Value"
     },
     "view_employee": {
-        "bn": "কর্মচারী বিবরণ দেখুন",
+        "bn": "বিস্তারিত দেখুন",
         "en": "View Employee"
     },
     "is_active": {
@@ -1168,7 +1220,7 @@
         "en": "Employees"
     },
     "edit_employee": {
-        "bn": "কর্মচারী সম্পাদনা করুন",
+        "bn": "সম্পাদন করুন",
         "en": "Edit Employee"
     },
     "delete_employee": {
@@ -1267,6 +1319,14 @@
         "bn": "বকেয়া বিক্রয়",
         "en": "Sales Due"
     },
+    "sales_amount": {
+        "bn": "বিক্রয়য়ের পরিমাণ",
+        "en": "Sales Amount"
+    },
+    "received_amount": {
+        "bn": "আদায়কৃত অর্থ",
+        "en": "Received Amount"
+    },
     "purchases_due": {
         "bn": "বকেয়া ক্রয়",
         "en": "Purchases Due"
@@ -1312,7 +1372,7 @@
         "en": "Supplier Funds Balance"
     },
     "funding_source": {
-        "bn": "তহবিল উৎস",
+        "bn": "তহবিলের উৎস",
         "en": "Funding Source"
     },
     "debit": {
@@ -1382,5 +1442,37 @@
     "subcategories": {
         "bn": "উপবিভাগসমুহ",
         "en": "Subcategories"
+    },
+    "daily_transactions": {
+        "bn": "দৈনিক লেনদেন",
+        "en": "Daily Transactions"
+    },
+    "transaction.income": {
+        "bn": "জমা",
+        "en": "Income"
+    },
+    "transaction.expense": {
+        "bn": "খরচ",
+        "en": "Expense"
+    },
+    "transaction.customer_payments": {
+        "bn": "বকেয়া আদায়",
+        "en": "Customer Payments"
+    },
+    "transaction.supplier_payments": {
+        "bn": "বকেয়া প্রদান",
+        "en": "Supplier Payments"
+    },
+    "exmployee_salaries": {
+        "bn": "কর্মকর্তা/কর্মচারীর বেতন",
+        "en": "Employee Salary"
+    },
+    "exmployee": {
+        "bn": "কর্মকর্তা/কর্মচারীর নাম",
+        "en": "Employee"
+    },
+    "daily_expenses": {
+        "bn": "দৈনিক খরচ",
+        "en": "Daily Expense"
     }
 }

@@ -319,6 +319,9 @@ export const cleanWhere = (obj, filters = [null, undefined, '']) => Object.entri
     .reduce((a, [k, v]) => (filters.includes(v) ? a : (a[k] = v, a)), {});
 
 export const commonDtOptions = (ctx) => {
+    if (!ctx) {
+        ctx = this;
+    }
     return {
         items: ctx.getItems,
         fields: ctx.fields,
@@ -381,6 +384,9 @@ export default {
         initDatatableModalEvents(this);
     },
     methods: {
+        commonDtOptions: function () {
+            return commonDtOptions(this);
+        },
         getItems(ctx) {
             // console.log(ctx)
             return axios.post((this.api_url || ctx.apiUrl) + "?page=" + (ctx.currentPage ? ctx.currentPage : 1), {

@@ -11,8 +11,7 @@ const mix = require('laravel-mix');
  */
 
 mix
-    .js('resources/js/app-client.js', 'public/js')
-    .js('resources/js/frontend.js', 'public/js')
+    .js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css');
 // .js('resources/js/app-server.js', 'public/js');
 // https://laracasts.com/discuss/channels/elixir/mix-npm-run-hot-browser-crash-uncaught-typeerror-cannot-read-property-call-of-undefined?page=1#reply=584824

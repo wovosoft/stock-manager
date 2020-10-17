@@ -1,7 +1,5 @@
 <template>
-    <footer class="footer bg-dark text-white px-2"
-            :class="{'ft-sidebar-opened':sidebarOpened}"
-    >
+    <footer class="footer bg-dark text-white px-2" :class="{'ft-sidebar-opened':sidebarOpened}">
         <slot>
             <b-row>
                 <b-col>

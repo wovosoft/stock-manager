@@ -34,6 +34,8 @@ import TheContainer from "./containers/TheContainer";
 
 Vue.prototype.$log = console.log.bind(this);
 Vue.prototype.route = (name, params, absolute) => window.route(name, params, absolute, Ziggy);
+
+
 Vue.prototype.__ = (key, fallback) => window._t(key, fallback);
 Vue.prototype._settings = (key, fallback) => window._s(key, fallback);
 
@@ -46,4 +48,4 @@ export default new Vue({
     methods: {
         msgBox
     }
-});
+}).$mount("#app");

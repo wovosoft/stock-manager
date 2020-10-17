@@ -7,17 +7,17 @@
                 </b-card>
             </b-col>
             <b-col md="3" sm="12">
-                <b-card :title="__('sales_paid','Sales Paid')">
+                <b-card :title="__('received_amount','Received')">
                     {{fund_summery.paid | currency}}
                 </b-card>
             </b-col>
             <b-col md="3" sm="12">
-                <b-card :title="__('sales_returned','Sales Returned')">
+                <b-card :title="__('returned_total','Returned Total')">
                     {{fund_summery.returned | currency}}
                 </b-card>
             </b-col>
             <b-col md="3" sm="12">
-                <b-card :title="__('sales_balance','Sales Balance')">
+                <b-card :title="__('balance','Balance')">
                     {{fund_summery.balance | currency}}
                 </b-card>
             </b-col>
@@ -216,7 +216,7 @@
                         key: 'paid',
                         searchable: false,
                         sortable: true,
-                        label: _t('paid', 'Paid'),
+                        label: _t('customers.paid', 'Paid'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {

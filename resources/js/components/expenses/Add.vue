@@ -35,7 +35,7 @@
                     </template>
                 </b-input-group>
             </b-form-group>
-            <b-form-group :label="__('amount','Amount') +' *'">
+            <b-form-group :label="__('payment_amount','Amount') +' *'">
                 <b-input type="number" step="any" v-model="form.amount"
                          :placeholder="__('expense_amount','Expense Amount')" :required="true"/>
             </b-form-group>

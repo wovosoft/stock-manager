@@ -1,9 +1,17 @@
 import Vue from 'vue'
 import VueRouter from "vue-router";
-import startCase from "bootstrap-vue/esm/utils/startcase";
 
 Vue.use(VueRouter);
-
+const SalesAdd = () => import("@/components/sales/Add");
+const PurchasesAdd = () => import("@/components/purchases/Add");
+const ExpensesAdd = () => import("@/components/expenses/Add");
+const ExpenseCategoriesAdd = () => import("@/components/expense_categories/Add");
+const SMSAdd = () => import("@/components/sms/Add");
+const ProductsAdd = () => import("@/components/products/Add");
+const BrandsAdd = () => import("@/components/brands/Add");
+// const SubcategoriesAdd = () => import("@/components/subcategories/Add");
+const UnitsAdd = () => import("@/components/units/Add");
+const LanguagesAdd = () => import("@/components/languages/Add");
 export default new VueRouter({
     mode: 'history', // https://router.vuejs.org/api/#mode
     linkActiveClass: 'open active',
@@ -27,25 +35,6 @@ export default new VueRouter({
                 title: _t('history', 'History'),
             },
             component: () => import('@/components/history/List')
-        },
-        {
-            name: "Transactions",
-            path: '/transactions',
-            redirect: "/transactions/add",
-            meta: {
-                title: _t('transactions', 'Transactions')
-            },
-            component: {
-                render: (c) => c('router-view')
-            },
-            children: [
-                {
-                    path: 'add',
-                    name: 'TransactionsAdd',
-                    meta: {breadcrumb: 'Add', title: _t('add', 'Add')},
-                    component: () => import("@/components/transactions/Add")
-                },
-            ]
         },
         {
             name: "Users",
@@ -102,13 +91,13 @@ export default new VueRouter({
                     path: 'add/:id?',
                     name: 'SalesAdd',
                     meta: {breadcrumb: 'Add', title: _t('new_sale', 'New Sale')},
-                    component: () => import("@/components/sales/Add")
+                    component: SalesAdd
                 },
                 {
                     path: 'edit/:id?',
                     name: 'SalesEdit',
                     meta: {breadcrumb: 'Edit', title: _t('sales_edit', 'Sales Edit')},
-                    component: () => import("@/components/sales/Add")
+                    component: SalesAdd
                 },
                 {
                     path: 'list',
@@ -123,22 +112,7 @@ export default new VueRouter({
                             component: () => import("@/components/sales/View")
                         },
                     ]
-                },
-                {
-                    path: 'reports',
-                    name: 'SalesReport',
-                    redirect: "reports/daily",
-                    meta: {breadcrumb: 'Reports', title: _t('sales_report', 'SalesReport')},
-                    component: () => import("@/components/sales/reports/Index"),
-                    children: [
-                        {
-                            path: 'daily',
-                            name: 'SalesReportDaily',
-                            meta: {breadcrumb: 'Daily', title: _t('daily_sales_report', 'Daily Sales Report')},
-                            component: () => import("@/components/sales/reports/Daily")
-                        },
-                    ]
-                },
+                }
             ]
         },
         {
@@ -153,13 +127,13 @@ export default new VueRouter({
                     path: 'add/:id?',
                     name: 'PurchasesAdd',
                     meta: {breadcrumb: 'Add', title: _t('new_purchase', 'New Purchase')},
-                    component: () => import("@/components/purchases/Add")
+                    component: PurchasesAdd
                 },
                 {
                     path: 'edit/:id?',
                     name: 'PurchasesEdit',
                     meta: {breadcrumb: 'Edit', title: _t('edit_purchase', 'Edit Purchase')},
-                    component: () => import("@/components/purchases/Add")
+                    component: PurchasesAdd
                 },
                 {
                     path: 'list',
@@ -247,28 +221,7 @@ export default new VueRouter({
                 }
             ]
         },
-        {
-            name: "BalanceSheet",
-            path: '/balance-sheet',
-            redirect: "/balance-sheet/customers",
-            component: {
-                render: (c) => c('router-view')
-            },
-            children: [
-                {
-                    path: 'customers',
-                    name: 'CustomersBalanceSheet',
-                    meta: {breadcrumb: 'Customer Balance Sheet'},
-                    component: () => import("@/components/customers/Balance"),
-                },
-                {
-                    path: 'suppliers',
-                    name: 'SuppliersBalanceSheet',
-                    meta: {breadcrumb: 'Supplier Balance Sheet'},
-                    component: () => import("@/components/suppliers/Balance"),
-                }
-            ]
-        },
+
         {
             name: "CapitalFunds",
             path: '/capital',
@@ -364,13 +317,13 @@ export default new VueRouter({
                             path: 'add',
                             name: 'ExpensesAdd',
                             meta: {breadcrumb: 'Add'},
-                            component: () => import("@/components/expenses/Add")
+                            component: ExpensesAdd
                         },
                         {
                             path: ':id/edit',
                             name: 'ExpensesEdit',
                             meta: {breadcrumb: 'Edit'},
-                            component: () => import("@/components/expenses/Add")
+                            component: ExpensesAdd
                         },
                         {
                             path: ':id/view',
@@ -390,13 +343,13 @@ export default new VueRouter({
                             path: 'add',
                             name: 'ExpenseCategoriesAdd',
                             meta: {breadcrumb: 'Add'},
-                            component: () => import("@/components/expense_categories/Add")
+                            component: ExpenseCategoriesAdd
                         },
                         {
                             path: ':id/edit',
                             name: 'ExpenseCategoriesEdit',
                             meta: {breadcrumb: 'Edit'},
-                            component: () => import("@/components/expense_categories/Add")
+                            component: ExpenseCategoriesAdd
                         },
                         {
                             path: ':id/view',
@@ -429,13 +382,13 @@ export default new VueRouter({
                             path: 'add',
                             name: 'SMSAdd',
                             meta: {breadcrumb: 'Add'},
-                            component: () => import("@/components/sms/Add")
+                            component: SMSAdd
                         },
                         {
                             path: ':id/edit',
                             name: 'SMSEdit',
                             meta: {breadcrumb: 'Edit'},
-                            component: () => import("@/components/sms/Add")
+                            component: SMSAdd
                         },
                         {
                             path: ':id/view',
@@ -465,13 +418,13 @@ export default new VueRouter({
                             path: 'add',
                             name: 'ProductsAdd',
                             meta: {breadcrumb: 'Add', title: _t('add_product', 'Add Product')},
-                            component: () => import("@/components/products/Add")
+                            component: ProductsAdd
                         },
                         {
                             path: ':id/edit',
                             name: 'ProductsEdit',
                             meta: {breadcrumb: 'Edit', title: _t('edit_product', 'Edit Product')},
-                            component: () => import("@/components/products/Add")
+                            component: ProductsAdd
                         },
                         {
                             path: ':id/view',
@@ -511,45 +464,19 @@ export default new VueRouter({
                             path: 'add',
                             name: 'BrandsAdd',
                             meta: {breadcrumb: 'Add'},
-                            component: () => import("@/components/brands/Add")
+                            component: BrandsAdd
                         },
                         {
                             path: ':id/edit',
                             name: 'BrandsEdit',
                             meta: {breadcrumb: 'Edit'},
-                            component: () => import("@/components/brands/Add")
+                            component: BrandsAdd
                         },
                         {
                             path: ':id/view',
                             name: 'BrandsView',
                             meta: {breadcrumb: 'View'},
                             component: () => import("@/components/brands/View")
-                        },
-                    ]
-                },
-                {
-                    path: 'subcategories',
-                    name: 'ProductSubcategories',
-                    meta: {breadcrumb: 'Sub Categories'},
-                    component: () => import("@/components/subcategories/List"),
-                    children: [
-                        {
-                            path: 'add',
-                            name: 'SubcategoriesAdd',
-                            meta: {breadcrumb: 'Add'},
-                            component: () => import("@/components/subcategories/Add")
-                        },
-                        {
-                            path: ':id/edit',
-                            name: 'SubcategoriesEdit',
-                            meta: {breadcrumb: 'Edit'},
-                            component: () => import("@/components/subcategories/Add")
-                        },
-                        {
-                            path: ':id/view',
-                            name: 'SubcategoriesView',
-                            meta: {breadcrumb: 'View'},
-                            component: () => import("@/components/subcategories/View")
                         },
                     ]
                 },
@@ -563,13 +490,13 @@ export default new VueRouter({
                             path: 'add/:id?',
                             name: 'UnitsAdd',
                             meta: {breadcrumb: 'Add'},
-                            component: () => import("@/components/units/Add")
+                            component: UnitsAdd
                         },
                         {
                             path: ':id/edit',
                             name: 'UnitsEdit',
                             meta: {breadcrumb: 'Edit'},
-                            component: () => import("@/components/units/Add")
+                            component: UnitsAdd
                         },
                         {
                             path: ':id/view',
@@ -643,13 +570,13 @@ export default new VueRouter({
                             path: 'add/:id?',
                             name: 'LanguagesAdd',
                             meta: {breadcrumb: 'Add'},
-                            component: () => import("@/components/languages/Add")
+                            component: LanguagesAdd
                         },
                         {
                             path: 'edit/:id?',
                             name: 'LanguagesEdit',
                             meta: {breadcrumb: 'Edit'},
-                            component: () => import("@/components/languages/Add")
+                            component: LanguagesAdd
                         },
                     ]
                 },

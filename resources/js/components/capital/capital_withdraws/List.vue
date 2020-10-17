@@ -163,6 +163,7 @@
                 total_no_withdrawals: 0,
                 fields: [
                     {key: 'id', sortable: true, label: _t('id', 'ID')},
+                    {key: 'reference', sortable: true, label: _t('reference', 'Reference')},
                     {
                         key: 'payment_amount',
                         label: _t('payment_amount', 'Payment Amount'),

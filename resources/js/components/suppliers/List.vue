@@ -207,7 +207,7 @@
                         key: 'paid',
                         searchable: false,
                         sortable: true,
-                        label: _t('paid', 'Paid'),
+                        label: _t('suppliers.paid', 'Paid'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {

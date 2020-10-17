@@ -1,13 +1,5 @@
 {
-    "/js/app-client.js": "/js/app-client.js",
+    "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
-    "/js/frontend.js": "/js/frontend.js",
-    "/UsersRouted.js": "/UsersRouted.js",
-    "/js/app-client.8f27b686a926a8a484e5.hot-update.js": "/js/app-client.8f27b686a926a8a484e5.hot-update.js",
-    "/js/app-client.5f6b5bc735d52b3380da.hot-update.js": "/js/app-client.5f6b5bc735d52b3380da.hot-update.js",
-    "/js/app-client.6f9706d85108b6b25708.hot-update.js": "/js/app-client.6f9706d85108b6b25708.hot-update.js",
-    "/js/app-client.be35e4857d604f7b4f6b.hot-update.js": "/js/app-client.be35e4857d604f7b4f6b.hot-update.js",
-    "/js/app-client.c28cc1dd4454f6952055.hot-update.js": "/js/app-client.c28cc1dd4454f6952055.hot-update.js",
-    "/js/app-client.6175ca89c3d229d9fce8.hot-update.js": "/js/app-client.6175ca89c3d229d9fce8.hot-update.js",
-    "/js/app-client.760613fad1f09e546100.hot-update.js": "/js/app-client.760613fad1f09e546100.hot-update.js"
+    "/UsersRouted.js": "/UsersRouted.js"
 }

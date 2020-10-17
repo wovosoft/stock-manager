@@ -9,6 +9,12 @@
              :title="__((form.id?'edit':'add')+'_fund',(form.id?'Edit ':'Add ')+'Fund')"
              lazy>
         <b-form @submit.prevent="onSubmit" ref="theForm">
+            <b-form-group :label="__('reference','Reference')">
+                <b-input
+                    type="text"
+                    :placeholder="__('reference','Reference')"
+                    v-model="form.reference"/>
+            </b-form-group>
             <b-form-group :label="__('deposit_amount','Deposit Amount')">
                 <b-input-group append="BDT">
                     <b-input
@@ -44,7 +50,7 @@
             </b-button>
         </b-form>
 
-<!--                <pre v-html="form"/>-->
+        <!--                <pre v-html="form"/>-->
     </b-modal>
 
 </template>

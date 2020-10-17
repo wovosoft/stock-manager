@@ -26,6 +26,8 @@
             head-variant="dark"
             foot-clone
             foot-variant="light"
+            :sort-desc.sync="expenses.sortDesc"
+            :sort-by.sync="expenses.sortBy"
             :per-page="expenses.per_page"
             :current-page="expenses.current_page"
             :items="getTodaysExpenses">
@@ -36,6 +38,7 @@
                 {{colSum(expenses.data,'amount') | currency}}
             </template>
         </b-table>
+
         <dt-footer :datatable="expenses"></dt-footer>
         <expenses-add
             @reset="()=>{
@@ -102,7 +105,7 @@
                     {
                         key: "amount",
                         sortable: true,
-                        label: _t("amount", "Amount"),
+                        label: _t("transaction.expense", "Amount"),
                         formatter: (v) => this.$options.filters.currency(v),
                     },
                     {
@@ -131,13 +134,19 @@
                         order: isTrue(ctx.sortDesc) ? 'desc' : 'asc',
                     })
                     .then((res) => {
-                        this.$set(this, 'expenses', res.data);
+                        this.expenses = {...this.expenses, ...res.data};
                         return res.data.data;
                     })
                     .catch((err) => {
                         console.log(err.response);
                         this.$set(this, 'expenses', {
+                            sortBy: 'id',
+                            sortDesc: true,
+                            per_page: 30,
                             current_page: 1,
+                            total: 0,
+                            from: 0,
+                            to: 0,
                             data: []
                         });
                         return [];

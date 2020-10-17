@@ -13,7 +13,7 @@ class CapitalBalanceController extends Controller
 {
     public static function routes()
     {
-        Route::name('Capital')->prefix('capital')->group(function (){
+        Route::name('Capital.')->prefix('capital')->group(function (){
             Route::post("balance", [self::class, 'balance'])->name('Balance');
             Route::post("fullFinancialSummery", [self::class, 'fullFinancialSummery'])->name('FullFinancialSummery');
         });

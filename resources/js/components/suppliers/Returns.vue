@@ -74,7 +74,7 @@
                     },
                     {
                         key: 'product_name',
-                        label: _t('product', 'Product'),
+                        label: _t('product_name', 'Product'),
                         name: 'products.name',
                         sortable: true
                     },

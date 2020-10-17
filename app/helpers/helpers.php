@@ -225,3 +225,12 @@ if (!function_exists('updateOrGenerateProductRecords')) {
         }
     }
 }
+//use it only there where user input is not used.
+if (!function_exists('getSqlWithBindings')) {
+    function getSqlWithBindings($query)
+    {
+        return vsprintf(str_replace('?', '%s', $query->toSql()), collect($query->getBindings())->map(function ($binding) {
+            return is_numeric($binding) ? $binding : "'{$binding}'";
+        })->toArray());
+    }
+}

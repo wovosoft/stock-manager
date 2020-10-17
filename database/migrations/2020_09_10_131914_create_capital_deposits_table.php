@@ -15,6 +15,7 @@ class CreateCapitalDepositsTable extends Migration
     {
         Schema::create('capital_deposits', function (Blueprint $table) {
             $table->id();
+            $table->string('reference')->nullable();
             $table->double("payment_amount");
             $table->string("payment_method");
             $table->string("bank")->nullable();

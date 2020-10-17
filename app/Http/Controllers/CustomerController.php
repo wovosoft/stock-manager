@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
-use App\Models\Sale;
-use App\Models\SaleItem;
-use App\Models\SalePayment;
 use App\Traits\Crud;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
@@ -44,6 +41,7 @@ class CustomerController extends Controller
     ];
     use Crud;
 
+
     public static function routes()
     {
         Route::name('Customers.')->prefix('customers')->group(function () {
@@ -51,6 +49,7 @@ class CustomerController extends Controller
             Route::post("{customer}/returns", [self::class, 'returns'])->name('Returns');
             Route::post("{customer}/payments", [self::class, 'payments'])->name('Payments');
             Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("search/with/dues", [self::class, 'searchWithDues'])->name('SearchWithDues');
             Route::post("store", [self::class, 'store'])->name('Store');
             Route::post("delete", [self::class, 'delete'])->name('Delete');
             Route::post("{customer}/add_fund", [self::class, 'addPayment'])->name('Payments.Add');
@@ -117,50 +116,50 @@ class CustomerController extends Controller
     public function list(Request $request)
     {
         try {
-            $payable = "(SELECT IFNULL(SUM(sales.payable),0) FROM sales WHERE sales.customer_id = customers.id)";
-            $paid = "(SELECT IFNULL(SUM(sale_payments.payment_amount),0) FROM sale_payments WHERE sale_payments.customer_id = customers.id)";
-            $returned = "(SELECT IFNULL(SUM(sale_items.returned_total),0) FROM sale_items WHERE sale_items.customer_id = customers.id)";
 
-            $items = Customer::query()
-                ->select([
-                    "customers.*",
-                    "payable" => function (Builder $builder) {
-                        $builder
-                            ->from("sales")
-                            ->where("sales.customer_id", "=", DB::raw("customers.id"))
-                            ->whereNull("sales.deleted_at")
-                            ->selectRaw("IFNULL(SUM(sales.payable),0)");
-                    },
-                    "paid" => function (Builder $builder) {
-                        $builder
-                            ->from("sale_payments")
-                            ->where("sale_payments.customer_id", "=", DB::raw("customers.id"))
-                            ->whereNull("sale_payments.deleted_at")
-                            ->selectRaw("IFNULL(SUM(sale_payments.payment_amount),0)");
-                    },
-                    "returned" => function (Builder $builder) {
-                        $builder
-                            ->from("sale_returns")
-                            ->where("sale_returns.customer_id", "=", DB::raw("customers.id"))
-                            ->whereNull("sale_returns.deleted_at")
-                            ->selectRaw("IFNULL(SUM(sale_returns.amount),0)");
-                    },
-                    "balance" => function (Builder $builder) {
-                        $builder->selectRaw("payable - paid - returned");
-                    }
-                ]);
+            $payable = DB::table("sales")
+                ->where("sales.customer_id", "=", DB::raw("customers.id"))
+                ->whereNull("sales.deleted_at")
+                ->selectRaw("IFNULL(SUM(sales.payable),0)")
+                ->toSql();
+
+            $returned = DB::table("sale_returns")
+                ->where("sale_returns.customer_id", "=", DB::raw("customers.id"))
+                ->whereNull("sale_returns.deleted_at")
+                ->selectRaw("IFNULL(SUM(sale_returns.amount),0)")
+                ->toSql();
+
+            $paid = DB::table('sale_payments')
+                ->where("sale_payments.customer_id", "=", DB::raw("customers.id"))
+                ->whereNull("sale_payments.deleted_at")
+                ->selectRaw("IFNULL(SUM(sale_payments.payment_amount),0)")
+                ->toSql();
+
+            $selects = [
+                DB::raw("($payable) as payable"),
+                DB::raw("($paid) as paid"),
+                DB::raw("($returned) as returned"),
+                "balance" => function (Builder $builder) {
+                    $builder->selectRaw("payable - paid - returned");
+                },
+            ];
+            $items = Customer::query()->select(array_merge(["customers.*",], $selects));
             if ($request->has('id')) {
                 return $items->findOrFail($request->post('id'));
             }
 
             return response()
                 ->json($items->defaultDatatable($request))
-                ->header("fund_summery", json_encode(resetQueryForOverview($items)->select([
-                    DB::raw("SUM(IFNULL($payable,0)) as payable"),
-                    DB::raw("SUM(IFNULL($paid,0))  as paid"),
-                    DB::raw("SUM(IFNULL($returned,0))  as returned"),
-                    DB::raw("IFNULL(SUM($payable-$paid-$returned),0) as balance"),
-                ])->first()));
+                ->header("fund_summery", json_encode(
+                    resetQueryForOverview($items)
+                        ->select([
+                            DB::raw("SUM(IFNULL(($payable),0)) as payable"),
+                            DB::raw("SUM(IFNULL(($returned),0))  as returned"),
+                            DB::raw("SUM(IFNULL(($paid),0))  as paid"),
+                            DB::raw("SUM(IFNULL(($payable) - ($returned) - ($paid),0))  as balance"),
+                        ])
+                        ->first()
+                ));
         } catch (\Throwable $exception) {
             throw $exception;
         }
@@ -319,6 +318,49 @@ class CustomerController extends Controller
                     DB::raw("products.name as product_name"),
                 ])
                 ->defaultDatatable($request);
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function searchWithDues(Request $request)
+    {
+        try {
+            $payable = DB::table("sales")
+                ->where("sales.customer_id", "=", DB::raw("customers.id"))
+                ->whereNull("sales.deleted_at")
+                ->selectRaw("IFNULL(SUM(sales.payable),0)")
+                ->toSql();
+
+            $returned = DB::table("sale_returns")
+                ->where("sale_returns.customer_id", "=", DB::raw("customers.id"))
+                ->whereNull("sale_returns.deleted_at")
+                ->selectRaw("IFNULL(SUM(sale_returns.amount),0)")
+                ->toSql();
+
+            $paid = DB::table('sale_payments')
+                ->where("sale_payments.customer_id", "=", DB::raw("customers.id"))
+                ->whereNull("sale_payments.deleted_at")
+                ->selectRaw("IFNULL(SUM(sale_payments.payment_amount),0)")
+                ->toSql();
+            $items = Customer::query()
+                ->select([
+                    "customers.id",
+                    "customers.name",
+                    "customers.phone",
+                    "customers.company",
+                    DB::raw("(($payable) - ($paid) - ($returned)) as balance")
+                ])
+                ->limit($request->post('limit') ?? 30);
+
+            if ($request->post('query')) {
+                $items
+                    ->where('id', '=', $request->post('query'))
+                    ->orWhere('name', 'like', '%' . $request->post('query') . '%')
+                    ->orWhere('company', 'like', '%' . $request->post('query') . '%')
+                    ->orWhere('phone', 'like', '%' . $request->post('query') . '%');
+            }
+            return $items->get();
         } catch (\Throwable $exception) {
             throw $exception;
         }
