@@ -13,10 +13,10 @@
                     {{__('permission_management','Permissions Management')}}
                 </b-nav-item>
                 <b-nav-item :to="{name:'UserAbilityTest'}" exact exact-active-class="active">
-                    {{__('check_user_abilities',' Check Users Ability')}}
+                    {{__('check_users_ability',' Check Users Ability')}}
                 </b-nav-item>
                 <b-nav-item :to="{name:'RoleAbilityTest'}" exact exact-active-class="active">
-                    {{__('check_role_abilities','Check Roles Ability')}}
+                    {{__('check_roles_ability','Check Roles Ability')}}
                 </b-nav-item>
             </b-nav>
         </b-card-header>

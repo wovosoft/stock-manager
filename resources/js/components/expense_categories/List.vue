@@ -113,7 +113,7 @@
         props: {
             title: {
                 type: String,
-                default: ' Expense Categories'
+                default: _t('expense_categories','Expense Categories')
             },
             api_url: {
                 type: String,

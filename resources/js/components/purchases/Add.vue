@@ -212,7 +212,7 @@
                 </b-card>
             </b-col>
         </b-form-row>
-<!--        <pre v-html="form"></pre>-->
+        <!--        <pre v-html="form"></pre>-->
 
         <b-modal
             size="xl"
@@ -221,7 +221,7 @@
             header-text-variant="light"
             footer-bg-variant="dark"
             footer-text-variant="light"
-            :title="__('sale_invoice','Sale Invoice')"
+            :title="__('purchase_invoice','Purchase Invoice')"
             id="invoice-modal"
             lazy
             no-close-on-backdrop
@@ -231,7 +231,7 @@
                 id="print_invoice"
                 aspect="16by9"
                 allowfullscreen
-                :src="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'pdf'})"/>
+                :src="route('Backend.Purchases.Invoice.PDF',{purchase:purchase_id,type:'pdf'})"/>
             <template v-slot:modal-footer="{close}">
                 <!--                <b-button variant="primary" @click="invoice_type=invoice_type==='pdf'?'html':'pdf'">-->
                 <!--                    Type : {{invoice_type}}-->
@@ -274,7 +274,7 @@
         },
         data() {
             return {
-                sale_id: null,
+                purchase_id: null,
                 search_category: null,
                 searched_items: {
                     data: [],
@@ -339,7 +339,7 @@
                     }
                     this.onSubmit((res) => {
                         this.$bvModal.show('invoice-modal');
-                        this.sale_id = res.data.sale_id;
+                        this.purchase_id = res.data.purchase_id;
                         this.$set(this, "form", {
                             items: [],
                             date: dayjs().format("YYYY-MM-DD"),

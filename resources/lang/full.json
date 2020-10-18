@@ -80,7 +80,7 @@
         "en": "Capital Funds"
     },
     "balance": {
-        "bn": "জের",
+        "bn": "ব্যাল্যান্স",
         "en": "Balance"
     },
     "previous_balance": {
@@ -984,11 +984,11 @@
         "en": "Withdraw Method"
     },
     "total_expense_amount": {
-        "bn": "মোট ব্যায়িত অর্থ",
+        "bn": "মোট খরচ",
         "en": "Total Expense Amount"
     },
     "total_expense_quantity": {
-        "bn": "মোট ব্যয়ের সংখ্যা",
+        "bn": "মোট খরচের সংখ্যা",
         "en": "Total Expense Quantity"
     },
     "view_expense": {
@@ -998,6 +998,10 @@
     "expense_category_id": {
         "bn": "ব্যয় বিভাগের আইডি",
         "en": "Expense Category Id"
+    },
+    "expense_categories": {
+        "bn": "খরচ বিভাগের তালিকা",
+        "en": "Expense Categories"
     },
     "expense_category_name": {
         "bn": "ব্যয় বিভাগের নাম",
@@ -1216,7 +1220,7 @@
         "en": "Salary"
     },
     "employees": {
-        "bn": "কর্মচারীর তালিকা",
+        "bn": "কর্মী তালিকা",
         "en": "Employees"
     },
     "edit_employee": {
@@ -1340,7 +1344,7 @@
         "en": "Employee Salaries"
     },
     "total_employees": {
-        "bn": "মোট কর্মচারী",
+        "bn": "মোট কর্মকর্তা/কর্মচারী",
         "en": "Total Employees"
     },
     "cash_available": {
@@ -1474,5 +1478,157 @@
     "daily_expenses": {
         "bn": "দৈনিক খরচ",
         "en": "Daily Expense"
+    },
+    "customer_sales_report": {
+        "bn": "ক্রেতা অনুযায়ী বিক্রয় রিপোর্ট",
+        "en": "Customer-wise Sales Report"
+    },
+    "supplier_purchase_report": {
+        "bn": "সরবরাহকারী অনুযায়ী ক্রয় রিপোর্ট",
+        "en": "Supplier-wise Sales Report"
+    },
+    "daily_product_report": {
+        "bn": "দৈনিক পণ্য জমা-খরচ রিপোর্ট",
+        "en": "Daily Stock Report"
+    },
+    "purchases.paid": {
+        "bn": "জমা",
+        "en": "Paid"
+    },
+    "sales.paid": {
+        "bn": "জমা",
+        "en": "Paid"
+    },
+    "capital_deposit": {
+        "bn": "মূলধন জমা",
+        "en": "Capital Deposit"
+    },
+    "capital_withdraw": {
+        "bn": "মূলধন উত্তোলন",
+        "en": "Capital Withdraw"
+    },
+    "purchase_payment": {
+        "bn": "বকেয়া পরিশোধ",
+        "en": "Purchase Payment"
+    },
+    "purchase_return": {
+        "bn": "ক্রয়কৃত মাল ফেরত",
+        "en": "Purchase Return"
+    },
+    "purchase_balance": {
+        "bn": "ক্রয় জের",
+        "en": "Purchase Balance"
+    },
+    "sale_payment": {
+        "bn": "বকেয়া আদায়",
+        "en": "Sale Payment"
+    },
+    "sale_return": {
+        "bn": "বিক্রিত মাল ফেরত",
+        "en": "Sale Return"
+    },
+    "sale_balance": {
+        "bn": "বিক্রয় জের",
+        "en": "Sale Balance"
+    },
+    "expense": {
+        "bn": "দৈনিক খরচ",
+        "en": "Daily Expense"
+    },
+    "employee_salary": {
+        "bn": "কর্মকর্তা/কর্মচারী বেতন",
+        "en": "Employee Salary"
+    },
+    "capital.deposit": {
+        "bn": "জমা",
+        "en": "Deposit"
+    },
+    "capital.withdraw": {
+        "bn": "উত্তোলন",
+        "en": "Withdraw"
+    },
+    "capital_debit_credit": {
+        "bn": "মূলধন জমা ও উত্তোলন",
+        "en": "Capital Debit Credit"
+    },
+    "select_category": {
+        "bn": "বিভাগ বাছাই করুন",
+        "en": "Select Category"
+    },
+    "sales_quantity": {
+        "bn": "বিক্রয়ের সংখ্যা",
+        "en": "Sales Quantity"
+    },
+    "list_of_sales": {
+        "bn": "বিক্রয়ের তালিকা",
+        "en": "List of Sales"
+    },
+    "purchases_quantity": {
+        "bn": "ক্রয়ের সংখ্যা",
+        "en": "Purchases Quantity"
+    },
+    "purchases_total": {
+        "bn": "মোট ক্রয়মূল্য",
+        "en": "Purchases Total"
+    },
+    "purchases_returned": {
+        "bn": "ক্রয়কৃত মাল ফেরত",
+        "en": "Purchases Returned"
+    },
+    "add_payment": {
+        "bn": "নতুন পেমেন্ট",
+        "en": "Add Payment"
+    },
+    "returns_history": {
+        "bn": "মাল ফেরতের ইতিহাস",
+        "en": "Returns History"
+    },
+    "more": {
+        "bn": "আরও",
+        "en": "More"
+    },
+    "check_users_ability": {
+        "bn": "ব্যাবহারকারির সক্ষমতা যাচাই",
+        "en": "Check User's Ability"
+    },
+    "check_roles_ability": {
+        "bn": "ব্যাবহারকারি ভূমিকার সক্ষমতা যাচাই",
+        "en": "Check User's Ability"
+    },
+    "reports": {
+        "bn": "রিপোর্টের তালিকা",
+        "en": "Reports"
+    },
+    "product_report": {
+        "bn": "পণ্য স্টক রিপোর্ট",
+        "en": "Product Report"
+    },
+    "income_expense_report": {
+        "bn": "আয়/ব্যয় রিপোর্ট",
+        "en": "Income / Expense Report"
+    },
+    "income": {
+        "bn": "আয়",
+        "en": "Income"
+    },
+    "reports.expense": {
+        "bn": "ব্যয়",
+        "en": "Expense"
+    },
+    "time": {
+        "bn": "সময়",
+        "en": "Time"
+    },
+    "sl": {
+        "bn": "ক্রঃনং",
+        "en": "SL"
+    },
+    "title": {
+        "bn": "শিরোনাম",
+        "en": "Title"
+    },
+    "short_financial_report": {
+        "bn": "সংক্ষিপ্ত আর্থিক বিবরণ",
+        "en": "Short Financial Report"
     }
 }

@@ -63,7 +63,7 @@
                                       @click="invoice_is_delivery=true,currentItem=JSON.parse(JSON.stringify(row.item))">
                                 <i class="fa fa-shopping-cart"></i>
                             </b-button>
-                            <b-dropdown right text="More" size="sm">
+                            <b-dropdown right size="sm">
                                 <b-dropdown-item
                                     :title="__('cash_and_delivery_memo','Cash & Delivery')"
                                     v-b-modal:invoice-modal
@@ -142,7 +142,7 @@
         props: {
             title: {
                 type: String,
-                default: 'List of Sales'
+                default: _t('list_of_sales', 'List of Sales')
             },
             api_url: {
                 type: String,

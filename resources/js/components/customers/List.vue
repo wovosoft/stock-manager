@@ -64,7 +64,7 @@
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
                                 <i class="fa fa-money-check"></i>
                             </b-button>
-                            <b-dropdown right text="More" size="sm">
+                            <b-dropdown right  size="sm">
                                 <b-dropdown-item
                                     :title="__('returns_history','Returns History')"
                                     v-b-modal:returns-modal

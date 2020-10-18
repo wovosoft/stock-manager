@@ -8,6 +8,7 @@ use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Traits\Crud;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -63,7 +64,8 @@ class SaleController extends Controller
                     $request->post('payment_method'),
                     $request->post("bank"),
                     $request->post("check"),
-                    $request->post("transaction_no")
+                    $request->post("transaction_no"),
+                    Carbon::now()->add(CarbonInterval::milliseconds(500))->toDateTimeString()
                 );
                 DB::commit();
             } catch (\Throwable $exception) {
@@ -106,6 +108,17 @@ class SaleController extends Controller
             DB::beginTransaction();
 
             $sale = Sale::query()->findOrNew($request->post('id'));
+
+            /**
+             * Now we calculate the total and payable
+             */
+
+            [$items_total, $sale_payable] = $this->getSalesAndItemsPayable(
+                $request->post("items"),
+                $request->post('tax') ?? 0,
+                $request->post('discount') ?? 0
+            );
+
             $sale->forceFill([
                 "customer_id" => $request->post("customer_id"),
                 "tax" => $request->post('tax') ?? 0,
@@ -114,17 +127,10 @@ class SaleController extends Controller
                 "status" => $request->post('status') ?? "Processed",
                 "note" => $request->post('note') ?? null,
                 "paid" => round($request->post('payment_amount'), 2),
+                "total" => round($items_total, 2),
+                "payable" => round($sale_payable, 2)
             ]);
-            /**
-             * Now we calculate the total and payable
-             */
-            [$items_total, $sale_payable] = $this->getSalesAndItemsPayable(
-                $request->post("items"),
-                $request->post('tax') ?? 0,
-                $request->post('discount') ?? 0
-            );
-            $sale->total = round($items_total, 2);
-            $sale->payable = round($sale_payable, 2);
+
             $sale->saveOrFail();
 
             $this->applySalePayment($sale, $request);

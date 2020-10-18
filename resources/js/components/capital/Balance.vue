@@ -168,13 +168,13 @@
                     },
                     {
                         key: 'debit',
-                        label: _t('debit', 'Debit'),
+                        label: _t('capital.deposit', 'Debit'),
                         sortable: true,
                         formatter: v => v ? this.$options.filters.currency(v) : ''
                     },
                     {
                         key: 'credit',
-                        label: _t('credit', 'Credit'),
+                        label: _t('capital.withdraw', 'Credit'),
                         sortable: true,
                         formatter: v => v ? this.$options.filters.currency(v) : ''
                     },

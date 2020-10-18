@@ -10,6 +10,7 @@ use App\Models\PurchasePayment;
 use App\Models\Supplier;
 use App\Traits\Crud;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -23,7 +24,7 @@ class PurchaseController extends Controller
 
     public static function routes()
     {
-        Route::name('Purchases.')->prefix('purchases')->group(function (){
+        Route::name('Purchases.')->prefix('purchases')->group(function () {
             Route::post("store", [self::class, 'store'])->name('Store');
             Route::post("list", [self::class, 'list'])->name('List');
             Route::post("delete", [self::class, 'delete'])->name('Delete');
@@ -52,21 +53,26 @@ class PurchaseController extends Controller
         ];
     }
 
+    /**
+     * @param Purchase $purchase
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     private function applyPayment(Purchase $purchase, Request $request)
     {
         if ($request->post('payment_amount')) {
             try {
                 DB::beginTransaction();
-                $payment = new PurchasePayment();
-                $payment->forceFill([
-                    "supplier_id" => $purchase->supplier_id,
-                    "payment_amount" => round($request->post('payment_amount'), 2),
-                    "payment_method" => $request->post('payment_method'),
-                    "bank" => $request->post("bank"),
-                    "check" => $request->post("check"),
-                    "transaction_no" => $request->post("transaction_no"),
-                ]);
-                $payment->saveOrFail();
+                $supplier = Supplier::query()->findOrFail($purchase->supplier_id);
+                $supplier->addPayment(
+                    round($request->post('payment_amount'), 2),
+                    $request->post('payment_method'),
+                    $request->post("bank"),
+                    $request->post("check"),
+                    $request->post("transaction_no"),
+                    Carbon::now()->add(CarbonInterval::milliseconds(500))->toDateTimeString()
+                );
                 DB::commit();
                 return successResponse();
             } catch (\Throwable $exception) {
@@ -79,8 +85,8 @@ class PurchaseController extends Controller
     private function applyItems(Purchase $purchase, Request $request)
     {
         try {
+            DB::beginTransaction();
             foreach ($request->post('items') as $si) {
-                DB::beginTransaction();
                 $purchase_item = new PurchaseItem();
                 $purchase_item->forceFill([
                     "purchase_id" => $purchase->id,
@@ -90,8 +96,8 @@ class PurchaseController extends Controller
                     "price" => round($si['price'], 2)
                 ]);
                 $purchase_item->saveOrFail();
-                DB::commit();
             }
+            DB::commit();
         } catch (\Throwable $exception) {
             DB::rollBack();
             throw $exception;

@@ -9,19 +9,15 @@ use App\Models\Expense;
 use App\Models\Product;
 use App\Models\PurchasePayment;
 use App\Models\PurchaseReturn;
-use App\Models\SaleItem;
 use App\Models\SalePayment;
 use App\Models\SaleReturn;
 use App\Models\Supplier;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 class ReportsController extends Controller
 {
@@ -34,6 +30,7 @@ class ReportsController extends Controller
             Route::match(['get', 'post'], 'customers/sales/{pdf?}', [self::class, 'customerSalesReport'])->name("Customers.Sales");
             Route::match(['get', 'post'], 'suppliers/purchases/{pdf?}', [self::class, 'supplierPurchasesReport'])->name("Suppliers.Purchases");
             Route::match(['get', 'post'], 'income_expenses/{date}/{pdf?}', [self::class, 'incomeExpense'])->name("IncomeExpense");
+            Route::match(['get', 'post'], 'financial_report/{pdf?}', [self::class, 'financialReport'])->name("ShortFinancialReport");
         });
     }
 
@@ -100,7 +97,7 @@ class ReportsController extends Controller
                             ->whereDate("sale_returns.created_at", "=", $date)
                             ->where("sale_returns.product_id", "=", DB::raw("products.id"))
                             ->selectRaw("IFNULL(SUM(sale_returns.quantity),0)");
-                    },
+                    }
                 ]);
 
         } catch (\Throwable $exception) {
@@ -120,77 +117,9 @@ class ReportsController extends Controller
             return $this
                 ->dailyProductsReport($date, $export, $request)
                 ->paginate($request->post('per_page') ?? 30);
-
-//            $this->date = $date;
-//            if (!Storage::exists('product_records/' . Carbon::parse($date)->format('Y_m_d') . ".json")) {
-//                Artisan::call("record:products");
-//            }
-//
-//            return $this
-//                ->paginate($this->getRecord($date), $request->post('per_page') ?? 30)
-//                ->setPath(\request()->url());
         } catch (\Throwable $exception) {
             throw $exception;
         }
-    }
-
-    private function getRecord(string $date)
-    {
-        if (!Storage::exists('product_records/' . Carbon::parse($date)->format('Y_m_d') . ".json")) {
-            return [];
-        }
-        return json_decode(Storage::get('product_records/' . Carbon::parse($date)->format('Y_m_d') . ".json"));
-    }
-
-    private function paginate($items, $perPage = 100, $page = null, $options = [])
-    {
-        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-
-        $collection = new LengthAwarePaginator(
-            array_slice($items, max(0, ($page - 1) * $perPage), $perPage),
-            count($items),
-            $perPage,
-            $page,
-            $options
-        );
-        $products = Product::query()
-            ->whereIn('id', $collection->getCollection()->pluck('id'))
-            ->select(['id', 'name', 'code', 'unit_id'])
-            ->with(['unit:id,name'])
-            ->get()
-            ->keyBy('id');
-
-
-        $sale_items = SaleItem::query()
-            ->whereIn('product_id', $collection->getCollection()->pluck('id'))
-            ->whereDate("created_at", "=", $this->date)
-            ->groupBy('product_id')
-            ->select([
-                "product_id",
-                DB::raw("SUM(quantity) as sales_quantity"),
-                DB::raw("SUM(total) as sales_payable"),
-            ])
-            ->get()
-            ->keyBy('product_id');
-
-        $yesterday_data = Collection::make(
-            $this->getRecord(Carbon::parse($this->date)->addDays(-1)->format('Y-m-d'))
-        )->keyBy('id');
-
-
-        $collection->getCollection()->transform(function ($item) use ($yesterday_data, $sale_items, $products) {
-            $the_item = $products->get($item->id);
-            $sale_item = $sale_items->get($item->id);
-            $previous_data = $yesterday_data->get($item->id);
-            $item->name = $the_item->name;
-            $item->code = $the_item->code;
-            $item->unit = $the_item->unit;
-            $item->sales_quantity = $sale_item ? $sale_item->sales_quantity : 0;
-            $item->sales_payable = $sale_item ? $sale_item->sales_payable : 0;
-            $item->previous_quantity = $previous_data ? $previous_data->quantity : null;
-            return $item;
-        });
-        return $collection;
     }
 
 
@@ -479,4 +408,163 @@ class ReportsController extends Controller
             throw $exception;
         }
     }
+
+    private function setDateRange(Builder $builder, Request $request)
+    {
+        if ($request->input('start_date')) {
+            $builder->whereDate("created_at", ">=", $request->input('start_date'));
+        }
+        if ($request->input('end_date')) {
+            $builder->whereDate("created_at", "<=", $request->input('end_date'));
+        }
+        return $builder;
+    }
+
+    public function financialReport(?string $pdf = null, Request $request)
+    {
+        try {
+            $item = User::query()
+                ->select([
+                    "capital_deposit" => function (Builder $builder) use ($request) {
+                        $builder
+                            ->from('capital_deposits')
+                            ->selectRaw("IFNULL(SUM(capital_deposits.payment_amount),0)");
+                        $this->setDateRanges($builder, $request);
+                    },
+                    "capital_withdraw" => function (Builder $builder) use ($request) {
+                        $builder
+                            ->from('capital_withdraws')
+                            ->selectRaw("IFNULL(SUM(capital_withdraws.payment_amount),0)");
+                        $this->setDateRanges($builder, $request);
+                    },
+                    "capital_balance" => function (Builder $builder) use ($request) {
+                        $builder->selectRaw("capital_deposit - capital_withdraw");
+                    },
+                    "purchase_payment" => function (Builder $builder) use ($request) {
+                        $builder->from("purchase_payments")
+                            ->selectRaw("IFNULL(SUM(purchase_payments.payment_amount),0)");
+                        $this->setDateRanges($builder, $request);
+                    },
+                    "purchase_return" => function (Builder $builder) use ($request) {
+                        $builder->from("purchase_returns")
+                            ->selectRaw("IFNULL(SUM(purchase_returns.amount),0)");
+                        $this->setDateRanges($builder, $request);
+                    },
+                    "purchase_balance" => function (Builder $builder) {
+                        $builder->selectRaw("purchase_payment - purchase_return");
+                    },
+                    "sale_payment" => function (Builder $builder) use ($request) {
+                        $builder->from("sale_payments")
+                            ->selectRaw("IFNULL(SUM(sale_payments.payment_amount),0)");
+                        $this->setDateRanges($builder, $request);
+                    },
+                    "sale_return" => function (Builder $builder) use ($request) {
+                        $builder->from("sale_returns")
+                            ->selectRaw("IFNULL(SUM(sale_returns.amount),0)");
+                        $this->setDateRanges($builder, $request);
+                    },
+                    "sale_balance" => function (Builder $builder) {
+                        $builder->selectRaw("sale_payment - sale_return");
+                    },
+                    "expense" => function (Builder $builder) use ($request) {
+                        $builder->from("expenses")
+                            ->selectRaw("IFNULL(SUM(expenses.amount),0)");
+                        $this->setDateRanges($builder, $request);
+                    },
+                    "employee_salary" => function (Builder $builder) use ($request) {
+                        $builder->from("employee_salaries")
+                            ->selectRaw("IFNULL(SUM(employee_salaries.payment_amount),0)");
+                        $this->setDateRanges($builder, $request);
+                    },
+                    "balance" => function (Builder $builder) {
+                        $builder->selectRaw("capital_deposit - capital_withdraw - purchase_payment + purchase_return + sale_payment -  sale_return - expense - employee_salary ");
+                    }
+                ])
+                ->first();
+            if ($pdf == "pdf") {
+                return \PDF::loadView("pages.financial.short", [
+                    "item" => $item,
+                    "html" => false
+                ])->stream('full_financial_report.pdf');
+            } elseif ($pdf == 'html') {
+                return view("pages.financial.short", [
+                    "item" => $item,
+                    "html" => true
+                ]);
+            }
+            return $item;
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
 }
+/*
+ * //            $this->date = $date;
+//            if (!Storage::exists('product_records/' . Carbon::parse($date)->format('Y_m_d') . ".json")) {
+//                Artisan::call("record:products");
+//            }
+//
+//            return $this
+//                ->paginate($this->getRecord($date), $request->post('per_page') ?? 30)
+//                ->setPath(\request()->url());
+ *  private function getRecord(string $date)
+    {
+        if (!Storage::exists('product_records/' . Carbon::parse($date)->format('Y_m_d') . ".json")) {
+            return [];
+        }
+        return json_decode(Storage::get('product_records/' . Carbon::parse($date)->format('Y_m_d') . ".json"));
+    }
+
+    private function paginate($items, $perPage = 100, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+
+        $collection = new LengthAwarePaginator(
+            array_slice($items, max(0, ($page - 1) * $perPage), $perPage),
+            count($items),
+            $perPage,
+            $page,
+            $options
+        );
+        $products = Product::query()
+            ->whereIn('id', $collection->getCollection()->pluck('id'))
+            ->select(['id', 'name', 'code', 'unit_id'])
+            ->with(['unit:id,name'])
+            ->get()
+            ->keyBy('id');
+
+
+        $sale_items = SaleItem::query()
+            ->whereIn('product_id', $collection->getCollection()->pluck('id'))
+            ->whereDate("created_at", "=", $this->date)
+            ->groupBy('product_id')
+            ->select([
+                "product_id",
+                DB::raw("SUM(quantity) as sales_quantity"),
+                DB::raw("SUM(total) as sales_payable"),
+            ])
+            ->get()
+            ->keyBy('product_id');
+
+        $yesterday_data = Collection::make(
+            $this->getRecord(Carbon::parse($this->date)->addDays(-1)->format('Y-m-d'))
+        )->keyBy('id');
+
+
+        $collection->getCollection()->transform(function ($item) use ($yesterday_data, $sale_items, $products) {
+            $the_item = $products->get($item->id);
+            $sale_item = $sale_items->get($item->id);
+            $previous_data = $yesterday_data->get($item->id);
+            $item->name = $the_item->name;
+            $item->code = $the_item->code;
+            $item->unit = $the_item->unit;
+            $item->sales_quantity = $sale_item ? $sale_item->sales_quantity : 0;
+            $item->sales_payable = $sale_item ? $sale_item->sales_payable : 0;
+            $item->previous_quantity = $previous_data ? $previous_data->quantity : null;
+            return $item;
+        });
+        return $collection;
+    }
+
+
+ */

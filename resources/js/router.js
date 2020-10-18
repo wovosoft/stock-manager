@@ -510,6 +510,7 @@ export default new VueRouter({
         },
         {
             path: '/reports',
+            redirect: '/reports/short_financial',
             name: 'Reports',
             component: {
                 render: (c) => c('router-view')
@@ -538,6 +539,12 @@ export default new VueRouter({
                     name: 'IncomeExpenseReport',
                     meta: {breadcrumb: 'Income - Expense Report'},
                     component: () => import("@/components/reports/collection/InvomeExpense")
+                },
+                {
+                    path: 'short_financial',
+                    name: 'ShortFinancialReport',
+                    meta: {breadcrumb: 'Short Financial Report'},
+                    component: () => import("@/components/reports/accounts/ShortFinancialReport")
                 }
             ]
         },

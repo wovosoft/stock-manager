@@ -128,7 +128,7 @@
                     },
                     {
                         key: 'paid',
-                        label: _t('paid', 'Paid'),
+                        label: _t('purchases.paid', 'Paid'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {

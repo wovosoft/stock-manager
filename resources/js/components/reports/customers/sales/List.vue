@@ -123,12 +123,12 @@
                     },
                     {
                         key: 'payable',
-                        label: _t('sales_amount', 'Sales Amount'),
+                        label: _t('total', 'Total'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {
                         key: 'paid',
-                        label: _t('paid', 'Paid'),
+                        label: _t('sales.paid', 'Paid'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {

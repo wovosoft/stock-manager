@@ -19,7 +19,7 @@
             </b-col>
             <b-col md="3" sm="12">
                 <b-card bg-variant="dark" text-variant="light" class="text-center mb-2">
-                    <h4>{{__('expense','Expense')}}</h4>
+                    <h4>{{__('reports.expense','Expense')}}</h4>
                     <div>
                         {{colSum(dt.data,'expense') | currency}}
                     </div>
@@ -43,7 +43,8 @@
                         </b-input-group>
                     </b-col>
                     <b-col>
-                        <b-button size="sm" target="_blank" variant="dark" :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'pdf'}).url()">
+                        <b-button size="sm" target="_blank" variant="dark"
+                                  :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'pdf'}).url()">
                             Export
                         </b-button>
                     </b-col>
@@ -61,16 +62,13 @@
                 small
                 bordered
                 :per-page="dt.per_page"
-                :fields="['sl','title','description','income','expense',{key:'date',label:'Time'}]"
+                :fields="fields"
                 head-variant="dark"
                 foot-clone
                 :api-url="route('Backend.Reports.IncomeExpense',{date:date}).url()"
                 :items="getItems">
                 <template #cell(sl)="row">
                     {{row.index+1 | localNumber}}
-                </template>
-                <template #cell(title)="row">
-                    {{startCase(row.item.title)}}
                 </template>
                 <template #cell(income)="row">
                     {{row.item.income?$options.filters.currency(row.item.income ) :''}}
@@ -108,7 +106,18 @@
         data() {
             return {
                 dt: {...dt},
-                date: dayjs().format('YYYY-MM-DD')
+                date: dayjs().format('YYYY-MM-DD'),
+                fields: [
+                    {key: 'sl', label: _t('sl', 'SL')},
+                    {
+                        key: 'title', label: _t('title', 'Title'),
+                        formatter: v => _t(v, startCase(v))
+                    },
+                    {key: 'description', label: _t('description', 'Description')},
+                    {key: 'income', label: _t('income', 'Income')},
+                    {key: 'expense', label: _t('reports.expense', 'Expense')},
+                    {key: 'date', label: _t('time', 'Time')}
+                ]
             }
         },
         methods: {
