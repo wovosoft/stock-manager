@@ -1630,5 +1630,29 @@
     "short_financial_report": {
         "bn": "সংক্ষিপ্ত আর্থিক বিবরণ",
         "en": "Short Financial Report"
+    },
+    "reports.addition": {
+        "bn": "জমা",
+        "en": "Addition"
+    },
+    "reports.current_stock": {
+        "bn": "বর্তমান মজুদ",
+        "en": "Current Stock"
+    },
+    "reports.subtraction": {
+        "bn": "খরচ",
+        "en": "Subtraction"
+    },
+    "reports.remains": {
+        "bn": "অবশিষ্ট",
+        "en": "Remains"
+    },
+    "reports.stock": {
+        "bn": "মোট মজুদ",
+        "en": "Stock"
+    },
+    "export_report": {
+        "bn": "রিপোর্ট এক্সপোর্ট করুন",
+        "en": "Export Report"
     }
 }
