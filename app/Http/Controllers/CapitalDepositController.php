@@ -35,10 +35,12 @@ class CapitalDepositController extends Controller
 
     public static function routes()
     {
-        Route::post("capital/deposits/list", '\\' . __CLASS__ . '@list')->name('Capital.Deposits.List');
-        Route::post("capital/deposits/search", '\\' . __CLASS__ . '@search')->name('Capital.Deposits.Search');
-        Route::post("capital/deposits/store", '\\' . __CLASS__ . '@store')->name('Capital.Deposits.Store');
-        Route::post("capital/deposits/delete", '\\' . __CLASS__ . '@delete')->name('Capital.Deposits.Delete');
+        Route::name('Capital.Deposits.')->prefix('capital/deposits')->group(function () {
+            Route::post("list/{date?}", [static::class, 'list'])->name('List');
+            Route::post("search", [static::class, 'search'])->name('Search');
+            Route::post("store", [static::class, 'store'])->name('Store');
+            Route::post("delete", [static::class, 'delete'])->name('Delete');
+        });
     }
 
     public function store(Request $request)
@@ -46,17 +48,16 @@ class CapitalDepositController extends Controller
         try {
             DB::beginTransaction();
             $item = CapitalDeposit::query()->findOrNew($request->post('id'));
-            $item->reference = $request->post('reference');
-            $item->payment_amount = $request->post('payment_amount');
-            $item->payment_method = $request->post('payment_method');
-            $item->bank = $request->post('bank') ?? null;
-            $item->check_no = $request->post('check_no') ?? null;
-            $item->transaction_no = $request->post('transaction_no') ?? null;
-            $item->deposited_by = auth()->id();
+            $item->forceFill([
+                "reference" => $request->post('reference'),
+                "payment_amount" => $request->post('payment_amount'),
+                "payment_method" => $request->post('payment_method'),
+                "bank" => $request->post('bank') ?? null,
+                "check_no" => $request->post('check_no') ?? null,
+                "transaction_no" => $request->post('transaction_no') ?? null,
+                "deposited_by" => auth()->id(),
+            ]);
 
-            if (!$item) {
-                throw new \Exception("Unable to Save the Data", 304);
-            }
             $item->saveOrFail();
             DB::commit();
             return successResponse();
@@ -66,10 +67,13 @@ class CapitalDepositController extends Controller
         }
     }
 
-    public function list(Request $request)
+    public function list(?string $date = null, Request $request)
     {
         try {
             $items = CapitalDeposit::query();
+            if ($date) {
+                $items->whereDate('created_at', '=', $date);
+            }
             if ($request->has('id')) {
                 if (isset($this->listWith)) {
                     return $items->findOrFail($request->post('id'));

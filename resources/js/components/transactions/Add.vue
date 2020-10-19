@@ -6,10 +6,12 @@
                     <h4>{{__('daily_transactions','Daily Transaction')}}</h4>
                 </b-col>
                 <b-col>
-                    <b-button size="sm" target="_blank" variant="dark" :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'html'}).url()">
+                    <b-button size="sm" target="_blank" variant="dark"
+                              :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'html'}).url()">
                         View
                     </b-button>
-                    <b-button size="sm" target="_blank" variant="dark" :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'pdf'}).url()">
+                    <b-button size="sm" target="_blank" variant="dark"
+                              :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'pdf'}).url()">
                         Export
                     </b-button>
                 </b-col>
@@ -33,6 +35,9 @@
                         <b-tab :title="__('transaction.customer_payments', 'Customer Payments')" class="p-2" lazy>
                             <sale-payments :date="date"></sale-payments>
                         </b-tab>
+                        <b-tab :title="__('capital_deposit', 'Capital Deposit')" class="p-2" lazy>
+                            <capital-deposit :date="date"></capital-deposit>
+                        </b-tab>
                     </b-tabs>
                 </b-card>
             </b-col>
@@ -55,12 +60,13 @@
                         <b-tab :title="__('transaction.supplier_payments', 'Supplier Payments')" class="p-2" lazy>
                             <purchase-payments :date="date"/>
                         </b-tab>
+                        <b-tab :title="__('capital_withdraw', 'Capital Withdraw')" class="p-2" lazy>
+                            <capital-withdraw :date="date"/>
+                        </b-tab>
                     </b-tabs>
                 </b-card>
             </b-col>
-
         </b-form-row>
-
     </b-card>
 </template>
 <script>
@@ -69,13 +75,17 @@
     import EmployeeSalaries from "@/components/transactions/EmployeeSalaries";
     import PurchasePayments from "@/components/transactions/PurchasePayments";
     import SalePayments from "@/components/transactions/SalePayments";
+    import CapitalDeposit from "@/components/transactions/CapitalDeposit";
+    import CapitalWithdraw from "@/components/transactions/CapitalWithdraw";
 
     export default {
         components: {
             Expenses,
             EmployeeSalaries,
             PurchasePayments,
-            SalePayments
+            SalePayments,
+            CapitalDeposit,
+            CapitalWithdraw
         },
         data() {
             return {

@@ -35,8 +35,8 @@ class CapitalWithdrawController extends Controller
 
     public static function routes()
     {
-        Route::name('Capital.Withdraws.')->prefix('capital/withdraws')->group(function (){
-            Route::post("list", [self::class, 'list'])->name('List');
+        Route::name('Capital.Withdraws.')->prefix('capital/withdraws')->group(function () {
+            Route::post("list/{date?}", [self::class, 'list'])->name('List');
             Route::post("search", [self::class, 'search'])->name('Search');
             Route::post("store", [self::class, 'store'])->name('Store');
             Route::post("delete", [self::class, 'delete'])->name('Delete');
@@ -67,10 +67,13 @@ class CapitalWithdrawController extends Controller
         }
     }
 
-    public function list(Request $request)
+    public function list(?string $date = null, Request $request)
     {
         try {
             $items = CapitalWithdraw::query();
+            if ($date) {
+                $items->whereDate('created_at', '=', $date);
+            }
             if ($request->has('id')) {
                 if (isset($this->listWith)) {
                     return $items->findOrFail($request->post('id'));

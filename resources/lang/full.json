@@ -1654,5 +1654,9 @@
     "export_report": {
         "bn": "রিপোর্ট এক্সপোর্ট করুন",
         "en": "Export Report"
+    },
+    "deposit_payment": {
+        "bn": "মূলধন জমা দিন",
+        "en": "Deposit Payment"
     }
 }
