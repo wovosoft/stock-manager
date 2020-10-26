@@ -47,16 +47,20 @@
             if (!fallback) {
                 fallback = key;
             }
-                {{--const t =<?php echo json_encode(currentLangTranslations());?>;--}}
 
-                <?php
-                $local_trans = json_decode(\Illuminate\Support\Facades\File::get(resource_path("lang/full.json")));
-                $tt = [];
-                foreach ($local_trans as $key => $value) {
-                    $tt[$key] = $value->bn;
-                }
-                ?>
+                @if(app()->environment('production'))
+            const t =@php echo json_encode(currentLangTranslations());@endphp;
+                @else
+                @php
+                    $local_trans = json_decode(\Illuminate\Support\Facades\File::get(resource_path("lang/full.json")));
+                    $tt = [];
+                    foreach ($local_trans as $key => $value) {
+                        $tt[$key] = $value->bn;
+                    }
+                @endphp
             const t =<?php echo json_encode($tt);?>;
+            @endif
+
             // if (!translation_collector) {
             //     translation_collector = t;
             // }
@@ -71,10 +75,7 @@
             return (typeof t[key] !== "undefined") ? t[key] : fallback;
         }
     </script>
-
     @routes
-
-
     <script defer src="{{ mix('js/app.js') }}"></script>
 </head>
 <body class="h-100" style="overflow-x: hidden;">
