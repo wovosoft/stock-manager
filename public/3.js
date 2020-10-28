@@ -1,1 +1,517 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{11:function(t,e,o){"use strict";var n=o(2);e.a={props:{getCreatedItem:{type:Boolean,default:!1},item:{type:Object,default:function(){return{}}}},mounted:function(){this.form=this.item,Object(n.g)(this,(function(){}))},data:function(){return{form:{},errors:null,visible:!0}},methods:{getItem:n.e,onSubmit:n.n,hitSubmit:function(){this.$refs.submitBtn.click()},hasError:function(t){return!!(this.errors&&this.errors[t]&&this.errors[t].length)},getErrorMsg:function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:",";return this.hasError(t)?this.errors[t].join(e):""}}}},143:function(t,e,o){"use strict";o.r(e);var n=o(11),r=o(2),i=o(16),s=[{text:"Code25",value:"code25"},{text:"Code39",value:"code39"},{text:"Code128",value:"code128"},{text:"EAN8",value:"ean8"},{text:"EAN13",value:"ean13"},{text:"UPC-A",value:"upc-a"},{text:"UPC-E",value:"upc-e"}],a={mixins:[n.a],components:{VueSelect:i.a},props:{submit_url:{type:String,default:function(){return route("Backend.Products.Store").url()}}},methods:{slugify:r.s,objPhotoUrl:r.m,initForm:function(){this.form.cost||this.$set(this.form,"cost",0),this.form.price||this.$set(this.form,"price",0),this.form.unit_id||this.$set(this.form,"unit_id",this.units[0].value),this.form.barcode_symbology||this.$set(this.form,"barcode_symbology","code128"),0!==this.form.status&&1!==this.form.status&&this.$set(this.form,"status",1)}},data:function(){return{barcode_symbologies:s,categories:[],subcategories:[],units:[]}},mounted:function(){var t=this;axios.post(route("Backend.Products.Get.Category.Unit").url()).then((function(e){t.categories=e.data.categories,t.units=e.data.units})).catch((function(t){return console.log(t.response)}))}},u=o(1),l=Object(u.a)(a,(function(){var t=this,e=t.$createElement,o=t._self._c||e;return o("b-modal",{attrs:{size:"xl","no-close-on-backdrop":"","header-bg-variant":"dark","header-text-variant":"light","no-body":"",title:t.__((t.form.id?"edit":"add")+"_product",(t.form.id?"Edit ":"Add ")+"Product"),lazy:""},on:{hidden:function(e){t.$router.go(-1),t.$emit("reset",!0)},shown:t.initForm},scopedSlots:t._u([{key:"modal-footer",fn:function(e){var n=e.cancel;return[o("b-button",{ref:"submitBtn",attrs:{variant:"primary"},on:{click:t.onSubmit}},[t._v("\n            "+t._s(t.__("submit","SUBMIT"))+"\n        ")]),t._v(" "),o("b-button",{on:{click:function(t){return n()}}},[t._v("\n            "+t._s(t.__("cancel","CANCEL"))+"\n        ")])]}}]),model:{value:t.visible,callback:function(e){t.visible=e},expression:"visible"}},[o("form",{ref:"theForm",on:{submit:function(e){return e.preventDefault(),t.hitSubmit(e)}}},[o("b-form-row",[o("b-col",[o("b-form-group",{attrs:{label:t.__("name","Name")+"*"}},[o("b-form-input",{attrs:{placeholder:t.__("name","Name"),required:!0},model:{value:t.form.name,callback:function(e){t.$set(t.form,"name",e)},expression:"form.name"}})],1),t._v(" "),o("b-form-group",{attrs:{label:t.__("code","Code")+" *"}},[o("b-form-input",{attrs:{required:!0,type:"text",placeholder:t.__("code_barcode_sku_upc_isbn","Code (Barcode/SKU/UPC/ISBN)")},model:{value:t.form.code,callback:function(e){t.$set(t.form,"code",e)},expression:"form.code"}})],1),t._v(" "),o("b-form-row",[o("b-col",{attrs:{md:"6",sm:"12"}},[o("b-form-group",{attrs:{label:t.__("cost","Cost")+" *"}},[o("b-input",{attrs:{type:"number",step:"any",required:!0,placeholder:t.__("product_buying_cost","Product Buying Cost")},model:{value:t.form.cost,callback:function(e){t.$set(t.form,"cost",e)},expression:"form.cost"}})],1)],1),t._v(" "),o("b-col",{attrs:{md:"6",sm:"12"}},[o("b-form-group",{attrs:{label:t.__("price","Price")+" *"}},[o("b-input",{attrs:{type:"number",step:"any",required:!0,placeholder:t.__("product_selling_price","Product Selling Price")},model:{value:t.form.price,callback:function(e){t.$set(t.form,"price",e)},expression:"form.price"}})],1)],1)],1),t._v(" "),o("b-form-row",[o("b-col",{attrs:{md:"6",sm:"12"}},[o("b-form-group",{attrs:{label:t.__("quantity","Quantity")}},[o("b-form-input",{attrs:{type:"number",step:"any",placeholder:t.__("product_quantity","Product Quantity")},model:{value:t.form.quantity,callback:function(e){t.$set(t.form,"quantity",e)},expression:"form.quantity"}})],1)],1),t._v(" "),o("b-col",{attrs:{md:"6",sm:"12"}},[o("b-form-group",{attrs:{label:t.__("alert_quantity","Alert Quantity")}},[o("b-form-input",{attrs:{type:"number",step:"any",placeholder:t.__("product_alert_quantity","Product Alert Quantity")},model:{value:t.form.alert_quantity,callback:function(e){t.$set(t.form,"alert_quantity",e)},expression:"form.alert_quantity"}})],1)],1)],1)],1),t._v(" "),o("b-col",[o("b-form-row",[o("b-col",[o("b-form-group",{attrs:{label:t.__("status","Status")}},[o("b-form-select",{attrs:{options:[{text:"Active",value:1},{text:"Inactive",value:0}]},model:{value:t.form.status,callback:function(e){t.$set(t.form,"status",e)},expression:"form.status"}})],1)],1),t._v(" "),o("b-col",[o("b-form-group",{scopedSlots:t._u([{key:"label",fn:function(){return[t._v("\n                                "+t._s(t.__("photo","Photo"))+"\n                                "),t.form.photo_url?o("a",{attrs:{target:"_blank",href:t.form.photo_url}},[o("i",{staticClass:"fa fa-link"})]):t._e()]},proxy:!0}])},[t._v(" "),o("b-input-group",{scopedSlots:t._u([{key:"append",fn:function(){return[o("b-button",{attrs:{title:t.__("reset","Reset")},on:{click:function(e){t.form.photo=null,t.form.photo_upload=null,t.form.photo_url=null}}},[t._v("\n                                        x\n                                    ")])]},proxy:!0}])},[o("b-form-file",{model:{value:t.form.photo_upload,callback:function(e){t.$set(t.form,"photo_upload",e)},expression:"form.photo_upload"}})],1)],1)],1)],1),t._v(" "),o("b-form-row",[o("b-col",{attrs:{md:"6",sm:"12"}},[o("b-form-group",{attrs:{label:t.__("category","Category")}},[o("b-input-group",{scopedSlots:t._u([{key:"append",fn:function(){return[o("b-button",{on:{click:function(e){t.form.category=null,t.form.category_id=null}}},[t._v("x")])]},proxy:!0}])},[o("vue-select",{attrs:{api_url:t.route("Backend.Categories.Search").url()},on:{input:function(e){t.form.category_id=e?e.id:null,t.form.subcategory_id=null}},scopedSlots:t._u([{key:"option",fn:function(e){return[t._v("\n                                        "+t._s([e.item.id,e.item.name].join(" # "))+"\n                                    ")]}},{key:"tag",fn:function(e){return[t._v("\n                                        "+t._s(e.tag?[e.tag.id,e.tag.name].join(" # "):"Not Selected")+"\n                                    ")]}}]),model:{value:t.form.category,callback:function(e){t.$set(t.form,"category",e)},expression:"form.category"}})],1)],1)],1),t._v(" "),o("b-col",{attrs:{md:"6",sm:"12"}},[o("b-form-group",{attrs:{label:t.__("sub_category","Subcategory")}},[t.form.category?o("b-input-group",{scopedSlots:t._u([{key:"append",fn:function(){return[o("b-button",{on:{click:function(e){t.form.subcategory_id=null}}},[t._v("x")])]},proxy:!0}],null,!1,2421310739)},[o("b-form-select",{attrs:{options:t.form.category.subcategories,"text-field":"name","value-field":"id"},model:{value:t.form.subcategory_id,callback:function(e){t.$set(t.form,"subcategory_id",e)},expression:"form.subcategory_id"}})],1):t._e()],1)],1)],1),t._v(" "),o("b-form-row",[o("b-col",{attrs:{md:"6",sm:"12"}},[o("b-form-group",{attrs:{label:t.__("brand","Brand")}},[o("b-input-group",{scopedSlots:t._u([{key:"append",fn:function(){return[o("b-button",{on:{click:function(e){t.form.brand=null,t.form.brand_id=null}}},[t._v("x")])]},proxy:!0}])},[o("vue-select",{attrs:{api_url:t.route("Backend.Brands.Search").url()},on:{input:function(e){t.form.brand_id=e?e.id:null}},scopedSlots:t._u([{key:"option",fn:function(e){return[t._v("\n                                        "+t._s([e.item.id,e.item.name].join(" # "))+"\n                                    ")]}},{key:"tag",fn:function(e){return[t._v("\n                                        "+t._s(e.tag?[e.tag.id,e.tag.name].join(" # "):t.__("not_selected","Not Selected"))+"\n                                    ")]}}]),model:{value:t.form.brand,callback:function(e){t.$set(t.form,"brand",e)},expression:"form.brand"}})],1)],1)],1),t._v(" "),o("b-col",{attrs:{md:"6",sm:"12"}},[o("b-form-group",{attrs:{label:t.__("unit","Unit")}},[o("b-form-select",{attrs:{options:t.units},model:{value:t.form.unit_id,callback:function(e){t.$set(t.form,"unit_id",e)},expression:"form.unit_id"}})],1)],1)],1)],1)],1),t._v(" "),o("b-form-group",{attrs:{label:t.__("description","Description")}},[o("b-form-textarea",{attrs:{placeholder:t.__("product_description","Product Description")},model:{value:t.form.description,callback:function(e){t.$set(t.form,"description",e)},expression:"form.description"}})],1)],1)])}),[],!1,null,null,null);e.default=l.exports},16:function(t,e,o){"use strict";var n=o(0),r={props:{value:{type:null|Object,default:function(){return null}},api_url:{type:String,default:null,required:!0},prepend:{type:String,default:""},append:{type:String,default:""},placeholder:{type:String,default:"Search Items"},size:{type:String,default:"sm"},autocomplete:{type:String,default:"off"},dropdownVariant:{type:String,default:"outline-secondary"},emptyOptionText:{type:String,default:"No items available to select"},inputClass:{type:String|Array,default:function(){return[]}},menuStyle:{type:String|Array,default:function(){return[]}},clearSearchOnItemSelected:{type:Boolean,default:!1},initOptions:{type:Boolean|String,default:!1},required:{type:Boolean,default:!1},state:{type:Boolean,default:null},hideDdIcon:{type:Boolean,default:!1},disabled:{type:Boolean,default:!1},menuClass:{type:String|Object,default:function(){return""}},getFiltered:{type:Function},clearSearchOnDropdownHidden:{type:Boolean,default:function(){return!0}},optionText:{type:Function},tagText:{Type:Function}},data:function(){return{options:[],query:"",selected_item:null}},mounted:function(){this.initOptions&&(Object(n.a)(this.initOptions)&&this.initOptions?this.getItems(""):this.query=this.initOptions),this.$set(this,"selected_item",this.value)},computed:{getOptions:function(){return"function"==typeof this.getFiltered&&this.getFiltered?this.getFiltered(this.options):this.options}},watch:{value:{deep:!0,handler:function(t){this.$set(this,"selected_item",t)}}},methods:{reset:function(){this.$emit("input",null),this.$set(this,"selected_item",null),this.query=""},itemSelected:function(t){this.$emit("input",t),this.$set(this,"selected_item",t),this.clearSearchOnItemSelected&&(this.query=null)},getItems:function(t){var e=this;axios.post(this.api_url,{query:this.query}).then((function(t){e.$set(e,"options",t.data||[])})).catch((function(t){e.$set(e,"options",[]),console.error(t.response)}))}}},i=(o(92),o(1)),s=Object(i.a)(r,(function(){var t=this,e=this,o=e.$createElement,n=e._self._c||o;return n("div",{staticClass:"vue-select form-control p-0",class:{"is-invalid":null!==e.state&&e.state,"is-valid":null!==e.state&&!e.state}},[e.required?n("input",{staticStyle:{height:"0",position:"absolute",top:"0",border:"0",outline:"0","z-index":"-1"},attrs:{type:"text",required:!0},domProps:{value:e.value?"initialized":""}}):e._e(),e._v(" "),n("b-dropdown",{class:{"hide-dd-icon":e.hideDdIcon,disabled:e.disabled},style:e.menuStyle,attrs:{block:"",lazy:"",variant:e.dropdownVariant,disabled:e.disabled,"toggle-class":"text-left m-0 border-0 border-radius-0","menu-class":e.menuClass},on:{hidden:function(){e.$emit("hidden",!0),t.clearSearchOnDropdownHidden&&(t.query="")}},scopedSlots:e._u([{key:"button-content",fn:function(){return[e._t("tag",[e._v("\n                "+e._s("function"==typeof e.tagText?e.tagText(e.selected_item):(e.selected_item,e.placeholder))+"\n            ")],{tag:e.selected_item})]},proxy:!0}],null,!0)},[e._v(" "),n("div",{staticClass:"px-2"},[n("b-form-input",{class:e.inputClass,attrs:{autofocus:"",type:"search",size:e.size,placeholder:e.placeholder,autocomplete:e.autocomplete},on:{keypress:function(t){if(!t.type.indexOf("key")&&e._k(t.keyCode,"enter",13,t.key,"Enter"))return null;t.preventDefault()},input:function(t){return e.getItems(t)}},model:{value:e.query,callback:function(t){e.query=t},expression:"query"}})],1),e._v(" "),n("b-dropdown-divider"),e._v(" "),e._l(e.getOptions,(function(t,o){return n("b-dropdown-item",{key:o,on:{click:function(o){return e.itemSelected(t)}}},[e._t("option",[e._v("\n                "+e._s("function"==typeof e.optionText?e.optionText(t):t)+"\n            ")],{item:t,query:e.query})],2)})),e._v(" "),0===e.options.length?[e._t("empty",[0===e.options.length?n("b-dropdown-text",[e._v("\n                    "+e._s(e.emptyOptionText)+"\n                ")]):e._e()],{query:e.query})]:e._e(),e._v(" "),e._t("default_item",null,{query:e.query})],2)],1)}),[],!1,null,null,null);e.a=s.exports},46:function(t,e,o){var n=o(18),r=o(93);"string"==typeof(r=r.__esModule?r.default:r)&&(r=[[t.i,r,""]]);var i={insert:"head",singleton:!1};n(r,i);t.exports=r.locals||{}},92:function(t,e,o){"use strict";var n=o(46);o.n(n).a},93:function(t,e,o){(e=o(19)(!1)).push([t.i,".vue-select .dropdown-menu {\n  max-height: 300px;\n  overflow-y: auto;\n  width: 100%;\n}\n.vue-select .dropdown-toggle::after {\n  position: absolute;\n  right: 10px;\n  top: 49%;\n}\n.vue-select .border-radius-0 {\n  border-radius: 0 !important;\n}\n.vue-select .top-reverse-100 {\n  top: -100% !important;\n}\n.vue-select .hide-dd-icon .dropdown-toggle::after {\n  display: none !important;\n}\n.vue-select.is-invalid, .vue-select.is-valid {\n  background-position: right calc(1.4em + 0.1875rem) center !important;\n}",""]),t.exports=e}}]);
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
+
+/***/ "./resources/js/partials/add_form.js":
+/*!*******************************************!*\
+  !*** ./resources/js/partials/add_form.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _partials_datatable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/partials/datatable */ "./resources/js/partials/datatable.js");
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    getCreatedItem: {
+      type: Boolean,
+      "default": false
+    },
+    item: {
+      type: Object,
+      "default": function _default() {
+        return {};
+      }
+    }
+  },
+  mounted: function mounted() {
+    this.form = this.item;
+    Object(_partials_datatable__WEBPACK_IMPORTED_MODULE_0__["initAddForm"])(this, function () {});
+  },
+  data: function data() {
+    return {
+      form: {},
+      errors: null,
+      visible: true
+    };
+  },
+  methods: {
+    getItem: _partials_datatable__WEBPACK_IMPORTED_MODULE_0__["getItem"],
+    onSubmit: _partials_datatable__WEBPACK_IMPORTED_MODULE_0__["onSubmit"],
+    hitSubmit: function hitSubmit() {
+      this.$refs.submitBtn.click();
+    },
+    hasError: function hasError(field) {
+      return !!(this.errors && this.errors[field] && this.errors[field].length);
+    },
+    getErrorMsg: function getErrorMsg(field) {
+      var join = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ",";
+      return this.hasError(field) ? this.errors[field].join(join) : "";
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/shared/districts.js":
+/*!******************************************!*\
+  !*** ./resources/js/shared/districts.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ([{
+  "id": "1",
+  "division_id": "3",
+  "name": "Dhaka",
+  "bn_name": "ঢাকা",
+  "lat": "23.7115253",
+  "long": "90.4111451"
+}, {
+  "id": "2",
+  "division_id": "3",
+  "name": "Faridpur",
+  "bn_name": "ফরিদপুর",
+  "lat": "23.6070822",
+  "long": "89.8429406"
+}, {
+  "id": "3",
+  "division_id": "3",
+  "name": "Gazipur",
+  "bn_name": "গাজীপুর",
+  "lat": "24.0022858",
+  "long": "90.4264283"
+}, {
+  "id": "4",
+  "division_id": "3",
+  "name": "Gopalganj",
+  "bn_name": "গোপালগঞ্জ",
+  "lat": "23.0050857",
+  "long": "89.8266059"
+}, {
+  "id": "5",
+  "division_id": "8",
+  "name": "Jamalpur",
+  "bn_name": "জামালপুর",
+  "lat": "24.937533",
+  "long": "89.937775"
+}, {
+  "id": "6",
+  "division_id": "3",
+  "name": "Kishoreganj",
+  "bn_name": "কিশোরগঞ্জ",
+  "lat": "24.444937",
+  "long": "90.776575"
+}, {
+  "id": "7",
+  "division_id": "3",
+  "name": "Madaripur",
+  "bn_name": "মাদারীপুর",
+  "lat": "23.164102",
+  "long": "90.1896805"
+}, {
+  "id": "8",
+  "division_id": "3",
+  "name": "Manikganj",
+  "bn_name": "মানিকগঞ্জ",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "9",
+  "division_id": "3",
+  "name": "Munshiganj",
+  "bn_name": "মুন্সিগঞ্জ",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "10",
+  "division_id": "8",
+  "name": "Mymensingh",
+  "bn_name": "ময়মনসিংহ",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "11",
+  "division_id": "3",
+  "name": "Narayanganj",
+  "bn_name": "নারায়াণগঞ্জ",
+  "lat": "23.63366",
+  "long": "90.496482"
+}, {
+  "id": "12",
+  "division_id": "3",
+  "name": "Narsingdi",
+  "bn_name": "নরসিংদী",
+  "lat": "23.932233",
+  "long": "90.71541"
+}, {
+  "id": "13",
+  "division_id": "8",
+  "name": "Netrokona",
+  "bn_name": "নেত্রকোণা",
+  "lat": "24.870955",
+  "long": "90.727887"
+}, {
+  "id": "14",
+  "division_id": "3",
+  "name": "Rajbari",
+  "bn_name": "রাজবাড়ি",
+  "lat": "23.7574305",
+  "long": "89.6444665"
+}, {
+  "id": "15",
+  "division_id": "3",
+  "name": "Shariatpur",
+  "bn_name": "শরীয়তপুর",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "16",
+  "division_id": "8",
+  "name": "Sherpur",
+  "bn_name": "শেরপুর",
+  "lat": "25.0204933",
+  "long": "90.0152966"
+}, {
+  "id": "17",
+  "division_id": "3",
+  "name": "Tangail",
+  "bn_name": "টাঙ্গাইল",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "18",
+  "division_id": "5",
+  "name": "Bogura",
+  "bn_name": "বগুড়া",
+  "lat": "24.8465228",
+  "long": "89.377755"
+}, {
+  "id": "19",
+  "division_id": "5",
+  "name": "Joypurhat",
+  "bn_name": "জয়পুরহাট",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "20",
+  "division_id": "5",
+  "name": "Naogaon",
+  "bn_name": "নওগাঁ",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "21",
+  "division_id": "5",
+  "name": "Natore",
+  "bn_name": "নাটোর",
+  "lat": "24.420556",
+  "long": "89.000282"
+}, {
+  "id": "22",
+  "division_id": "5",
+  "name": "Nawabganj",
+  "bn_name": "নবাবগঞ্জ",
+  "lat": "24.5965034",
+  "long": "88.2775122"
+}, {
+  "id": "23",
+  "division_id": "5",
+  "name": "Pabna",
+  "bn_name": "পাবনা",
+  "lat": "23.998524",
+  "long": "89.233645"
+}, {
+  "id": "24",
+  "division_id": "5",
+  "name": "Rajshahi",
+  "bn_name": "রাজশাহী",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "25",
+  "division_id": "5",
+  "name": "Sirajgonj",
+  "bn_name": "সিরাজগঞ্জ",
+  "lat": "24.4533978",
+  "long": "89.7006815"
+}, {
+  "id": "26",
+  "division_id": "6",
+  "name": "Dinajpur",
+  "bn_name": "দিনাজপুর",
+  "lat": "25.6217061",
+  "long": "88.6354504"
+}, {
+  "id": "27",
+  "division_id": "6",
+  "name": "Gaibandha",
+  "bn_name": "গাইবান্ধা",
+  "lat": "25.328751",
+  "long": "89.528088"
+}, {
+  "id": "28",
+  "division_id": "6",
+  "name": "Kurigram",
+  "bn_name": "কুড়িগ্রাম",
+  "lat": "25.805445",
+  "long": "89.636174"
+}, {
+  "id": "29",
+  "division_id": "6",
+  "name": "Lalmonirhat",
+  "bn_name": "লালমনিরহাট",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "30",
+  "division_id": "6",
+  "name": "Nilphamari",
+  "bn_name": "নীলফামারী",
+  "lat": "25.931794",
+  "long": "88.856006"
+}, {
+  "id": "31",
+  "division_id": "6",
+  "name": "Panchagarh",
+  "bn_name": "পঞ্চগড়",
+  "lat": "26.3411",
+  "long": "88.5541606"
+}, {
+  "id": "32",
+  "division_id": "6",
+  "name": "Rangpur",
+  "bn_name": "রংপুর",
+  "lat": "25.7558096",
+  "long": "89.244462"
+}, {
+  "id": "33",
+  "division_id": "6",
+  "name": "Thakurgaon",
+  "bn_name": "ঠাকুরগাঁও",
+  "lat": "26.0336945",
+  "long": "88.4616834"
+}, {
+  "id": "34",
+  "division_id": "1",
+  "name": "Barguna",
+  "bn_name": "বরগুনা",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "35",
+  "division_id": "1",
+  "name": "Barishal",
+  "bn_name": "বরিশাল",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "36",
+  "division_id": "1",
+  "name": "Bhola",
+  "bn_name": "ভোলা",
+  "lat": "22.685923",
+  "long": "90.648179"
+}, {
+  "id": "37",
+  "division_id": "1",
+  "name": "Jhalokati",
+  "bn_name": "ঝালকাঠি",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "38",
+  "division_id": "1",
+  "name": "Patuakhali",
+  "bn_name": "পটুয়াখালী",
+  "lat": "22.3596316",
+  "long": "90.3298712"
+}, {
+  "id": "39",
+  "division_id": "1",
+  "name": "Pirojpur",
+  "bn_name": "পিরোজপুর",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "40",
+  "division_id": "2",
+  "name": "Bandarban",
+  "bn_name": "বান্দরবান",
+  "lat": "22.1953275",
+  "long": "92.2183773"
+}, {
+  "id": "41",
+  "division_id": "2",
+  "name": "Brahmanbaria",
+  "bn_name": "ব্রাহ্মণবাড়িয়া",
+  "lat": "23.9570904",
+  "long": "91.1119286"
+}, {
+  "id": "42",
+  "division_id": "2",
+  "name": "Chandpur",
+  "bn_name": "চাঁদপুর",
+  "lat": "23.2332585",
+  "long": "90.6712912"
+}, {
+  "id": "43",
+  "division_id": "2",
+  "name": "Chattogram",
+  "bn_name": "চট্টগ্রাম",
+  "lat": "22.335109",
+  "long": "91.834073"
+}, {
+  "id": "44",
+  "division_id": "2",
+  "name": "Cumilla",
+  "bn_name": "কুমিল্লা",
+  "lat": "23.4682747",
+  "long": "91.1788135"
+}, {
+  "id": "45",
+  "division_id": "2",
+  "name": "Cox\'s Bazar",
+  "bn_name": "কক্স বাজার",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "46",
+  "division_id": "2",
+  "name": "Feni",
+  "bn_name": "ফেনী",
+  "lat": "23.023231",
+  "long": "91.3840844"
+}, {
+  "id": "47",
+  "division_id": "2",
+  "name": "Khagrachari",
+  "bn_name": "খাগড়াছড়ি",
+  "lat": "23.119285",
+  "long": "91.984663"
+}, {
+  "id": "48",
+  "division_id": "2",
+  "name": "Lakshmipur",
+  "bn_name": "লক্ষ্মীপুর",
+  "lat": "22.942477",
+  "long": "90.841184"
+}, {
+  "id": "49",
+  "division_id": "2",
+  "name": "Noakhali",
+  "bn_name": "নোয়াখালী",
+  "lat": "22.869563",
+  "long": "91.099398"
+}, {
+  "id": "50",
+  "division_id": "2",
+  "name": "Rangamati",
+  "bn_name": "রাঙ্গামাটি",
+  "lat": "0",
+  "long": "0"
+}, {
+  "id": "51",
+  "division_id": "7",
+  "name": "Habiganj",
+  "bn_name": "হবিগঞ্জ",
+  "lat": "24.374945",
+  "long": "91.41553"
+}, {
+  "id": "52",
+  "division_id": "7",
+  "name": "Maulvibazar",
+  "bn_name": "মৌলভীবাজার",
+  "lat": "24.482934",
+  "long": "91.777417"
+}, {
+  "id": "53",
+  "division_id": "7",
+  "name": "Sunamganj",
+  "bn_name": "সুনামগঞ্জ",
+  "lat": "25.0658042",
+  "long": "91.3950115"
+}, {
+  "id": "54",
+  "division_id": "7",
+  "name": "Sylhet",
+  "bn_name": "সিলেট",
+  "lat": "24.8897956",
+  "long": "91.8697894"
+}, {
+  "id": "55",
+  "division_id": "4",
+  "name": "Bagerhat",
+  "bn_name": "বাগেরহাট",
+  "lat": "22.651568",
+  "long": "89.785938"
+}, {
+  "id": "56",
+  "division_id": "4",
+  "name": "Chuadanga",
+  "bn_name": "চুয়াডাঙ্গা",
+  "lat": "23.6401961",
+  "long": "88.841841"
+}, {
+  "id": "57",
+  "division_id": "4",
+  "name": "Jashore",
+  "bn_name": "যশোর",
+  "lat": "23.16643",
+  "long": "89.2081126"
+}, {
+  "id": "58",
+  "division_id": "4",
+  "name": "Jhenaidah",
+  "bn_name": "ঝিনাইদহ",
+  "lat": "23.5448176",
+  "long": "89.1539213"
+}, {
+  "id": "59",
+  "division_id": "4",
+  "name": "Khulna",
+  "bn_name": "খুলনা",
+  "lat": "22.815774",
+  "long": "89.568679"
+}, {
+  "id": "60",
+  "division_id": "4",
+  "name": "Kushtia",
+  "bn_name": "কুষ্টিয়া",
+  "lat": "23.901258",
+  "long": "89.120482"
+}, {
+  "id": "61",
+  "division_id": "4",
+  "name": "Magura",
+  "bn_name": "মাগুরা",
+  "lat": "23.487337",
+  "long": "89.419956"
+}, {
+  "id": "62",
+  "division_id": "4",
+  "name": "Meherpur",
+  "bn_name": "মেহেরপুর",
+  "lat": "23.762213",
+  "long": "88.631821"
+}, {
+  "id": "63",
+  "division_id": "4",
+  "name": "Narail",
+  "bn_name": "নড়াইল",
+  "lat": "23.172534",
+  "long": "89.512672"
+}, {
+  "id": "64",
+  "division_id": "4",
+  "name": "Satkhira",
+  "bn_name": "সাতক্ষীরা",
+  "lat": "0",
+  "long": "0"
+}]);
+
+/***/ })
+
+}]);

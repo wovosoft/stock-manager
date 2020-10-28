@@ -239,6 +239,10 @@
         "bn": "অর্থের পরিমাণ",
         "en": "Payment Amount"
     },
+    "sales.payment_amount": {
+        "bn": "জমা",
+        "en": "Payment Amount"
+    },
     "employment_salaries.payment_amount": {
         "bn": "প্রদত্ত অর্থ",
         "en": "Payment Amount"

@@ -34,18 +34,18 @@
     @endforeach
     </tbody>
     <tfoot>
-    <tr>
-        <td colspan="{{$is_delivery?1:3}}" class="text-right">
-            মোট পণ্যঃ
-        </td>
-        <td>
-            {{\App\Drivers\BanglaConverter::en2bn($sale->items->sum('quantity'))}} টি
-        </td>
-    </tr>
+    {{--    <tr>--}}
+    {{--        <td colspan="{{$is_delivery?1:3}}" class="text-right">--}}
+    {{--            মোট পণ্যঃ--}}
+    {{--        </td>--}}
+    {{--        <td>--}}
+    {{--            {{\App\Drivers\BanglaConverter::en2bn($sale->items->sum('quantity'))}} টি--}}
+    {{--        </td>--}}
+    {{--    </tr>--}}
 
     <tr>
         <td colspan="3" class="text-right">
-            মোট বিক্রয়মূল্যঃ
+            মোটঃ
         </td>
         <td>
             {{\App\Drivers\BanglaConverter::en2bn($sale->payable)}} টাকা
@@ -80,10 +80,10 @@
     </tr>
 
     <tr>
-        <td>
+        <td style="font-size: small;">
             @php($date=\Carbon\Carbon::now()->locale('bn-BD'))
             আজকের তারিখঃ {{\App\Drivers\BanglaConverter::en2bn($date->format('d-m-Y'))}},
-            {{$date->dayName}}
+            {{$date->dayName}} । <span style="color: lightgray;">Developed by - WovoSoft</span>
         </td>
     </tr>
     </tfoot>

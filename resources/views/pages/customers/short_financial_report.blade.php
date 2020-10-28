@@ -33,10 +33,7 @@
 <body>
 
 <div class="text-center">
-    বিসমিল্লাহির রাহমানির রাহিম<br>
-    <h3 style="margin: 0;padding: 0;"> বিসমিল্লাহ এন্টারপ্রাইজ</h3>
-    প্রোঃ মোঃ আনোয়ার হোসেন<br>
-    ঠাকুরগাঁও রোড, ঠাকুরগাঁও।<br>
+    {!! _s('invoice_header') !!}
     @php
         $date= \Carbon\Carbon::now()->locale('bn-BD');
     @endphp

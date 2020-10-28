@@ -31,10 +31,10 @@
         </td>
     </tr>
     <tr>
-        <td>
+        <td style="font-size: small;">
             @php($date=\Carbon\Carbon::now()->locale('bn-BD'))
             আজকের তারিখঃ {{\App\Drivers\BanglaConverter::en2bn($date->format('d-m-Y'))}},
-            {{$date->dayName}}
+            {{$date->dayName}}  । <span style="color: lightgray;">Developed by - WovoSoft</span>
         </td>
     </tr>
     </tfoot>

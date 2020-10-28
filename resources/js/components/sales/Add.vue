@@ -109,11 +109,11 @@
 
                         <b-form-row>
                             <b-col>
-                                <b-form-group :label="__('payment_amount', 'Payment Amount')">
+                                <b-form-group :label="__('sales.payment_amount', 'Payment Amount')">
                                     <b-input-group>
                                         <b-input
                                             step="any" type="number"
-                                            :placeholder="__('payment_amount', 'Payment Amount')" :required="true"
+                                            :placeholder="__('sales.payment_amount', 'Payment Amount')" :required="true"
                                             v-model="form.payment_amount"/>
                                         <template #append>
                                             <b-button variant="dark" @click="form.payment_amount = getPayable">
@@ -135,17 +135,17 @@
                                     <b-form-input type="date" v-model="form.date"></b-form-input>
                                 </b-form-group>
                             </b-col>
-<!--                            <b-col>-->
-<!--                                <b-form-group label="Status">-->
-<!--                                    <b-form-select :required="true" v-model="form.status" :options="statuses"/>-->
-<!--                                </b-form-group>-->
-<!--                            </b-col>-->
+                            <!--                            <b-col>-->
+                            <!--                                <b-form-group label="Status">-->
+                            <!--                                    <b-form-select :required="true" v-model="form.status" :options="statuses"/>-->
+                            <!--                                </b-form-group>-->
+                            <!--                            </b-col>-->
                         </b-form-row>
 
-                        <b-form-group :label="__('note', 'Note')">
-                            <b-form-textarea :rows="4" :placeholder="__('sales_note', 'Sales Note')"
-                                             v-model="form.note"/>
-                        </b-form-group>
+<!--                        <b-form-group :label="__('note', 'Note')">-->
+<!--                            <b-form-textarea :rows="4" :placeholder="__('sales_note', 'Sales Note')"-->
+<!--                                             v-model="form.note"/>-->
+<!--                        </b-form-group>-->
                         <b-button type="submit" block variant="dark">
                             {{ __("submit", "SUBMIT") }}
                         </b-button>

@@ -389,16 +389,20 @@ class ReportsController extends Controller
     public function incomeExpense(string $date, ?string $pdf = null, Request $request)
     {
         try {
+            $yesterday_items = $this->getIncomeExpenseReport(Carbon::parse($date)->addDays(-1)->format('Y-m-d'), $request)->get();
+            $previous_balance = $yesterday_items->sum('income') - $yesterday_items->sum('expense');
             if ($pdf == 'pdf') {
                 return \PDF::loadView("pages.collection.income_expense_report", [
                     "items" => $this->getIncomeExpenseReport($date, $request)->get(),
                     "date" => Carbon::parse($date),
+                    "previous_balance" => $previous_balance,
                     "html" => false
                 ])->stream("supplier_purchases_report.pdf");
             } elseif ($pdf == 'html') {
                 return view("pages.collection.income_expense_report", [
                     "items" => $this->getIncomeExpenseReport($date, $request)->get(),
                     "date" => Carbon::parse($date),
+                    "previous_balance" => $previous_balance,
                     "html" => true
                 ]);
             }

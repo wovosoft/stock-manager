@@ -47,10 +47,7 @@
 </head>
 <body>
 <div class="text-center">
-    বিসমিল্লাহির রাহমানির রাহিম<br>
-    <h3 style="margin: 0;padding: 0;"> বিসমিল্লাহ এন্টারপ্রাইজ</h3>
-    প্রোঃ মোঃ আনোয়ার হোসেন<br>
-    ঠাকুরগাঁও রোড, ঠাকুরগাঁও।<br>
+    {!! _s('invoice_header') !!}
     গোডাউনের মজুদ এবং খরচের পর মোট মজুদ মালের তালিকা
 </div>
 <div style="position: absolute;top:100px;right:60px;">
