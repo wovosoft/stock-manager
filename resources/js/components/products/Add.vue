@@ -80,16 +80,16 @@
                 </b-col>
                 <b-col>
                     <b-form-row>
-                        <b-col>
-                            <b-form-group :label="__('status','Status')">
-                                <b-form-select
-                                    v-model="form.status"
-                                    :options="[
-                                {text:'Active',value:1},
-                                {text: 'Inactive',value: 0}
-                            ]"/>
-                            </b-form-group>
-                        </b-col>
+                        <!--                        <b-col>-->
+                        <!--                            <b-form-group :label="__('status','Status')">-->
+                        <!--                                <b-form-select-->
+                        <!--                                    v-model="form.status"-->
+                        <!--                                    :options="[-->
+                        <!--                                {text:'Active',value:1},-->
+                        <!--                                {text: 'Inactive',value: 0}-->
+                        <!--                            ]"/>-->
+                        <!--                            </b-form-group>-->
+                        <!--                        </b-col>-->
                         <b-col>
                             <b-form-group>
                                 <template v-slot:label>
@@ -112,7 +112,7 @@
                         </b-col>
                     </b-form-row>
                     <b-form-row>
-                        <b-col md="6" sm="12">
+                        <b-col md="12" sm="12">
                             <b-form-group :label="__('category','Category')">
                                 <b-input-group>
                                     <vue-select
@@ -133,16 +133,16 @@
                                 </b-input-group>
                             </b-form-group>
                         </b-col>
-                        <b-col md="6" sm="12">
+                        <b-col md="12" sm="12" v-if="form.category">
                             <b-form-group :label="__('sub_category','Subcategory')">
-                                <b-input-group v-if="form.category">
+                                <b-input-group>
                                     <b-form-select
                                         :options="form.category.subcategories"
                                         text-field="name"
                                         value-field="id"
                                         v-model="form.subcategory_id"/>
                                     <template v-slot:append>
-                                        <b-button @click="form.subcategory_id=null">x</b-button>
+                                        <b-button @click="$set(form,'subcategory_id',null)">x</b-button>
                                     </template>
                                 </b-input-group>
                             </b-form-group>

@@ -53,7 +53,7 @@
         props: {
             title: {
                 type: String,
-                default: ' Brands'
+                default: _t('brands', 'Brands')
             },
             api_url: {
                 type: String,

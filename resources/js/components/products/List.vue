@@ -197,7 +197,7 @@
         props: {
             title: {
                 type: String,
-                default: ' Products'
+                default: _t('products', 'Products')
             },
             api_url: {
                 type: String,
@@ -215,12 +215,12 @@
                 type: Array,
                 default: () => [
                     {
-                        text: 'Add',
+                        text: _t('add', 'Add'),
                         variant: 'dark',
                         to: {name: 'ProductsAdd'}
                     },
                     {
-                        text: 'History',
+                        text: _t('history', 'History'),
                         variant: 'primary',
                         to: {
                             name: 'ModelHistory',

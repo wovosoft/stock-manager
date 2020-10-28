@@ -51,7 +51,7 @@
         props: {
             title: {
                 type: String,
-                default: ' Units'
+                default: _t('units', 'Units')
             },
             api_url: {
                 type: String,

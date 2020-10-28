@@ -131,7 +131,7 @@
         props: {
             title: {
                 type: String,
-                default: 'List of Purchases'
+                default: _t('purchase_list', 'List of Purchases')
             },
             api_url: {
                 type: String,

@@ -135,11 +135,11 @@
                                     <b-form-input type="date" v-model="form.date"></b-form-input>
                                 </b-form-group>
                             </b-col>
-                            <b-col>
-                                <b-form-group label="Status">
-                                    <b-form-select :required="true" v-model="form.status" :options="statuses"/>
-                                </b-form-group>
-                            </b-col>
+<!--                            <b-col>-->
+<!--                                <b-form-group label="Status">-->
+<!--                                    <b-form-select :required="true" v-model="form.status" :options="statuses"/>-->
+<!--                                </b-form-group>-->
+<!--                            </b-col>-->
                         </b-form-row>
 
                         <b-form-group :label="__('note', 'Note')">

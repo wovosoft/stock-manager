@@ -79,7 +79,6 @@ class SaleController extends Controller
     {
         try {
             foreach ($request->post('items') as $si) {
-                DB::beginTransaction();
                 $sale_item = new SaleItem();
                 $sale_item->forceFill([
                     "sale_id" => $sale->id,
@@ -89,11 +88,8 @@ class SaleController extends Controller
                     "price" => round($si['price'], 2),
                 ]);
                 $sale_item->saveOrFail();
-                DB::commit();
-                return successResponse();
             }
         } catch (\Throwable $exception) {
-            DB::rollBack();
             throw $exception;
         }
     }
