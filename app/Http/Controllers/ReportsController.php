@@ -194,10 +194,10 @@ class ReportsController extends Controller
                     ]);
                 }
             ])
-            ->having('payable', '>', 0)
-            ->orHaving('paid', '>', 0)
-            ->orHaving('returned', '>', 0)
-            ->orHaving('balance', '>', 0);
+            ->having('payable', '!=', 0)
+            ->orHaving('paid', '!=', 0)
+            ->orHaving('returned', '!=', 0)
+            ->orHaving('balance', '!=', 0);
     }
 
     public function customerSalesReport(?string $pdf = null, Request $request)
