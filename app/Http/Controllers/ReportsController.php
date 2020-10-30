@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CapitalDeposit;
+use App\Models\CapitalWithdraw;
 use App\Models\Customer;
 use App\Models\EmployeeSalary;
 use App\Models\Expense;
@@ -295,6 +296,7 @@ class ReportsController extends Controller
                     DB::raw("0 as income"),
                     DB::raw("expenses.created_at as date")
                 ])
+                ->whereNull('expenses.deleted_at')
                 ->whereDate("expenses.created_at", "=", $date);
 
             $purchase_payments = PurchasePayment::query()
@@ -306,6 +308,7 @@ class ReportsController extends Controller
                     DB::raw("0 as income"),
                     DB::raw("purchase_payments.created_at as date")
                 ])
+                ->whereNull('purchase_payments.deleted_at')
                 ->whereDate("purchase_payments.created_at", "=", $date);
 
             $purchase_returns = PurchaseReturn::query()
@@ -317,6 +320,7 @@ class ReportsController extends Controller
                     DB::raw("purchase_returns.amount as income"),
                     DB::raw("purchase_returns.created_at as date")
                 ])
+                ->whereNull('purchase_returns.deleted_at')
                 ->whereDate("purchase_returns.created_at", "=", $date);
 
             $employee_salaries = EmployeeSalary::query()
@@ -328,6 +332,7 @@ class ReportsController extends Controller
                     DB::raw("0 as income"),
                     DB::raw("employee_salaries.created_at as date")
                 ])
+                ->whereNull('employee_salaries.deleted_at')
                 ->whereDate("employee_salaries.created_at", "=", $date);
 
 
@@ -340,6 +345,7 @@ class ReportsController extends Controller
                     DB::raw("0 as income"),
                     DB::raw("sale_returns.created_at as date")
                 ])
+                ->whereNull('sale_returns.deleted_at')
                 ->whereDate("sale_returns.created_at", "=", $date);
 
             $capital_deposits = CapitalDeposit::query()
@@ -350,9 +356,10 @@ class ReportsController extends Controller
                     DB::raw("payment_amount as income"),
                     DB::raw("created_at as date")
                 ])
+                ->whereNull('capital_deposits.deleted_at')
                 ->whereDate("created_at", "=", $date);
 
-            $capital_withdraws = CapitalDeposit::query()
+            $capital_withdraws = CapitalWithdraw::query()
                 ->select([
                     DB::raw("'capital_withdraw' as title"),
                     DB::raw("reference as description"),
@@ -360,6 +367,7 @@ class ReportsController extends Controller
                     DB::raw("0 as income"),
                     DB::raw("created_at as date")
                 ])
+                ->whereNull('capital_withdraws.deleted_at')
                 ->whereDate("created_at", "=", $date);
 
             return SalePayment::query()
@@ -371,6 +379,7 @@ class ReportsController extends Controller
                     DB::raw("sale_payments.payment_amount as income"),
                     DB::raw("sale_payments.created_at as date")
                 ])
+                ->whereNull('sale_payments.deleted_at')
                 ->whereDate("sale_payments.created_at", "=", $date)
                 ->union($expenses)
                 ->union($purchase_payments)
