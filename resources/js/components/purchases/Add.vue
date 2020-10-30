@@ -50,10 +50,10 @@
                         </b-form-group>
                         <b-table bordered small hover striped head-variant="dark" :fields="item_fields"
                                  :items="form.items">
-                            <template v-slot:cell(price)="row">
+                            <template v-slot:cell(cost)="row">
                                 <b-input-group size="sm" :append="$options.filters.currencySymbol(0)">
-                                    <b-input type="number" step="any" v-model="row.item.price"
-                                             :placeholder="__('price', 'Price')" :required="true"/>
+                                    <b-input type="number" step="any" v-model="row.item.cost"
+                                             :placeholder="__('cost', 'Cost')" :required="true"/>
                                 </b-input-group>
                             </template>
                             <template v-slot:cell(quantity)="row">
@@ -61,7 +61,7 @@
                                          :placeholder="__('quantity', 'Quantity')" :required="true" size="sm"/>
                             </template>
                             <template v-slot:cell(total)="row">
-                                {{ Number(row.item.quantity * row.item.price) | currency }}
+                                {{ Number(row.item.quantity * row.item.cost) | currency }}
                             </template>
 
                             <template v-slot:cell(action)="row">
@@ -172,8 +172,8 @@
                                         <td>: {{ si.code }}</td>
                                     </tr>
                                     <tr>
-                                        <td>{{ __("price", "Price") }}</td>
-                                        <td>: {{ si.price | currency }}</td>
+                                        <td>{{ __("cost", "Cost") }}</td>
+                                        <td>: {{ si.cost | currency }}</td>
                                     </tr>
                                     <tr>
                                         <td>{{ __("quantity", "Quantity") }}</td>
@@ -284,7 +284,7 @@
                     {key: "product_id", label: _t("pid", "PID")},
                     {key: "name", label: _t("name", "Name")},
                     {key: "code", label: _t("code", "Code")},
-                    {key: "price", label: _t("price", "Price")},
+                    {key: "cost", label: _t("cost", "Cost")},
                     {key: "quantity", label: _t("quantity", "Quantity")},
                     {key: 'total', label: _t('total', 'Total')},
                     {key: "action", label: _t("action", "Action")},
@@ -361,7 +361,7 @@
                 } else {
                     items.push({
                         product_id: v.id,
-                        price: v.price || 0,
+                        cost: v.cost || 0,
                         quantity: 1,
                         code: v.code,
                         name: v.name,
@@ -373,7 +373,7 @@
                 this.$set(this.form, "items", items);
             },
             getItemPayable(row) {
-                return row.quantity * row.price;
+                return row.quantity * row.cost;
             },
             removeCartItem(row) {
                 if (confirm("Are You Sure?")) {
