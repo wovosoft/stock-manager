@@ -23,7 +23,10 @@
             </td>
 
             <td>
-                {{\App\Drivers\BanglaConverter::en2bn($sale_item->quantity)}} টি
+                @php
+                    $unit =$sale_item->unit;
+                @endphp
+                {{\App\Drivers\BanglaConverter::en2bn($sale_item->quantity)}} {{$unit?$unit->name:''}}
             </td>
 
             <td>

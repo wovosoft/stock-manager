@@ -142,6 +142,7 @@ class ProductController extends Controller
                     "category_id",
                     "subcategory_id",
                     "price",
+                    "cost",
                     "quantity",
                     "photo"
                 ]);

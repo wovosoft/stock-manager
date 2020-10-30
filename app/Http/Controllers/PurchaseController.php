@@ -44,7 +44,7 @@ class PurchaseController extends Controller
         $items_total = 0;     //sale Total
         if (is_array($items) && count($items)) {
             foreach ($items as $sitem) {
-                $items_total += ($sitem['quantity'] ?? 0) * ($sitem['price'] ?? 0);
+                $items_total += ($sitem['quantity'] ?? 0) * ($sitem['cost'] ?? 0);
             }
         }
         return [
@@ -93,7 +93,7 @@ class PurchaseController extends Controller
                     "product_id" => $si['product_id'],
                     "supplier_id" => $purchase->supplier_id,
                     "quantity" => $si['quantity'],
-                    "price" => round($si['price'], 2)
+                    "price" => round($si['cost'], 2)
                 ]);
                 $purchase_item->saveOrFail();
             }

@@ -79,4 +79,16 @@ class SaleItem extends BaseModel
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
+
+    public function unit()
+    {
+        return $this->hasOneThrough(
+            Unit::class,
+            Product::class,
+            'id',
+            'id',
+            'product_id',
+            'unit_id',
+        );
+    }
 }
