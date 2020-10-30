@@ -46,6 +46,7 @@ class ReportsController extends Controller
                     "prev_purchased_items" => function (Builder $builder) use ($date) {
                         $builder
                             ->from("purchase_items")
+                            ->whereNull('purchase_items.deleted_at')
                             ->whereDate("purchase_items.created_at", "<", $date)
                             ->where("purchase_items.product_id", "=", DB::raw("products.id"))
                             ->selectRaw("IFNULL(SUM(purchase_items.quantity),0)");
@@ -53,6 +54,7 @@ class ReportsController extends Controller
                     "prev_purchase_returned_items" => function (Builder $builder) use ($date) {
                         $builder
                             ->from("purchase_returns")
+                            ->whereNull('purchase_returns.deleted_at')
                             ->whereDate("purchase_returns.created_at", "<", $date)
                             ->where("purchase_returns.product_id", "=", DB::raw("products.id"))
                             ->selectRaw("IFNULL(SUM(purchase_returns.quantity),0)");
@@ -60,6 +62,7 @@ class ReportsController extends Controller
                     "prev_sold_items" => function (Builder $builder) use ($date) {
                         $builder
                             ->from("sale_items")
+                            ->whereNull('sale_items.deleted_at')
                             ->whereDate("sale_items.created_at", "<", $date)
                             ->where("sale_items.product_id", "=", DB::raw("products.id"))
                             ->selectRaw("IFNULL(SUM(sale_items.quantity),0)");
@@ -67,6 +70,7 @@ class ReportsController extends Controller
                     "prev_sold_returned_items" => function (Builder $builder) use ($date) {
                         $builder
                             ->from("sale_returns")
+                            ->whereNull('sale_returns.deleted_at')
                             ->whereDate("sale_returns.created_at", "<", $date)
                             ->where("sale_returns.product_id", "=", DB::raw("products.id"))
                             ->selectRaw("IFNULL(SUM(sale_returns.quantity),0)");
@@ -74,6 +78,7 @@ class ReportsController extends Controller
                     "purchased_items" => function (Builder $builder) use ($date) {
                         $builder
                             ->from("purchase_items")
+                            ->whereNull('purchase_items.deleted_at')
                             ->whereDate("purchase_items.created_at", "=", $date)
                             ->where("purchase_items.product_id", "=", DB::raw("products.id"))
                             ->selectRaw("IFNULL(SUM(purchase_items.quantity),0)");
@@ -81,6 +86,7 @@ class ReportsController extends Controller
                     "purchase_returned_items" => function (Builder $builder) use ($date) {
                         $builder
                             ->from("purchase_returns")
+                            ->whereNull('purchase_returns.deleted_at')
                             ->whereDate("purchase_returns.created_at", "=", $date)
                             ->where("purchase_returns.product_id", "=", DB::raw("products.id"))
                             ->selectRaw("IFNULL(SUM(purchase_returns.quantity),0)");
@@ -88,6 +94,7 @@ class ReportsController extends Controller
                     "sold_items" => function (Builder $builder) use ($date) {
                         $builder
                             ->from("sale_items")
+                            ->whereNull('sale_items.deleted_at')
                             ->whereDate("sale_items.created_at", "=", $date)
                             ->where("sale_items.product_id", "=", DB::raw("products.id"))
                             ->selectRaw("IFNULL(SUM(sale_items.quantity),0)");
@@ -95,6 +102,7 @@ class ReportsController extends Controller
                     "sold_returned_items" => function (Builder $builder) use ($date) {
                         $builder
                             ->from("sale_returns")
+                            ->whereNull('sale_returns.deleted_at')
                             ->whereDate("sale_returns.created_at", "=", $date)
                             ->where("sale_returns.product_id", "=", DB::raw("products.id"))
                             ->selectRaw("IFNULL(SUM(sale_returns.quantity),0)");
@@ -185,11 +193,16 @@ class ReportsController extends Controller
                         DB::raw("payable - paid - returned")
                     ]);
                 }
-            ]);
+            ])
+            ->having('payable', '>', 0)
+            ->orHaving('paid', '>', 0)
+            ->orHaving('returned', '>', 0)
+            ->orHaving('balance', '>', 0);
     }
 
     public function customerSalesReport(?string $pdf = null, Request $request)
     {
+//        return $this->getCustomerSalesReport($request)->toSql();
         try {
             if ($pdf == 'pdf') {
                 $request->validate([
@@ -441,12 +454,14 @@ class ReportsController extends Controller
                     "capital_deposit" => function (Builder $builder) use ($request) {
                         $builder
                             ->from('capital_deposits')
+                            ->whereNull('capital_deposits.deleted_at')
                             ->selectRaw("IFNULL(SUM(capital_deposits.payment_amount),0)");
                         $this->setDateRanges($builder, $request);
                     },
                     "capital_withdraw" => function (Builder $builder) use ($request) {
                         $builder
                             ->from('capital_withdraws')
+                            ->whereNull('capital_withdraws.deleted_at')
                             ->selectRaw("IFNULL(SUM(capital_withdraws.payment_amount),0)");
                         $this->setDateRanges($builder, $request);
                     },
@@ -455,11 +470,13 @@ class ReportsController extends Controller
                     },
                     "purchase_payment" => function (Builder $builder) use ($request) {
                         $builder->from("purchase_payments")
+                            ->whereNull('purchase_payments.deleted_at')
                             ->selectRaw("IFNULL(SUM(purchase_payments.payment_amount),0)");
                         $this->setDateRanges($builder, $request);
                     },
                     "purchase_return" => function (Builder $builder) use ($request) {
                         $builder->from("purchase_returns")
+                            ->whereNull('purchase_returns.deleted_at')
                             ->selectRaw("IFNULL(SUM(purchase_returns.amount),0)");
                         $this->setDateRanges($builder, $request);
                     },
@@ -468,11 +485,13 @@ class ReportsController extends Controller
                     },
                     "sale_payment" => function (Builder $builder) use ($request) {
                         $builder->from("sale_payments")
+                            ->whereNull('sale_payments.deleted_at')
                             ->selectRaw("IFNULL(SUM(sale_payments.payment_amount),0)");
                         $this->setDateRanges($builder, $request);
                     },
                     "sale_return" => function (Builder $builder) use ($request) {
                         $builder->from("sale_returns")
+                            ->whereNull('sale_returns.deleted_at')
                             ->selectRaw("IFNULL(SUM(sale_returns.amount),0)");
                         $this->setDateRanges($builder, $request);
                     },
@@ -481,11 +500,13 @@ class ReportsController extends Controller
                     },
                     "expense" => function (Builder $builder) use ($request) {
                         $builder->from("expenses")
+                            ->whereNull('expenses.deleted_at')
                             ->selectRaw("IFNULL(SUM(expenses.amount),0)");
                         $this->setDateRanges($builder, $request);
                     },
                     "employee_salary" => function (Builder $builder) use ($request) {
                         $builder->from("employee_salaries")
+                            ->whereNull('employee_salaries.deleted_at')
                             ->selectRaw("IFNULL(SUM(employee_salaries.payment_amount),0)");
                         $this->setDateRanges($builder, $request);
                     },
