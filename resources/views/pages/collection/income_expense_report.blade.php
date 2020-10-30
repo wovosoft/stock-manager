@@ -152,7 +152,7 @@
     </div>
 </div>
 <br>
-<table style="border: 0;">
+<table style="border: 0;margin-left: 40%;">
     <tr>
         <td style="border: 0;"> পূর্বের জমাঃ</td>
         <td style="border: 0;">{{\App\Drivers\BanglaConverter::en2bn(number_format($previous_balance,2))}} টাকা</td>
