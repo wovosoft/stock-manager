@@ -19,6 +19,7 @@ class ProductController extends Controller
         'id',
         'name',
         'code',
+        'cost',
         'price',
         'quantity',
         'description'
@@ -27,6 +28,7 @@ class ProductController extends Controller
         'id',
         'name',
         'code',
+        'cost',
         'price',
         'quantity',
         'description'

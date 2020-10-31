@@ -57,7 +57,7 @@
                                 </b-input-group>
                             </template>
                             <template v-slot:cell(quantity)="row">
-                                <b-input type="number" step="any" v-model="row.item.quantity" :min="0"
+                                <b-input type="number" step="any" v-model="row.item.quantity"
                                          :placeholder="__('quantity', 'Quantity')" :required="true" size="sm"/>
                             </template>
                             <template v-slot:cell(total)="row">
