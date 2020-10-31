@@ -54,7 +54,7 @@ class PurchasePaymentController extends Controller
     public function purchasePayments(Request $request)
     {
         try {
-            return PurchasePayment::query()
+            $items = PurchasePayment::query()
                 ->select([
                     'purchase_payments.id',
                     'purchase_payments.supplier_id',
@@ -68,8 +68,11 @@ class PurchasePaymentController extends Controller
                     'purchase_payments.created_at',
                 ])
                 ->leftJoin("suppliers", "suppliers.id", "=", "purchase_payments.supplier_id")
-                ->leftJoin("users", "users.id", "=", "purchase_payments.given_by")
-                ->defaultDatatable($request);
+                ->leftJoin("users", "users.id", "=", "purchase_payments.given_by");
+            if ($request->post("date")) {
+                $items->whereDate("purchase_payments.created_at", "=", $request->post("date"));
+            }
+            return $items->defaultDatatable($request);
         } catch (\Throwable $exception) {
             throw $exception;
         }
