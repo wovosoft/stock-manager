@@ -82,6 +82,13 @@ class SaleItem extends BaseModel
 
     public function unit()
     {
+        /**
+         * Tutorial:
+         * First we need to get the product. So, using
+         * products.id (first key, means target model Product) = sale_items.product_id (Local Key means Sale Items local key)
+         * now we got product,
+         * so now
+         */
         return $this->hasOneThrough(
             Unit::class,
             Product::class,

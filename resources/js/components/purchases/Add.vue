@@ -126,7 +126,7 @@
                             <b-form-textarea :rows="4" :placeholder="__('sales_note', 'Sales Note')"
                                              v-model="form.note"/>
                         </b-form-group>
-                        <b-button type="submit" block variant="dark">
+                        <b-button type="submit" block variant="dark" :disabled="submit_disabled">
                             {{ __("submit", "SUBMIT") }}
                         </b-button>
                     </b-form>
@@ -274,6 +274,7 @@
         },
         data() {
             return {
+                submit_disabled: false,
                 purchase_id: null,
                 search_category: null,
                 searched_items: {
@@ -337,6 +338,7 @@
                         this.$refs.productSelector.$el.querySelector("button").click();
                         return false;
                     }
+                    this.submit_disabled = true;
                     this.onSubmit((res) => {
                         this.$bvModal.show('invoice-modal');
                         this.purchase_id = res.data.purchase_id;
@@ -350,6 +352,7 @@
                             payment_method: "Cash",
                             payment_amount: 0,
                         });
+                        this.submit_disabled = false;
                     });
                 }
             },

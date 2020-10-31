@@ -220,11 +220,11 @@
                     //     label: _t('discount', 'Discount'),
                     //     formatter: v => this.$options.filters.localNumber(v || 0) + "%"
                     // },
-                    {
-                        key: 'payable', sortable: true,
-                        label: _t('sales.payable', 'Payable'),
-                        formatter: v => this.$options.filters.currency(v || 0)
-                    },
+                    // {
+                    //     key: 'payable', sortable: true,
+                    //     label: _t('sales.payable', 'Payable'),
+                    //     formatter: v => this.$options.filters.currency(v || 0)
+                    // },
                     {
                         key: 'previous_balance', sortable: true,
                         label: _t('previous_balance', 'Previous Balance'),

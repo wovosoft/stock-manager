@@ -142,11 +142,11 @@
                             <!--                            </b-col>-->
                         </b-form-row>
 
-<!--                        <b-form-group :label="__('note', 'Note')">-->
-<!--                            <b-form-textarea :rows="4" :placeholder="__('sales_note', 'Sales Note')"-->
-<!--                                             v-model="form.note"/>-->
-<!--                        </b-form-group>-->
-                        <b-button type="submit" block variant="dark">
+                        <b-form-group :label="__('note', 'Note')">
+                            <b-form-textarea :rows="4" :placeholder="__('sales_note', 'Sales Note')"
+                                             v-model="form.note"/>
+                        </b-form-group>
+                        <b-button type="submit" block variant="dark" :disabled="submit_disabled">
                             {{ __("submit", "SUBMIT") }}
                         </b-button>
                     </b-form>
@@ -156,8 +156,7 @@
                 <b-card
                     class="h-100"
                     body-class="p-2 mh-60vh overflow-auto"
-                    header-class="px-2"
-                >
+                    header-class="px-2">
                     <template #header>
                         <b-input-group>
                             <template #prepend>
@@ -304,6 +303,7 @@
         },
         data() {
             return {
+                submit_disabled: false,
                 sale_id: null,
                 search_category: null,
                 searched_items: {
@@ -365,12 +365,14 @@
                 el.print();
             },
             handleSubmit() {
+
                 if (this.$refs.theForm.reportValidity()) {
                     if (!(isArray(this.form.items) && this.form.items.length > 0)) {
                         alert("Please Select Items First");
                         this.$refs.productSelector.$el.querySelector("button").click();
                         return false;
                     }
+                    this.submit_disabled = true;
                     this.onSubmit((res) => {
                         this.$bvModal.show('invoice-modal');
                         this.sale_id = res.data.sale_id;
@@ -384,6 +386,7 @@
                             payment_method: "Cash",
                             payment_amount: 0,
                         });
+                        this.submit_disabled = false;
                     });
                 }
             },

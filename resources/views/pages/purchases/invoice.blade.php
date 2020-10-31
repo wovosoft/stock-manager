@@ -88,7 +88,10 @@
                 {{\App\Drivers\BanglaConverter::en2bn(number_format($purchase_item->price,2))}} টাকা
             </td>
             <td>
-                {{\App\Drivers\BanglaConverter::en2bn($purchase_item->quantity)}} টি
+                @php
+                    $unit=$purchase_item->unit;
+                @endphp
+                {{\App\Drivers\BanglaConverter::en2bn($purchase_item->quantity)}} {{$unit?$unit->name:''}}
             </td>
             <td>
                 {{\App\Drivers\BanglaConverter::en2bn(number_format($purchase_item->total,2))}} টাকা
@@ -97,14 +100,6 @@
     @endforeach
     </tbody>
     <tfoot>
-    <tr>
-        <td colspan="3" class="text-right">
-            মোট পণ্যঃ
-        </td>
-        <td>
-            {{\App\Drivers\BanglaConverter::en2bn($purchase->items->sum('quantity'))}} টি
-        </td>
-    </tr>
     <tr>
         <td colspan="3" class="text-right">
             মোট ক্রয়মূল্যঃ

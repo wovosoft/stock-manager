@@ -79,4 +79,22 @@ class PurchaseItem extends BaseModel
     {
         return $this->belongsTo(Purchase::class, 'purchase_id', 'id');
     }
+    public function unit()
+    {
+        /**
+         * Tutorial:
+         * First we need to get the product. So, using
+         * products.id (first key, means target model Product) = sale_items.product_id (Local Key means Sale Items local key)
+         * now we got product,
+         * so now
+         */
+        return $this->hasOneThrough(
+            Unit::class,
+            Product::class,
+            'id',
+            'id',
+            'product_id',
+            'unit_id',
+        );
+    }
 }

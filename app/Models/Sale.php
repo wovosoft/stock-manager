@@ -43,6 +43,11 @@ class Sale extends BaseModel
             $item->current_balance = $payable - $paid;
             $item->saveOrFail();
         });
+        static::deleting(function (self $item) {
+            $item->items()->each(function (SaleItem $sale_item) {
+                $sale_item->delete();
+            });
+        });
     }
 
     public function items()

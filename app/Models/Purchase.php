@@ -42,6 +42,11 @@ class Purchase extends BaseModel
             $item->current_balance = $payable - $paid;
             $item->saveOrFail();
         });
+        static::deleting(function (self $item) {
+            $item->items()->each(function (PurchaseItem $purchaseItem) {
+                $purchaseItem->delete();
+            });
+        });
     }
 
     public function items()

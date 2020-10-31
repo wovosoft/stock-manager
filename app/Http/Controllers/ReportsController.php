@@ -28,7 +28,7 @@ class ReportsController extends Controller
     {
         Route::name("Reports.")->prefix("reports")->group(function () {
             Route::match(['get', 'post'], 'products/daily/{date}/{export?}', [self::class, 'dailyProducts'])->name("Products.Daily");
-            Route::match(['get', 'post'], 'customers/sales/{pdf?}', [self::class, 'customerSalesReport'])->name("Customers.Sales");
+            Route::match(['get', 'post'], 'customers/sales/export/{pdf?}', [self::class, 'customerSalesReport'])->name("Customers.Sales");
             Route::match(['get', 'post'], 'suppliers/purchases/{pdf?}', [self::class, 'supplierPurchasesReport'])->name("Suppliers.Purchases");
             Route::match(['get', 'post'], 'income_expenses/{date}/{pdf?}', [self::class, 'incomeExpense'])->name("IncomeExpense");
             Route::match(['get', 'post'], 'financial_report/{pdf?}', [self::class, 'financialReport'])->name("ShortFinancialReport");
@@ -273,7 +273,11 @@ class ReportsController extends Controller
                         DB::raw("payable - paid - returned")
                     ]);
                 }
-            ]);
+            ])
+            ->having('payable', '!=', 0)
+            ->orHaving('paid', '!=', 0)
+            ->orHaving('returned', '!=', 0)
+            ->orHaving('balance', '!=', 0);;
     }
 
     public function supplierPurchasesReport(?string $pdf = null, Request $request)

@@ -16,20 +16,23 @@
                 {{$sale_item->product->name}}
             </td>
             <td>
-                {{\App\Drivers\BanglaConverter::en2bn($sale_item->quantity)}} টি
+                @php
+                    $unit =$sale_item->unit;
+                @endphp
+                {{\App\Drivers\BanglaConverter::en2bn($sale_item->quantity)}} {{$unit?$unit->name:''}}
             </td>
         </tr>
     @endforeach
     </tbody>
     <tfoot>
-    <tr>
-        <td  class="text-right">
-            মোট পণ্যঃ
-        </td>
-        <td>
-            {{\App\Drivers\BanglaConverter::en2bn($sale->items->sum('quantity'))}} টি
-        </td>
-    </tr>
+{{--    <tr>--}}
+{{--        <td  class="text-right">--}}
+{{--            মোট পণ্যঃ--}}
+{{--        </td>--}}
+{{--        <td>--}}
+{{--            {{\App\Drivers\BanglaConverter::en2bn($sale->items->sum('quantity'))}} টি--}}
+{{--        </td>--}}
+{{--    </tr>--}}
     <tr>
         <td style="font-size: small;">
             @php($date=\Carbon\Carbon::now()->locale('bn-BD'))

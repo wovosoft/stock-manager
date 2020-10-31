@@ -191,11 +191,11 @@
                         sortable: true,
                         label: _t('supplier', "Supplier")
                     },
-                    {
-                        key: 'total', sortable: true,
-                        label: _t('total', 'Total'),
-                        formatter: v => this.$options.filters.currency(v || 0)
-                    },
+                    // {
+                    //     key: 'total', sortable: true,
+                    //     label: _t('total', 'Total'),
+                    //     formatter: v => this.$options.filters.currency(v || 0)
+                    // },
                     // {
                     //     key: 'tax', sortable: true,
                     //     label: _t('tax', 'Tax'),
