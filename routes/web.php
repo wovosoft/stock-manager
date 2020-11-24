@@ -3,11 +3,24 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers as CC;
-
+use Illuminate\Http\Request;
 Auth::routes(["register" => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get("/test", fn() => view("test"));
+
+Route::get('/access-token', function (Request $request) {
+    $credentials = $request->only('email', 'password');
+
+    if (Auth::attempt($credentials)) {
+        // Authentication passed...
+        $user = Auth::user();
+        $token = $user->createToken('Token Name')->accessToken;
+
+        return response()->json($token);
+    }
+});
+
+
 Route::pattern('url', '.*');
 
 Route::middleware(['auth'])->prefix('backend')->name('Backend.')->group(function () {

@@ -16,8 +16,8 @@
                                     :required="true"
                                     @input="(v) => (form.supplier_id = v ? v.id : null)"
                                     v-model="form.supplier"
-                                    :tag-text="(tag)=>tag ? [tag.id, tag.name, tag.phone].join(' # '): __('not_selected', 'Not Selected')"
-                                    :option-text="(op)=>op ? [op.id, op.name, op.phone].join(' # '): ''"
+                                    :tag-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): __('not_selected', 'Not Selected')"
+                                    :option-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): ''"
                                     :api_url="route('Backend.Suppliers.Search').url()">
                                 </vue-select>
                                 <template v-slot:append>
