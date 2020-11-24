@@ -46,7 +46,7 @@
                 <b-col sm="12" md="6">
                     <b-form-group :label="__('district','District')">
                         <b-form-select
-                            text-field="name"
+                            text-field="bn_name"
                             value-field="name"
                             :options="districts"
                             v-model="form.district"
