@@ -14,15 +14,19 @@
                                 <vue-select
                                     :init-options="true"
                                     :required="true"
-                                    @input="(v) => (form.customer_id = v ? v.id : null)"
+                                    @input="(v) => {
+                                        (form.customer_id = v ? v.id : null);
+                                        customer_balance=v?v.balance:0;
+                                    }"
                                     v-model="form.customer"
                                     :tag-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): __('not_selected', 'Not Selected')"
                                     :option-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): ''"
                                     :api_url="route('Backend.Customers.Search').url()">
                                 </vue-select>
                                 <template v-slot:append>
-                                    <b-button @click="(form.customer = null), (form.customer_id = null)"
-                                              class="font-weight-bold">
+                                    <b-button
+                                        @click="(form.customer = null), (form.customer_id = null),customer_balance=0"
+                                        class="font-weight-bold">
                                         X
                                     </b-button>
                                     <b-button @click="customer_add_modal_visible = true" variant="dark">
@@ -52,6 +56,7 @@
                             </b-input-group>
                         </b-form-group>
                         <b-table
+                            responsive
                             bordered
                             small
                             hover
@@ -63,11 +68,13 @@
                             <template v-slot:cell(price)="row">
                                 <b-input-group size="sm" :append="$options.filters.currencySymbol(0)">
                                     <b-input type="number" step="any" v-model="row.item.price"
+                                             style="min-width: 80px;"
                                              :placeholder="__('sales.price', 'Price')" :required="true"/>
                                 </b-input-group>
                             </template>
                             <template v-slot:cell(quantity)="row">
                                 <b-input type="number" step="any" v-model="row.item.quantity"
+                                         style="min-width: 50px;"
                                          :placeholder="__('quantity', 'Quantity')" :required="true" size="sm"/>
                             </template>
                             <template v-slot:cell(total)="row">
@@ -108,7 +115,12 @@
                         </b-table>
 
                         <b-form-row>
-                            <b-col>
+                            <b-col md="4" sm="12">
+                                <b-form-group :label="__('previous_balance', 'Previous Balance')">
+                                    <div class="form-control">{{customer_balance|currency}}</div>
+                                </b-form-group>
+                            </b-col>
+                            <b-col md="4" sm="12">
                                 <b-form-group :label="__('sales.payment_amount', 'Payment Amount')">
                                     <b-input-group>
                                         <b-input
@@ -123,7 +135,7 @@
                                     </b-input-group>
                                 </b-form-group>
                             </b-col>
-                            <b-col>
+                            <b-col md="4" sm="12">
                                 <b-form-group :label="__('payment_method', 'Payment Method')">
                                     <b-form-select v-model="form.payment_method" :options="payment_options"/>
                                 </b-form-group>
@@ -309,6 +321,7 @@
                 searched_items: {
                     data: [],
                 },
+                customer_balance: 0,
                 customer_add_modal_visible: false,
                 item_fields: [
                     {key: "product_id", label: _t("pid", "PID")},

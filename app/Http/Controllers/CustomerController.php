@@ -13,19 +13,7 @@ use Illuminate\Support\Facades\Route;
 class CustomerController extends Controller
 {
     protected string $model = Customer::class;
-    public array $search_selects = [
-        'id',
-        'name',
-        'email',
-        'phone',
-        'company',
-        'district',
-        'thana',
-        'post_office',
-        'village',
-        'shipping_address',
-        'shipping_address',
-    ];
+    public array $search_selects = [];
     public array $search_fields = [
         'id',
         'name',
@@ -39,6 +27,45 @@ class CustomerController extends Controller
         'shipping_address',
         'shipping_address',
     ];
+
+    public function __construct()
+    {
+
+        $this->search_selects = [
+            'id',
+            'name',
+            'email',
+            'phone',
+            'company',
+            'district',
+            'thana',
+            'post_office',
+            'village',
+            'shipping_address',
+            'shipping_address',
+            "balance" => function (Builder $builder) {
+                $payable = DB::table("sales")
+                    ->where("sales.customer_id", "=", DB::raw("customers.id"))
+                    ->whereNull("sales.deleted_at")
+                    ->selectRaw("IFNULL(SUM(sales.payable),0)")
+                    ->toSql();
+
+                $returned = DB::table("sale_returns")
+                    ->where("sale_returns.customer_id", "=", DB::raw("customers.id"))
+                    ->whereNull("sale_returns.deleted_at")
+                    ->selectRaw("IFNULL(SUM(sale_returns.amount),0)")
+                    ->toSql();
+
+                $paid = DB::table('sale_payments')
+                    ->where("sale_payments.customer_id", "=", DB::raw("customers.id"))
+                    ->whereNull("sale_payments.deleted_at")
+                    ->selectRaw("IFNULL(SUM(sale_payments.payment_amount),0)")
+                    ->toSql();
+                $builder->selectRaw("($payable) - ($paid) - ($returned)");
+            },
+        ];
+    }
+
     use Crud;
 
 
