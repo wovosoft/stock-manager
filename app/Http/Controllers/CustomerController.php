@@ -376,6 +376,7 @@ class CustomerController extends Controller
                     "customers.name",
                     "customers.phone",
                     "customers.company",
+                    "customers.village",
                     DB::raw("(($payable) - ($paid) - ($returned)) as balance")
                 ])
                 ->limit($request->post('limit') ?? 30);
