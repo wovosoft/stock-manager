@@ -414,6 +414,7 @@
                             payment_amount: 0,
                         });
                         this.submit_disabled = false;
+                        this.$set(this, 'customer_balance', 0);
                     });
                 }
             },
