@@ -206,6 +206,12 @@
                         label: _t('customer', "Customer")
                     },
                     {
+                        key: 'customer_address',
+                        name: 'customers.village',
+                        sortable: true,
+                        label: _t('address', "Address")
+                    },
+                    {
                         key: 'total', sortable: true,
                         label: _t('total', 'Total'),
                         formatter: v => this.$options.filters.currency(v || 0)

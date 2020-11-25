@@ -147,7 +147,11 @@ class SaleController extends Controller
         try {
             $items = Sale::query()
                 ->leftJoin("customers", "customers.id", "=", "sales.customer_id")
-                ->select(["sales.*", "customers.name as customer_name"])
+                ->select([
+                    "sales.*",
+                    "customers.name as customer_name",
+                    "customers.village as customer_address"
+                ])
                 ->with([
                     'items' => function ($query) {
                         $query->leftJoin("products", "products.id", "=", "sale_items.product_id");
