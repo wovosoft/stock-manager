@@ -111,15 +111,24 @@
                                         {{ getPayable | currency }}
                                     </b-td>
                                 </b-tr>
+                                <b-tr>
+                                    <b-td :colspan="5" class="text-right font-weight-bold">
+                                        {{ __('previous_balance', 'Previous Balance') }}
+                                    </b-td>
+                                    <b-td :colspan="2" class="font-weight-bold">
+                                        {{customer_balance|currency}}
+                                    </b-td>
+                                </b-tr>
                             </template>
                         </b-table>
 
                         <b-form-row>
                             <b-col md="4" sm="12">
-                                <b-form-group :label="__('previous_balance', 'Previous Balance')">
-                                    <div class="form-control">{{customer_balance|currency}}</div>
+                                <b-form-group :label="__('payment_method', 'Payment Method')">
+                                    <b-form-select v-model="form.payment_method" :options="payment_options"/>
                                 </b-form-group>
                             </b-col>
+
                             <b-col md="4" sm="12">
                                 <b-form-group :label="__('sales.payment_amount', 'Payment Amount')">
                                     <b-input-group>
@@ -136,8 +145,13 @@
                                 </b-form-group>
                             </b-col>
                             <b-col md="4" sm="12">
-                                <b-form-group :label="__('payment_method', 'Payment Method')">
-                                    <b-form-select v-model="form.payment_method" :options="payment_options"/>
+                                <b-form-group :label="__('current_balance', 'Current Balance')">
+                                    <div class="form-control">
+                                        {{
+                                        (Number(customer_balance) +
+                                        Number(getPayable) - Number(form.payment_amount)) |
+                                        currency}}
+                                    </div>
                                 </b-form-group>
                             </b-col>
                         </b-form-row>
