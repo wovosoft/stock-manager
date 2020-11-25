@@ -15,7 +15,6 @@ class PurchaseItemController extends Controller
         Route::post("purchases/items/return/{purchase}/{purchase_item}", [static::class, 'returnItem'])->name('Purchases.Items.Return');
     }
 
-
     public function returnItem(Purchase $purchase, PurchaseItem $purchaseItem, Request $request)
     {
         try {

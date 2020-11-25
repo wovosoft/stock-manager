@@ -148,7 +148,12 @@
                 saleItemFields: [
                     // {key: 'id', label: _t('id', 'ID')},
                     {key: 'product_name', label: _t('product_name', 'Product Name')},
-                    {key: 'quantity', label: _t('quantity', 'Quantity')},
+                    {
+                        key: 'quantity',
+                        label: _t('quantity', 'Quantity'),
+                        formatter: v => this.$options.filters.localNumber(v)
+
+                    },
                     {
                         key: 'price', label: _t('price', 'Price'),
                         formatter: v => this.$options.filters.currency(v)
