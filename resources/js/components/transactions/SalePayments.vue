@@ -52,7 +52,7 @@
                                 employeeId=e.id;
                             }"
                             :tag-text="o=>o?[o.id,o.name,o.village].join(' # '):__('not_selected','Not Selected')"
-                            :option-text="o=>o?o.id+' | ' + o.name + ' | ' + o.company+' | '+ o.village +' | ' + ($options.filters.currency(o.balance)):''"
+                            :option-text="o=>o?o.id+' | ' + o.name + ' | ' +  o.village +' | ' + ($options.filters.currency(o.balance)):''"
                             :api_url="route('Backend.Customers.SearchWithDues').url()"/>
                     </b-form-group>
                     <b-form-row>
