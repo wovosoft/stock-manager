@@ -112,6 +112,20 @@ export default new VueRouter({
                             component: () => import("@/components/sales/View")
                         },
                     ]
+                },
+                {
+                    path: 'returns_list',
+                    name: 'ReturnsList',
+                    meta: {breadcrumb: 'Returns List', title: _t('list_returns', 'List Returns')},
+                    component: () => import("@/components/sales/returns/List"),
+                    children: [
+                        {
+                            path: 'view/:id?',
+                            name: 'ReturnsView',
+                            meta: {breadcrumb: 'View Return', title: _t('view_return', 'View Return')},
+                            component: () => import("@/components/sales/returns/View")
+                        },
+                    ]
                 }
             ]
         },
@@ -149,6 +163,20 @@ export default new VueRouter({
                         },
                     ]
                 },
+                {
+                    path: 'returns_list',
+                    name: 'PurchaseReturnsList',
+                    meta: {breadcrumb: 'Returns', title: _t('list_returns', 'List Returns')},
+                    component: () => import("@/components/purchases/returns/List"),
+                    children: [
+                        {
+                            path: 'view/:id?',
+                            name: 'PurchaseReturnsView',
+                            meta: {breadcrumb: 'View Return', title: _t('view_return', 'View Return')},
+                            component: () => import("@/components/purchases/returns/View")
+                        },
+                    ]
+                }
             ]
         },
         {

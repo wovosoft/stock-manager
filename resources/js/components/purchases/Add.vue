@@ -14,15 +14,23 @@
                                 <vue-select
                                     :init-options="true"
                                     :required="true"
-                                    @input="(v) => (form.supplier_id = v ? v.id : null)"
+                                    @input="(v) => {
+                                        form.supplier_id = v ? v.id : null;
+                                        current_balance=v.balance || 0;
+                                    }"
                                     v-model="form.supplier"
                                     :tag-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): __('not_selected', 'Not Selected')"
                                     :option-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): ''"
                                     :api_url="route('Backend.Suppliers.Search').url()">
                                 </vue-select>
                                 <template v-slot:append>
-                                    <b-button @click="(form.supplier = null), (form.supplier_id = null)"
-                                              class="font-weight-bold">
+                                    <b-button
+                                        @click="()=>{
+                                            form.supplier = null;
+                                            form.supplier_id = null;
+                                            current_balance=0;
+                                        }"
+                                        class="font-weight-bold">
                                         X
                                     </b-button>
                                 </template>
@@ -65,17 +73,33 @@
                             </template>
 
                             <template v-slot:cell(action)="row">
-                                <b-button size="sm" variant="danger" @click="removeCartItem(row)">
+                                <b-button size="sm" @click="removeCartItem(row)">
                                     <b-icon-trash/>
                                 </b-button>
                             </template>
                             <template #custom-foot>
                                 <b-tr>
-                                    <b-td :colspan="5" class="text-right font-weight-bold">
+                                    <b-td colspan="3" class="text-right font-weight-bold">
+                                        {{ __("cost", "Cost") }}
+                                    </b-td>
+                                    <b-td :colspan="4" class="text-right font-weight-bold">
+                                        {{ getPayable | currency }}
+                                    </b-td>
+                                </b-tr>
+                                <b-tr>
+                                    <b-td colspan="3" class="text-right font-weight-bold">
+                                        {{ __("previous_balance", "Previous Balance") }}
+                                    </b-td>
+                                    <b-td colspan="4" class="text-right font-weight-bold">
+                                        {{ current_balance | currency }}
+                                    </b-td>
+                                </b-tr>
+                                <b-tr>
+                                    <b-td colspan="3" class="text-right font-weight-bold">
                                         {{ __("total", "Total") }}
                                     </b-td>
-                                    <b-td :colspan="2" class="font-weight-bold">
-                                        {{ getPayable | currency }}
+                                    <b-td colspan="4" class="text-right font-weight-bold">
+                                        {{ (current_balance + getPayable) | currency }}
                                     </b-td>
                                 </b-tr>
                             </template>
@@ -95,7 +119,7 @@
                                         <template #append>
                                             <b-button
                                                 variant="dark"
-                                                @click="form.payment_amount = getPayable"
+                                                @click="form.payment_amount = Number(getPayable + current_balance).toFixed(2)"
                                             >
                                                 {{ __("full", "Full") }}
                                             </b-button>
@@ -274,6 +298,7 @@
         },
         data() {
             return {
+                current_balance: 0,
                 submit_disabled: false,
                 purchase_id: null,
                 search_category: null,
@@ -282,13 +307,14 @@
                 },
                 supplier_add_modal_visible: false,
                 item_fields: [
+                    {key: "action", label: _t("action", "Action")},
                     {key: "product_id", label: _t("pid", "PID")},
                     {key: "name", label: _t("name", "Name")},
                     {key: "code", label: _t("code", "Code")},
                     {key: "cost", label: _t("cost", "Cost")},
                     {key: "quantity", label: _t("quantity", "Quantity")},
                     {key: 'total', label: _t('total', 'Total')},
-                    {key: "action", label: _t("action", "Action")},
+
                 ],
             };
         },

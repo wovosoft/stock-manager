@@ -1,5 +1,6 @@
 <template>
-    <b-modal @hidden="$router.go(-1)" visible
+    <b-modal @hidden="$router.go(-1)"
+             visible
              v-bind="{...BasicModalOptions,size:'md'}"
              :title="__('view_unit','View Unit')">
         <b-row>
@@ -35,7 +36,6 @@
 </template>
 <script>
     import view from "@/partials/view"
-
     import {BasicModalOptions} from '@/partials/datatable';
 
     export default {

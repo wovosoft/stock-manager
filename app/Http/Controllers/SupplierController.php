@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Supplier;
 use App\Traits\Crud;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -13,47 +14,53 @@ use Illuminate\Support\Facades\Route;
 class SupplierController extends Controller
 {
     protected string $model = Supplier::class;
-    public array $search_selects = [
-        'id',
-        'name',
-        'email',
-        'phone',
-        'company',
-        'district',
-        'thana',
-        'post_office',
-        'village',
-        'shipping_address',
-        'shipping_address',
-    ];
-    public array $search_fields = [
-        'id',
-        'name',
-        'email',
-        'phone',
-        'company',
-        'district',
-        'thana',
-        'post_office',
-        'village',
-        'shipping_address',
-        'shipping_address',
-    ];
+    public array $search_selects;
+    public array $search_fields;
 
-    private string $payable = "(SELECT IFNULL(SUM(purchases.payable),0) FROM purchases
-                        WHERE purchases.supplier_id = suppliers.id and purchases.deleted_at is null)";
-
-    private string $returned = "(SELECT IFNULL(SUM(purchase_returns.amount),0) FROM purchase_returns
-                        WHERE purchase_returns.supplier_id = suppliers.id and purchase_returns.deleted_at is null)";
-
-    private string $paid = "(SELECT IFNULL(SUM(purchase_payments.payment_amount),0) FROM purchase_payments
-                        WHERE purchase_payments.supplier_id = suppliers.id and purchase_payments.deleted_at is null)";
+    private string $payable, $returned, $paid;
     use Crud;
+
+    public function __construct()
+    {
+        $this->payable = DB::table('purchases')
+            ->whereNull('purchases.deleted_at')
+            ->where('purchases.supplier_id', '=', DB::raw('suppliers.id'))
+            ->selectRaw("IFNULL(SUM(purchases.payable),0)")
+            ->toSql();
+        $this->returned = DB::table('purchase_returns')
+            ->whereNull('purchase_returns.deleted_at')
+            ->where('purchase_returns.supplier_id', '=', DB::raw('suppliers.id'))
+            ->selectRaw("IFNULL(SUM(purchase_returns.amount),0)")
+            ->toSql();
+        $this->paid = DB::table('purchase_payments')
+            ->whereNull('purchase_payments.deleted_at')
+            ->where('purchase_payments.supplier_id', '=', DB::raw('suppliers.id'))
+            ->selectRaw("IFNULL(SUM(purchase_payments.payment_amount),0)")
+            ->toSql();
+
+        $this->search_selects = $this->search_fields = [
+            'id',
+            'name',
+            'email',
+            'phone',
+            'company',
+            'district',
+            'thana',
+            'post_office',
+            'village',
+            'shipping_address',
+            'shipping_address',
+            'balance' => function (Builder $builder) {
+                $builder->selectRaw("($this->payable) - ($this->paid) - ($this->returned)");
+            }
+        ];
+    }
 
     public static function routes()
     {
         Route::name("Suppliers.")->prefix("suppliers")->group(function () {
             Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("supplier/exact/{id}", [self::class, 'getById'])->name('GetByID');
             Route::post("{supplier}/payments", [self::class, 'payments'])->name('Payments');
             Route::post("{supplier}/returns", [self::class, 'returns'])->name('Returns');
             Route::post("search", [self::class, 'search'])->name('Search');
@@ -69,18 +76,20 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         try {
-            $item = Supplier::query()->findOrNew($request->post('id'));
-            $item->forceFill([
-                "name" => $request->post('name'),
-                "email" => $request->post('email'),
-                "phone" => $request->post('phone'),
-                "company" => $request->post('company'),
-                "district" => $request->post('district'),
-                "thana" => $request->post('thana'),
-                "post_office" => $request->post('post_office'),
-                "village" => $request->post('village'),
-                "shipping_address" => $request->post('shipping_address')
-            ]);
+            DB::beginTransaction();
+            $item = Supplier::query()
+                ->findOrNew($request->post('id'))
+                ->forceFill([
+                    "name" => $request->post('name'),
+                    "email" => $request->post('email'),
+                    "phone" => $request->post('phone'),
+                    "company" => $request->post('company'),
+                    "district" => $request->post('district'),
+                    "thana" => $request->post('thana'),
+                    "post_office" => $request->post('post_office'),
+                    "village" => $request->post('village'),
+                    "shipping_address" => $request->post('shipping_address')
+                ]);
 
             if ($request->hasFile('photo_upload')) {
                 $item->photo = $request->file('photo_upload')->store('photos', 'public');
@@ -89,14 +98,19 @@ class SupplierController extends Controller
             }
 
             $item->saveOrFail();
+            DB::commit();
             return successResponse([
                 "item" => $item
             ]);
         } catch (\Throwable $exception) {
+            DB::rollBack();
             throw $exception;
         }
     }
-
+    public function getById($id, Request $request)
+    {
+        return Supplier::query()->select($this->search_selects)->findOrFail($id);
+    }
     public function addPayment(Supplier $supplier, Request $request)
     {
         try {
@@ -113,7 +127,6 @@ class SupplierController extends Controller
             );
             return successResponse();
         } catch (\Throwable $exception) {
-            DB::rollBack();
             throw $exception;
         }
     }
@@ -121,14 +134,12 @@ class SupplierController extends Controller
     public function list(Request $request)
     {
         try {
-
-
             $items = Supplier::query()
                 ->select([
                     "suppliers.*",
-                    DB::raw("($this->payable) as payable"),
-                    DB::raw("($this->paid) as paid"),
-                    DB::raw("($this->returned) as returned"),
+                    DB::raw("(($this->payable)) as payable"),
+                    DB::raw("(($this->paid)) as paid"),
+                    DB::raw("(($this->returned)) as returned"),
                     DB::raw("(select (payable - returned - paid)) as balance")
                 ]);
             if ($request->has('id')) {
@@ -138,10 +149,10 @@ class SupplierController extends Controller
             return response()
                 ->json($items->defaultDatatable($request))
                 ->header("fund_summery", json_encode(resetQueryForOverview($items)->select([
-                    DB::raw("SUM(IFNULL($this->payable,0)) as payable"),
-                    DB::raw("SUM(IFNULL($this->returned,0))  as returned"),
-                    DB::raw("SUM(IFNULL($this->paid,0))  as paid"),
-                    DB::raw("SUM(IFNULL($this->payable - $this->returned - $this->paid,0))  as balance"),
+                    DB::raw("SUM(IFNULL(($this->payable),0)) as payable"),
+                    DB::raw("SUM(IFNULL(($this->returned),0))  as returned"),
+                    DB::raw("SUM(IFNULL(($this->paid),0))  as paid"),
+                    DB::raw("SUM(IFNULL(($this->payable) - ($this->returned) - ($this->paid),0))  as balance"),
                 ])->first()));
         } catch (\Throwable $exception) {
             throw $exception;

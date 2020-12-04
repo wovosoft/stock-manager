@@ -35,7 +35,7 @@ class ProductFactory extends Factory
             "brand_id" => random_int(1, $count_create),
             "status" => [true, false][random_int(0, 1)],
             "unit_id" => random_int(1, 4),
-            "quantity" => random_int(1, 100),
+//            "quantity" => random_int(1, 100),
             "alert_quantity" => random_int(1, 50),
             "description" => $this->faker->text(100),
             "created_at" => Carbon::now()->addDays(random_int(-30, 30))

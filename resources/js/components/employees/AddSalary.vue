@@ -6,27 +6,14 @@
                     <b-form-select
                         :required="true"
                         v-model="form.year"
-                        :options="[2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030]"/>
+                        :options="rangeIndexed(2015,2030)"/>
                 </b-form-group>
             </b-col>
             <b-col sm="12" md="6">
                 <b-form-group :label="__('month','Month')">
                     <b-form-select
                         v-model="form.month"
-                        :options="[
-                   {text:_t('january','January'),value:1},
-                   {text:_t('february','February'),value:2},
-                   {text:_t('march','March'),value:3},
-                   {text:_t('april','April'),value:4},
-                   {text:_t('may','May'),value:5},
-                   {text:_t('june','June'),value:6},
-                   {text:_t('july','July'),value:7},
-                   {text:_t('august','August'),value:8},
-                   {text:_t('september','September'),value:9},
-                   {text:_t('october','October'),value:10},
-                   {text:_t('november','November'),value:11},
-                   {text:_t('december','December'),value:12},
-               ]"/>
+                        :options="monthOptions"/>
                 </b-form-group>
             </b-col>
         </b-form-row>
@@ -59,8 +46,9 @@
 </template>
 <script>
     import dayjs from "dayjs"
-    import {msgBox} from "@/partials/datatable";
+    import {msgBox, rangeIndexed} from "@/partials/datatable";
     import payment_options from "@/shared/payment_options";
+    import {monthOptions} from "@/shared/months";
 
     export default {
         props: {
@@ -80,6 +68,7 @@
 
         data() {
             return {
+                monthOptions,
                 form: {
                     payment_amount: 0,
                     payment_method: 'Cash',
@@ -93,7 +82,7 @@
             this.$set(this.form, 'payment_amount', this.salary);
         },
         methods: {
-            msgBox,
+            msgBox, rangeIndexed,
             handleSubmit() {
                 axios
                     .post(route('Backend.Employees.Salaries.Store', {employee: this.employeeId}).url(), this.form)

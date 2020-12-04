@@ -10,25 +10,25 @@ use Illuminate\Support\Facades\Artisan;
 
 class Product extends BaseModel
 {
-    protected static function boot()
-    {
-        parent::boot();
-        static::created(function ($product) {
-            Artisan::call("record:products");
-//            updateOrGenerateProductRecords($product->id);
-        });
+//    protected static function boot()
+//    {
+//        parent::boot();
+//        static::created(function ($product) {
+//            Artisan::call("record:products");
+////            updateOrGenerateProductRecords($product->id);
+//        });
+//
+//        static::updated(function ($product) {
+//            Artisan::call("record:products");
+////            updateOrGenerateProductRecords($product->id);
+//        });
+//
+//        static::deleted(function ($product) {
+//            Artisan::call("record:products");
+////            updateOrGenerateProductRecords($product->id);
+//        });
 
-        static::updated(function ($product) {
-            Artisan::call("record:products");
-//            updateOrGenerateProductRecords($product->id);
-        });
-
-        static::deleted(function ($product) {
-            Artisan::call("record:products");
-//            updateOrGenerateProductRecords($product->id);
-        });
-
-    }
+//    }
 
     use HasFactory;
     use HistoryTrait;

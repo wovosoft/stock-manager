@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Unit;
 use App\Traits\Crud;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 class UnitController extends Controller
@@ -27,14 +28,18 @@ class UnitController extends Controller
     public function store(Request $request)
     {
         try {
-            $item = Unit::query()->findOrNew($request->post('id'));
-            $item->forceFill([
-                "name" => $request->post('name'),
-                "description" => $request->post('description'),
-            ]);
-            $item->saveOrFail();
+            DB::beginTransaction();
+            Unit::query()
+                ->findOrNew($request->post('id'))
+                ->forceFill([
+                    "name" => $request->post('name'),
+                    "description" => $request->post('description'),
+                ])
+                ->saveOrFail();
+            DB::commit();
             return successResponse();
         } catch (\Throwable $exception) {
+            DB::rollBack();
             throw $exception;
         }
     }

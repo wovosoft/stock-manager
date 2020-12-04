@@ -2,7 +2,7 @@
     <div>
         <div class="row mb-3">
             <div class="col-md-6 col-sm-12">
-                <h4>{{__('total_paid','Total Paid')}}: {{employee.paid_salary | currency}}</h4>
+                <h4>{{__('total_paid','Total Paid')}}: {{paid_salary | currency}}</h4>
             </div>
             <div class="col-md-6 col-sm-12">
                 <b-select v-model="year" @change="$refs.the_table.refresh()"
@@ -21,7 +21,7 @@
                 <b-button
                     size="sm"
                     :title="__('delete','Delete')"
-                    @click="trash(row.item.id)">
+                    @click="trash(row.item.id,row.item.payment_amount)">
                     <i class="fa fa-trash"></i> {{__('delete','Delete')}}
                 </b-button>
             </template>
@@ -41,9 +41,12 @@
                 required: true
             }
         },
+        mounted() {
+            this.paid_salary = this.employee.paid_salary;
+        },
         data() {
             return {
-                form: {},
+                paid_salary: 0,
                 year: (new Date()).getFullYear(),
                 fields: [
                     {key: 'id', sortable: true, label: _t('id', 'ID')},
@@ -84,6 +87,7 @@
                 api_url: route('Backend.Employees.Paid.Salaries', {employee: this.employee.id}).url()
             }
         },
+
         methods: {
             rangeIndexed,
             getItems(ctx) {
@@ -106,7 +110,7 @@
                     return [];
                 });
             },
-            trash(id) {
+            trash(id, amount) {
                 this.$bvModal
                     .msgBoxConfirm(this.__('are_you_sure', 'Are you sure?'), {
                         okTitle: this.__('ok', 'Ok'),
@@ -117,8 +121,10 @@
                             axios.post(route('Backend.Employees.Salaries.Delete').url(), {
                                 id: id,
                             }).then(res => {
+                                this.paid_salary = Number(this.paid_salary) - Number(amount);
                                 this.$root.msgBox(res.data);
-                                this.$refs['the_table'].refresh();
+                                this.$refs.the_table.refresh();
+                                this.$emit('refresh', true);
                             }).catch(err => {
                                 this.$root.msgBox(err.response.data);
                                 console.log(err.response)

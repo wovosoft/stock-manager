@@ -55,6 +55,12 @@ export default [
                 url: {name: 'SalesList'},
                 icon: 'nav-icon fas fa-chevron-right',
                 active: false
+            },
+            {
+                name: _t('list_returns', 'List Returns'),
+                url: {name: 'ReturnsList'},
+                icon: 'nav-icon fas fa-chevron-right',
+                active: false
             }
         ]
     },
@@ -73,6 +79,12 @@ export default [
             {
                 name: _t('list_purchases', 'List Purchases'),
                 url: {name: 'PurchasesList'},
+                icon: 'nav-icon fas fa-chevron-right',
+                active: false
+            },
+            {
+                name: _t('list_returns', 'List Returns'),
+                url: {name: 'PurchaseReturnsList'},
                 icon: 'nav-icon fas fa-chevron-right',
                 active: false
             }

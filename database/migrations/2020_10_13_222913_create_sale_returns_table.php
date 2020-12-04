@@ -16,8 +16,12 @@ class CreateSaleReturnsTable extends Migration
         Schema::create('sale_returns', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id');
+
+            /*DISABLED*/
             $table->unsignedBigInteger('sale_id');
             $table->unsignedBigInteger('sale_item_id');
+            /*DISABLED*/
+
             $table->unsignedBigInteger('product_id');
             $table->double('quantity')->default(0);
             $table->double('amount')->default(0);

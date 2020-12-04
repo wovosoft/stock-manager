@@ -108,19 +108,19 @@ class QueryBuilder extends Builder
                 if ($nested) {
                     $this->where(function ($q) use ($filter, $columns) {
                         for ($x = 0; $x < count($columns); $x++) {
-                            if ($x === 0) {
-                                $q->where($columns[$x], "LIKE", "%" . trim($filter) . "%");
-                            } else {
+                            if ($x > 0) {
                                 $q->orWhere($columns[$x], "LIKE", "%" . trim($filter) . "%");
+                            } else {
+                                $q->where($columns[$x], "LIKE", "%" . trim($filter) . "%");
                             }
                         }
                     });
                 } else {
                     for ($x = 0; $x < count($columns); $x++) {
-                        if ($x === 0) {
-                            $this->where($columns[$x], "LIKE", "%" . trim($filter) . "%");
-                        } else {
+                        if ($x > 0) {
                             $this->orWhere($columns[$x], "LIKE", "%" . trim($filter) . "%");
+                        } else {
+                            $this->where($columns[$x], "LIKE", "%" . trim($filter) . "%");
                         }
                     }
                 }

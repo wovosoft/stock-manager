@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers as CC;
 use Illuminate\Http\Request;
+
 Auth::routes(["register" => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -31,10 +32,10 @@ Route::middleware(['auth'])->prefix('backend')->name('Backend.')->group(function
     CC\EmployeeSalaryController::routes();
     CC\BrandController::routes();
     CC\UnitController::routes();
-    CC\SubcategoryController::routes();
+//    CC\SubcategoryController::routes();
     CC\ProductController::routes();
     CC\HistoryController::routes();
-    CC\WidgetsController::routes();
+//    CC\WidgetsController::routes();
     CC\SettingController::routes();
     CC\SaleController::routes();
     CC\SaleItemController::routes();
@@ -53,6 +54,8 @@ Route::middleware(['auth'])->prefix('backend')->name('Backend.')->group(function
     CC\SmsController::routes();
     CC\TransactionController::routes();
     CC\ReportsController::routes();
+    CC\SaleReturnController::routes();
+    CC\PurchaseReturnController::routes();
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/{url?}', fn() => view('layouts.dashboard', [

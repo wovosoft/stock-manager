@@ -1,10 +1,16 @@
 <template>
     <div>
-        <dt-table :title="__(title,startCase(title))" v-model="search" :fields="fields" :datatable="datatable"
-                  :custom_buttons="custom_buttons"
-        >
+        <dt-table
+            :title="__(title,startCase(title))"
+            v-model="search"
+            :fields="fields"
+            :datatable="datatable"
+            :custom_buttons="custom_buttons">
             <template v-slot:table>
-                <b-table ref="datatable" responsive="md" v-bind="commonDtOptions()">
+                <b-table
+                    ref="datatable"
+                    responsive="md"
+                    v-bind="commonDtOptions()">
                     <template v-slot:cell(action)="row">
                         <b-button-group size="sm">
                             <b-button variant="primary"
@@ -29,8 +35,10 @@
                 </b-table>
             </template>
         </dt-table>
-        <router-view @reset="currentItem={}" @refreshDatatable="()=>$refs.datatable.refresh()"
-                     :item="currentItem"></router-view>
+        <router-view
+            @reset="currentItem={}"
+            @refreshDatatable="()=>$refs.datatable.refresh()"
+            :item="currentItem"/>
     </div>
 </template>
 
@@ -93,7 +101,6 @@
         },
         data() {
             return {
-                form: {},
                 fields: [
                     {key: 'id', sortable: true, label: _t('id', 'ID')},
                     {key: 'name', sortable: true, label: _t('name', 'Name')},

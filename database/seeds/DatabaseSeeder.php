@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->command->info('Default Permissions added.');
-        $count_create = 5;
+        $count_create = 10;
         foreach ($roles as $role) {
             $role = Roles::query()->firstOrCreate($role);
 
@@ -75,15 +75,13 @@ class DatabaseSeeder extends Seeder
             UnitFactory::new()->create(['name' => $key, 'description' => $value]);
         }
 
-        // CategoryFactory::new()->count($count_create)->create();
-        // BrandFactory::new()->count($count_create)->create();
-        // ProductFactory::new()->count(10)->create([
-        //     "quantity" => 0
-        // ]);
-        // SupplierFactory::new()->count($count_create)->create();
-        // CustomerFactory::new()->count($count_create)->create();
-        // EmployeeFactory::new()->count($count_create)->create();
-        // ExpenseCategoryFactory::new()->count($count_create)->create();
+        CategoryFactory::new()->count($count_create)->create();
+        BrandFactory::new()->count($count_create)->create();
+        ProductFactory::new()->count(20)->create();
+        SupplierFactory::new()->count($count_create)->create();
+        CustomerFactory::new()->count($count_create)->create();
+        EmployeeFactory::new()->count($count_create)->create();
+        ExpenseCategoryFactory::new()->count($count_create)->create();
 
 
         refreshLanguages();

@@ -13,14 +13,14 @@ class Supplier extends BaseModel
     use HistoryTrait, HasFactory;
 
 //    protected $appends = ["photo_url"];
-//
-//    public function getPhotoUrlAttribute()
-//    {
-//        if (filter_var($this->photo, FILTER_VALIDATE_URL) === FALSE) {
-//            return asset("storage/" . $this->photo);
-//        }
-//        return $this->photo;
-//    }
+
+    public function getPhotoUrlAttribute()
+    {
+        if (filter_var($this->photo, FILTER_VALIDATE_URL) === FALSE) {
+            return asset("storage/" . $this->photo);
+        }
+        return $this->photo;
+    }
 
     /**
      * @param float $payment_amount
@@ -62,6 +62,35 @@ class Supplier extends BaseModel
             DB::rollBack();
             throw $exception;
         }
+    }
+
+    public function getCurrentBalanceAttribute()
+    {
+        $payable = DB::table("purchases")
+            ->where("purchases.supplier_id", "=", DB::raw($this->id))
+            ->whereNull("purchases.deleted_at")
+            ->selectRaw("IFNULL(SUM(purchases.payable),0)")
+            ->toSql();
+
+        $returned = DB::table("purchase_returns")
+            ->where("purchase_returns.supplier_id", "=", DB::raw($this->id))
+            ->whereNull("purchase_returns.deleted_at")
+            ->selectRaw("IFNULL(SUM(purchase_returns.amount),0)")
+            ->toSql();
+
+        $paid = DB::table('purchase_payments')
+            ->where("purchase_payments.supplier_id", "=", DB::raw($this->id))
+            ->whereNull("purchase_payments.deleted_at")
+            ->selectRaw("IFNULL(SUM(purchase_payments.payment_amount),0)")
+            ->toSql();
+
+        return self::query()
+            ->select([
+                DB::raw("SUM(($payable) - ($paid) - ($returned)) as the_balance")
+            ])
+            ->findOrFail($this->id)
+            ->the_balance;
+
     }
 
     public function purchases()

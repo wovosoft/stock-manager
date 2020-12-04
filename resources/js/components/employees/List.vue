@@ -15,15 +15,14 @@
         <dt-table :title="title" v-model="search" :fields="fields" :datatable="datatable"
                   :custom_buttons="custom_buttons"
                   enable-date-range
-                  @refreshDatatable="$refs.datatable.refresh()"
-        >
+                  @refreshDatatable="$refs.datatable.refresh()">
             <template v-slot:table>
                 <b-table ref="datatable" variant="primary" responsive="md" hover bordered small striped
                          head-variant="dark"
                          :items="getItems"
                          class="mb-0"
                          :fields="fields"
-                         @refreshed="overview=JSON.parse(headers.employee_summery)"
+                         @refreshed="overview=JSON.parse(headers.overview)"
                          :sort-by.sync="datatable.sortBy"
                          :sort-desc.sync="datatable.sortDesc"
                          :filter="search"
@@ -38,50 +37,56 @@
                         {{colSum(datatable.items,'paid_salary')|currency}}
                     </template>
                     <template v-slot:cell(action)="row">
-                        <b-dropdown right size="sm">
-                            <b-dropdown-item
+                        <b-button-group size="sm">
+                            <b-button
+                                variant="dark"
                                 :title="__('send_salary','Send Salary')"
                                 v-b-modal:add_salary_modal
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-money-bill-wave"></i> {{__('send_salary','Send Salary')}}
-                            </b-dropdown-item>
-                            <b-dropdown-item
+                                <i class="fa fa-money-bill-wave"></i>
+                            </b-button>
+                            <b-button
+                                variant="primary"
                                 :title="__('paid_salaries','Paid Salaries')"
                                 v-b-modal:list_paid_salaries
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-money-check"></i> {{__('paid_salaries','Paid Salaries')}}
-                            </b-dropdown-item>
-                            <b-dropdown-item
+                                <i class="fa fa-money-check"></i>
+                            </b-button>
+                            <b-button
+                                variant="dark"
                                 :title="__('view','View')"
                                 :to="{name:'EmployeesView',params:{id:row.item.id}}"
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-eye"></i> {{__('view_employee','View Employee')}}
-                            </b-dropdown-item>
-                            <b-dropdown-item
-                                :title="__('edit','Edit')"
-                                :to="{name:'EmployeesAdd',params:{id:row.item.id}}"
-                                @click="currentItem=JSON.parse(JSON.stringify(row.item))">
-                                <i class="fa fa-edit"></i> {{__('edit_employee','Edit Employee')}}
-                            </b-dropdown-item>
-                            <b-dropdown-item
-                                :title="__('delete','Delete')"
-                                @click="trash(row.item.id)">
-                                <i class="fa fa-trash"></i> {{__('delete_employee','Delete Employee')}}
-                            </b-dropdown-item>
-                        </b-dropdown>
+                                <i class="fa fa-eye"></i>
+                            </b-button>
+                            <b-dropdown right size="sm">
+                                <b-dropdown-item
+                                    :title="__('edit','Edit')"
+                                    :to="{name:'EmployeesAdd',params:{id:row.item.id}}"
+                                    @click="currentItem=JSON.parse(JSON.stringify(row.item))">
+                                    <i class="fa fa-edit"></i> {{__('edit_employee','Edit Employee')}}
+                                </b-dropdown-item>
+                                <b-dropdown-item
+                                    :title="__('delete','Delete')"
+                                    @click="trash(row.item.id)">
+                                    <i class="fa fa-trash"></i> {{__('delete_employee','Delete Employee')}}
+                                </b-dropdown-item>
+                            </b-dropdown>
+                        </b-button-group>
                     </template>
                 </b-table>
             </template>
         </dt-table>
-        <router-view @reset="currentItem={}"
-                     @refreshDatatable="()=>$refs.datatable.refresh()"
-                     :item="currentItem"></router-view>
+        <router-view
+            @reset="currentItem={}"
+            @refreshDatatable="()=>$refs.datatable.refresh()"
+            :item="currentItem"/>
         <b-modal id="add_salary_modal"
                  v-if="currentItem"
                  lazy
                  hide-footer
                  @hidden="currentItem=null"
-                 :title="'Send Salary'"
+                 :title="__('send_salary','Send Salary')"
                  header-bg-variant="dark"
                  header-text-variant="light">
             <template v-slot:default="{hide}">
@@ -104,17 +109,20 @@
                  header-bg-variant="dark"
                  header-text-variant="light">
             <template v-slot:default="{hide}">
-                <list-paid-salaries v-if="currentItem" :employee="currentItem"/>
+                <list-paid-salaries
+                    @refresh="$refs.datatable.refresh()"
+                    v-if="currentItem"
+                    :employee="currentItem"/>
             </template>
         </b-modal>
     </div>
 </template>
 
 <script>
-    import DtHeader from '../../partials/DtHeader'
-    import DtFooter from '../../partials/DtFooter'
-    import Datatable, {colSum} from "../../partials/datatable";
-    import DtTable from "../../partials/DtTable";
+    import DtHeader from '@/partials/DtHeader'
+    import DtFooter from '@/partials/DtFooter'
+    import Datatable, {colSum} from "@/partials/datatable";
+    import DtTable from "@/partials/DtTable";
     import AddSalary from "@/components/employees/AddSalary";
     import ListPaidSalaries from "@/components/employees/ListPaidSalaries";
 

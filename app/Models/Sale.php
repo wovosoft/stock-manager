@@ -24,28 +24,28 @@ class Sale extends BaseModel
          * Returned, depends on items returned_quantity value, so it is calculated when
          * this property changes in subsequent items.
          */
-        static::creating(function (self $item) {
-            $payable = self::query()
-                ->where("customer_id", "=", $item->customer_id)
-                ->sum("payable");
-            $paid = SalePayment::query()
-                ->where("customer_id", "=", $item->customer_id)
-                ->sum("payment_amount");
-            $item->previous_balance = $payable - $paid;
-        });
-        static::created(function (self $item) {
-            $payable = self::query()
-                ->where("customer_id", "=", $item->customer_id)
-                ->sum("payable");
-            $paid = SalePayment::query()
-                ->where("customer_id", "=", $item->customer_id)
-                ->sum("payment_amount");
-            $item->current_balance = $payable - $paid;
-            $item->saveOrFail();
-        });
-        static::deleting(function (self $item) {
-            $item->items()->each(function (SaleItem $sale_item) {
-                $sale_item->delete();
+//        static::creating(function (self $item) {
+//            $payable = self::query()
+//                ->where("customer_id", "=", $item->customer_id)
+//                ->sum("payable");
+//            $paid = SalePayment::query()
+//                ->where("customer_id", "=", $item->customer_id)
+//                ->sum("payment_amount");
+//            $item->previous_balance = $payable - $paid;
+//        });
+//        static::created(function (self $sale) {
+//            $payable = self::query()
+//                ->where("customer_id", "=", $sale->customer_id)
+//                ->sum("payable");
+//            $paid = SalePayment::query()
+//                ->where("customer_id", "=", $sale->customer_id)
+//                ->sum("payment_amount");
+//            $sale->current_balance = $payable - $paid;
+//            $sale->saveOrFail();
+//        });
+        static::deleting(function (self $sale) {
+            $sale->items()->each(function (SaleItem $saleItem) {
+                $saleItem->delete();
             });
         });
     }

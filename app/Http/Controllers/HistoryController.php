@@ -11,6 +11,7 @@ use App\Models\CheckInItem;
 use App\Models\CheckOut;
 use App\Models\CheckOutItem;
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\History;
@@ -41,20 +42,17 @@ class HistoryController extends Controller
         "units" => Unit::class,
         "brands" => Brand::class,
         "subcategories" => Subcategory::class,
-        "check_ins" => CheckIn::class,
-        "check_outs" => CheckOut::class,
-        "check_in_items" => CheckInItem::class,
-        "check_out_items" => CheckOutItem::class,
         "expenses" => Expense::class,
         "expense_categories" => ExpenseCategory::class,
         "languages" => Language::class,
         "capital_deposits" => CapitalDeposit::class,
         "capital_withdraws" => CapitalWithdraw::class,
+        "employees" => Employee::class,
     ];
 
     public static function routes()
     {
-        Route::name('History.')->prefix('history')->group(function (){
+        Route::name('History.')->prefix('history')->group(function () {
             Route::post("list", [self::class, 'list'])->name('List');
             Route::post("search", [self::class, 'search'])->name('Search');
             Route::post("store", [self::class, 'store'])->name('Store');

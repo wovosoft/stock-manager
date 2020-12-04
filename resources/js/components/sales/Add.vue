@@ -98,38 +98,46 @@
                                 {{ getItemPayable(row.item) | currency }}
                             </template>
                             <template v-slot:cell(action)="row">
-                                <b-button size="sm" variant="danger" @click="removeCartItem(row)">
+                                <b-button size="sm" @click="removeCartItem(row)">
                                     <b-icon-trash/>
                                 </b-button>
                             </template>
                             <template #custom-foot>
                                 <b-tr>
-                                    <b-td :colspan="5" class="text-right font-weight-bold">
-                                        {{ __("total", "Total") }}
+                                    <b-td :colspan="3" class="text-right font-weight-bold">
+                                        {{ __("price", "Price") }}
                                     </b-td>
-                                    <b-td :colspan="2" class="font-weight-bold">
+                                    <b-td :colspan="4" class="text-right font-weight-bold">
                                         {{ getPayable | currency }}
                                     </b-td>
                                 </b-tr>
                                 <b-tr>
-                                    <b-td :colspan="5" class="text-right font-weight-bold">
+                                    <b-td :colspan="3" class="text-right font-weight-bold">
                                         {{ __('previous_balance', 'Previous Balance') }}
                                     </b-td>
-                                    <b-td :colspan="2" class="font-weight-bold">
+                                    <b-td :colspan="4" class="text-right font-weight-bold">
                                         {{customer_balance|currency}}
+                                    </b-td>
+                                </b-tr>
+                                <b-tr>
+                                    <b-td :colspan="3" class="text-right font-weight-bold">
+                                        {{ __('total', 'Total') }}
+                                    </b-td>
+                                    <b-td :colspan="4" class="text-right font-weight-bold">
+                                        {{(customer_balance + getPayable)|currency}}
                                     </b-td>
                                 </b-tr>
                             </template>
                         </b-table>
 
                         <b-form-row>
-                            <b-col md="4" sm="12">
+                            <b-col md="6" sm="12">
                                 <b-form-group :label="__('payment_method', 'Payment Method')">
                                     <b-form-select v-model="form.payment_method" :options="payment_options"/>
                                 </b-form-group>
                             </b-col>
 
-                            <b-col md="4" sm="12">
+                            <b-col md="6" sm="12">
                                 <b-form-group :label="__('sales.payment_amount', 'Payment Amount')">
                                     <b-input-group>
                                         <b-input
@@ -137,14 +145,23 @@
                                             :placeholder="__('sales.payment_amount', 'Payment Amount')" :required="true"
                                             v-model="form.payment_amount"/>
                                         <template #append>
-                                            <b-button variant="dark" @click="form.payment_amount = getPayable">
+                                            <b-button variant="dark"
+                                                      @click="form.payment_amount = (getPayable + customer_balance)">
                                                 {{ __("full", "Full") }}
                                             </b-button>
                                         </template>
                                     </b-input-group>
                                 </b-form-group>
                             </b-col>
-                            <b-col md="4" sm="12">
+
+                        </b-form-row>
+                        <b-form-row>
+                            <b-col md="6" sm="12">
+                                <b-form-group :label="__('date', 'Date')">
+                                    <b-form-input type="date" v-model="form.date"></b-form-input>
+                                </b-form-group>
+                            </b-col>
+                            <b-col md="6" sm="12">
                                 <b-form-group :label="__('current_balance', 'Current Balance')">
                                     <div class="form-control">
                                         {{
@@ -152,13 +169,6 @@
                                         Number(getPayable) - Number(form.payment_amount)) |
                                         currency}}
                                     </div>
-                                </b-form-group>
-                            </b-col>
-                        </b-form-row>
-                        <b-form-row>
-                            <b-col>
-                                <b-form-group :label="__('date', 'Date')">
-                                    <b-form-input type="date" v-model="form.date"></b-form-input>
                                 </b-form-group>
                             </b-col>
                             <!--                            <b-col>-->
@@ -338,6 +348,7 @@
                 customer_balance: 0,
                 customer_add_modal_visible: false,
                 item_fields: [
+                    {key: "action", label: _t("action", "Action")},
                     {key: "product_id", label: _t("pid", "PID")},
                     {key: "name", label: _t("name", "Name")},
                     {key: "code", label: _t("code", "Code")},
@@ -348,7 +359,7 @@
                     // {key:'discount',label:_t('discount','Discount')},
                     // {key:'payable',label:_t('payable','Payable')},
                     {key: "payable", label: _t("total", "Total")},
-                    {key: "action", label: _t("action", "Action")},
+
                 ],
             };
         },

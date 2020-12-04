@@ -136,7 +136,7 @@
             বর্তমান জেরঃ
         </td>
         <td>
-            {{\App\Drivers\BanglaConverter::en2bn(number_format($purchase->current_balance - $purchase->paid,2))}}
+            {{\App\Drivers\BanglaConverter::en2bn(number_format($purchase->current_balance,2))}}
             টাকা
         </td>
     </tr>

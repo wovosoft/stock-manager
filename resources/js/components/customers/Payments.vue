@@ -8,7 +8,7 @@
         v-if="api_url"
         :custom_buttons="custom_buttons">
         <template v-slot:table>
-            <b-table ref="datatable" v-bind="commonDtOptions(the)">
+            <b-table ref="customer_payments" v-bind="commonDtOptions(the)">
                 <template #cell(action)="row">
                     <b-button-group size="sm">
                         <b-button variant="primary"
@@ -25,7 +25,7 @@
                         </b-button>
                         <b-button variant="danger"
                                   target="_blank"
-                                  @click="trash(row.item.id,'datatable',route('Backend.Payments.Sales.Delete').url())"
+                                  @click="trash(row.item.id,'customer_payments',route('Backend.Payments.Sales.Delete').url())"
                                   :title="__('trash','Trash')">
                             <i class="fa fa-trash"></i>
                         </b-button>

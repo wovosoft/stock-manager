@@ -282,6 +282,19 @@ export function objPhotoUrl(photo) {
     return URL.createObjectURL(photo);
 }
 
+/**
+ *
+ * @param obj Object
+ * @param params array
+ */
+export function pluck(obj, params = []) {
+    let x = {};
+    params.forEach(i => {
+        x[i] = obj[i];
+    });
+    return x;
+}
+
 export function colSum(rows, col) {
     if (!rows) {
         return 0;

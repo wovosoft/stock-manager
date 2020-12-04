@@ -111,12 +111,6 @@
                 <b-button @click="close" variant="secondary">Close</b-button>
             </template>
         </b-modal>
-        <b-modal id="returns-modal"
-                 v-bind="{...BasicModalOptions,bodyClass:'p-0'}"
-                 @hidden="currentItem={}"
-                 :title="__('returns_history','Returns History')">
-            <returns :sale-id="currentItem.id"></returns>
-        </b-modal>
         <router-view
             @reset="currentItem={}"
             @refreshDatatable="()=>$refs.datatable.refresh()"
@@ -129,14 +123,13 @@
     import DtFooter from '@/partials/DtFooter'
     import Datatable, {colSum, colCount, BasicModalOptions} from "@/partials/datatable";
     import DtTable from "@/partials/DtTable";
-    import Returns from "@/components/sales/Returns";
+
 
     export default {
         components: {
             DtHeader,
             DtFooter,
-            DtTable,
-            Returns
+            DtTable
         },
         mixins: [Datatable],
         props: {

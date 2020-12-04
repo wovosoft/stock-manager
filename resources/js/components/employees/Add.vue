@@ -12,14 +12,11 @@
             <b-row>
                 <b-col sm="12" md="6">
                     <b-form-group :label="__('name','Name')">
-                        <b-form-input type="text"
-                                      :required="true"
-                                      :state="!hasError('name')"
-                                      :placeholder="__('name','Name')"
-                                      v-model="form.name"/>
-                        <b-form-invalid-feedback :state="!hasError('name')">
-                            {{getErrorMsg('name')}}
-                        </b-form-invalid-feedback>
+                        <b-form-input
+                            type="text"
+                            :required="true"
+                            :placeholder="__('name','Name')"
+                            v-model="form.name"/>
                     </b-form-group>
                     <b-form-group :label="__('email','Email')">
                         <b-form-input type="email"
@@ -73,7 +70,7 @@
                     </b-form-group>
                     <b-form-group :label="__('district','District')">
                         <b-form-select
-                            text-field="name"
+                            text-field="bn_name"
                             value-field="name"
                             :options="districts"
                             v-model="form.district"

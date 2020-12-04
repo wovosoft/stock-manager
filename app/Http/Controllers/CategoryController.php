@@ -14,7 +14,7 @@ class CategoryController extends Controller
     protected string $model = Category::class;
     public array $search_selects = ['id', 'name', 'code', 'description'];
     public array $search_fields = ['id', 'name', 'code', 'description'];
-    public array $listWith = ['subcategories'];
+    public array $listWith = ['subcategories:id,category_id,name'];
     public array $searchWith = ['subcategories:id,category_id,name'];
     use Crud;
 
@@ -36,26 +36,25 @@ class CategoryController extends Controller
             ]);
             DB::beginTransaction();
 
-            $item = Category::query()->findOrNew($request->post('id'));
-            $item->forceFill([
-                "name" => $request->post('name'),
-                "code" => $request->post('code'),
-                "description" => $request->post('description'),
-            ]);
-
+            $item = Category::query()
+                ->findOrNew($request->post('id'))
+                ->forceFill([
+                    "name" => $request->post('name'),
+                    "code" => $request->post('code'),
+                    "description" => $request->post('description'),
+                ]);
             $item->saveOrFail();
+
             $subcatids = [];
             if ($request->post("subcategories") && is_array($request->post("subcategories"))) {
                 foreach ($request->post("subcategories") as $subcategory) {
-                    if (isset($subcategory['id'])) {
-                        $subcat = Subcategory::query()->findOrFail($subcategory['id']);
-                    } else {
-                        $subcat = new Subcategory();
-                    }
-
-                    $subcat->category_id = $item->id;
-                    $subcat->name = $subcategory['name'];
-                    $subcat->description = isset($subcategory['description']) ? $subcategory['description'] : null;
+                    $subcat = Subcategory::query()
+                        ->findOrNew(isset($subcategory['id']) ? $subcategory['id'] : null)
+                        ->forceFill([
+                            "category_id" => $item->id,
+                            "name" => isset($subcategory['name']) ? $subcategory['name'] : null,
+                            "description" => isset($subcategory['description']) ? $subcategory['description'] : null
+                        ]);
                     $subcat->saveOrFail();
                     $subcatids[] = $subcat->id;
                 }

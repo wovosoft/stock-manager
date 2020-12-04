@@ -53,6 +53,34 @@ class Customer extends BaseModel
         }
     }
 
+    public function getCurrentBalanceAttribute()
+    {
+        $payable = DB::table("sales")
+            ->where("sales.customer_id", "=", DB::raw($this->id))
+            ->whereNull("sales.deleted_at")
+            ->selectRaw("IFNULL(SUM(sales.payable),0)")
+            ->toSql();
+
+        $returned = DB::table("sale_returns")
+            ->where("sale_returns.customer_id", "=", DB::raw($this->id))
+            ->whereNull("sale_returns.deleted_at")
+            ->selectRaw("IFNULL(SUM(sale_returns.amount),0)")
+            ->toSql();
+
+        $paid = DB::table('sale_payments')
+            ->where("sale_payments.customer_id", "=", DB::raw($this->id))
+            ->whereNull("sale_payments.deleted_at")
+            ->selectRaw("IFNULL(SUM(sale_payments.payment_amount),0)")
+            ->toSql();
+        return self::query()
+            ->select([
+                DB::raw("SUM(($payable) - ($paid) - ($returned)) as the_balance")
+            ])
+            ->findOrFail($this->id)
+            ->the_balance;
+
+    }
+
     public function sales()
     {
         return $this->hasMany(Sale::class, 'customer_id', 'id');

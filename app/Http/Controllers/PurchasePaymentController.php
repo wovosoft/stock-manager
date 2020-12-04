@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
+use App\Traits\Crud;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,12 +12,16 @@ use Illuminate\Support\Facades\Route;
 
 class PurchasePaymentController extends Controller
 {
+    public string $model = PurchasePayment::class;
+    use Crud;
+
     public static function routes()
     {
         Route::name('Payments.')->prefix('payments/purchases')->group(function () {
             Route::post("take/{purchase}", [self::class, 'store'])->name('Purchases.Store');
             Route::post("list", [self::class, 'purchasePayments'])->name('Purchases.List');
             Route::match(['get', 'post'], "{purchasePayment}/invoice/{pdf?}", [static::class, 'purchasePaymentInvoice'])->name('Purchases.Invoice');
+            Route::post("delete", [static::class, 'delete'])->name('Purchases.Delete');
         });
 
     }

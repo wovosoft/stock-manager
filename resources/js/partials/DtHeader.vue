@@ -143,7 +143,8 @@
         },
         data: () => {
             return {
-                search: ''
+                search: '',
+                the:this
             }
         },
         mounted() {

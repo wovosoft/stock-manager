@@ -6,6 +6,7 @@ use App\Builders\Reports;
 use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Models\SalePayment;
 use App\Traits\Crud;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
@@ -34,12 +35,12 @@ class SaleController extends Controller
     }
 
     /**
-     * @param $items
-     * @param int $sale_tax
-     * @param int $sale_discount
+     * @param array $items
+     * @param float $tax
+     * @param float $discount
      * @return int[]
      */
-    private function getSalesAndItemsPayable($items = [], $tax = 0, $discount = 0)
+    private function getSalesAndItemsPayable(array $items = [], float $tax = 0, float $discount = 0)
     {
         $items_total = 0;     //sale Total
         if (is_array($items) && count($items)) {
@@ -102,9 +103,6 @@ class SaleController extends Controller
                 "items" => "required",
             ]);
             DB::beginTransaction();
-
-            $sale = Sale::query()->findOrNew($request->post('id'));
-
             /**
              * Now we calculate the total and payable
              */
@@ -114,7 +112,9 @@ class SaleController extends Controller
                 $request->post('tax') ?? 0,
                 $request->post('discount') ?? 0
             );
-
+            $customer = Customer::query()->findOrFail($request->post("customer_id"));
+            $current_balance = $customer->current_balance;
+            $sale = Sale::query()->findOrNew($request->post('id'));
             $sale->forceFill([
                 "customer_id" => $request->post("customer_id"),
                 "tax" => $request->post('tax') ?? 0,
@@ -122,9 +122,11 @@ class SaleController extends Controller
                 "date" => $request->post('date') ?? Carbon::now()->format('Y-m-d'),
                 "status" => $request->post('status') ?? "Processed",
                 "note" => $request->post('note') ?? null,
-                "paid" => round($request->post('payment_amount'), 2),
+                "paid" => round($request->post('payment_amount') ?? 0, 2),
                 "total" => round($items_total, 2),
-                "payable" => round($sale_payable, 2)
+                "payable" => round($sale_payable, 2),
+                "previous_balance" => round($current_balance, 2),
+                "current_balance" => round($current_balance + $sale_payable - $request->post('payment_amount') ?? 0, 2),
             ]);
 
             $sale->saveOrFail();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Traits\Crud;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 class BrandController extends Controller
@@ -27,15 +28,18 @@ class BrandController extends Controller
     public function store(Request $request)
     {
         try {
-            $item = Brand::query()->findOrNew($request->post('id'));
-            $item->forceFill([
-                "name" => $request->post('name'),
-                "description" => $request->post('description'),
-            ]);
-
-            $item->saveOrFail();
+            DB::beginTransaction();
+            Brand::query()
+                ->findOrNew($request->post('id'))
+                ->forceFill([
+                    "name" => $request->post('name'),
+                    "description" => $request->post('description'),
+                ])
+                ->saveOrFail();
+            DB::commit();
             return successResponse();
         } catch (\Throwable $exception) {
+            DB::rollBack();
             throw $exception;
         }
     }

@@ -104,6 +104,7 @@ class PurchaseController extends Controller
         }
     }
 
+
     public function store(Request $request)
     {
         try {
@@ -120,6 +121,10 @@ class PurchaseController extends Controller
                 $request->post('discount') ?? 0
             );
 
+            $supplier = Supplier::query()->findOrFail($request->post("supplier_id"));
+            $previous_balance = $supplier->current_balance;
+            $current_balance = $previous_balance + $purchase_payable - $request->post('payment_amount') ?? 0;
+
             DB::beginTransaction();
             $purchase = Purchase::query()->findOrNew($request->post('id'));
             $purchase->forceFill([
@@ -132,6 +137,8 @@ class PurchaseController extends Controller
                 "total" => round($items_total, 2),
                 "payable" => round($purchase_payable, 2),
                 "paid" => round($request->post('payment_amount'), 2),
+                "previous_balance" => round($previous_balance, 2),
+                "current_balance" => $current_balance
             ]);
             $purchase->saveOrFail();
 

@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-
 use App\Traits\HistoryTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Brand extends BaseModel
 {
-    use HistoryTrait;
-    use HasFactory;
+    use HistoryTrait, HasFactory;
 }

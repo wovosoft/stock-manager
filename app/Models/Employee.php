@@ -11,6 +11,6 @@ class Employee extends BaseModel
 
     public function salaries()
     {
-        return $this->hasMany(EmployeeSalary::class, 'employee_id', 'id');
+        return $this->hasMany(EmployeeSalary::class);
     }
 }

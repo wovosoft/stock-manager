@@ -29,6 +29,9 @@
                             v-if="['created_at','updated_at','joining_date','leaving_date'].includes(row.item.key)">
                             {{row.item.value | dayjs}}
                         </template>
+                        <template v-else-if="['paid_salary','salary'].includes(row.item.key)">
+                            {{row.item.value | currency}}
+                        </template>
                         <template v-else-if="['description'].includes(row.item.key)">
                             <div v-html="row.item.value"></div>
                         </template>

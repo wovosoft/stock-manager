@@ -23,25 +23,25 @@ class Purchase extends BaseModel
          * Returned, depends on items returned_quantity value, so it is calculated when
          * this property changes in subsequent items.
          */
-        static::creating(function (self $item) {
-            $payable = self::query()
-                ->where("supplier_id", "=", $item->supplier_id)
-                ->sum("payable");
-            $paid = PurchasePayment::query()
-                ->where("supplier_id", "=", $item->supplier_id)
-                ->sum("payment_amount");
-            $item->previous_balance = $payable - $paid;
-        });
-        static::created(function (self $item) {
-            $payable = self::query()
-                ->where("supplier_id", "=", $item->supplier_id)
-                ->sum("payable");
-            $paid = PurchasePayment::query()
-                ->where("supplier_id", "=", $item->supplier_id)
-                ->sum("payment_amount");
-            $item->current_balance = $payable - $paid;
-            $item->saveOrFail();
-        });
+//        static::creating(function (self $item) {
+//            $payable = self::query()
+//                ->where("supplier_id", "=", $item->supplier_id)
+//                ->sum("payable");
+//            $paid = PurchasePayment::query()
+//                ->where("supplier_id", "=", $item->supplier_id)
+//                ->sum("payment_amount");
+//            $item->previous_balance = $payable - $paid;
+//        });
+//        static::created(function (self $item) {
+//            $payable = self::query()
+//                ->where("supplier_id", "=", $item->supplier_id)
+//                ->sum("payable");
+//            $paid = PurchasePayment::query()
+//                ->where("supplier_id", "=", $item->supplier_id)
+//                ->sum("payment_amount");
+//            $item->current_balance = $payable - $paid;
+//            $item->saveOrFail();
+//        });
         static::deleting(function (self $item) {
             $item->items()->each(function (PurchaseItem $purchaseItem) {
                 $purchaseItem->delete();

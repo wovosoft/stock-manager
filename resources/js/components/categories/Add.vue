@@ -1,7 +1,7 @@
 <template>
     <b-modal @hidden="$router.go(-1),$emit('reset',true)"
              v-model="visible"
-             v-bind="{...BasicModalOptions}"
+             v-bind="{...BasicModalOptions,size:'lg'}"
              :title="__((form.id?'edit':'add ')+'_category',(form.id?'Edit ':'Add ')+'Category')">
         <form @submit.prevent="hitSubmit" ref="theForm">
             <b-form-row>
@@ -21,7 +21,7 @@
                 </b-col>
             </b-form-row>
             <div class="mb-3">
-                <h4 class="d-inline">Subcategories</h4>
+                <h4 class="d-inline">{{__('Subcategories','Subcategories')}}</h4>
                 <b-button size="sm" class="float-right"
                           @click="form.subcategories.push({name:'',description:''})">
                     <b-icon-plus/>
