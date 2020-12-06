@@ -556,7 +556,7 @@ class ReportsController extends Controller
                         $this->setDateRanges($builder, $request);
                     },
                     "sale_balance" => function (Builder $builder) {
-                        $builder->selectRaw("sale_payment - sale_return");
+                        $builder->selectRaw("sales_payable - sale_payment - sale_return");
                     },
                     "expense" => function (Builder $builder) use ($request) {
                         $builder->from("expenses")
