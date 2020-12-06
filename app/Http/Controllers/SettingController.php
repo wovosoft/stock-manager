@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -21,24 +22,25 @@ class SettingController extends Controller
     {
         try {
             foreach ($request->post() as $key => $value) {
-                if ($key !== 'logo') {
+                if (!in_array($key, ['logo'])) {
                     $item = Setting::query()->where('key', $key)->firstOrFail();
                     $item->value = $value;
                     $item->saveOrFail();
                 }
             }
+            \Artisan::call("env:set", [
+                "key" => "TIMEZONE",
+                "value" => $request->post('timezone') ?? "Asia/Dhaka"
+            ]);
+            //Artisan::call("config:cache");
+
             if ($request->hasFile('logo_upload')) {
                 $logo = Setting::query()->where('key', 'logo')->firstOrFail();
                 $logo->value = $request->file('logo_upload')->store('photos', 'public');
                 $logo->saveOrFail();
             }
             refreshCachedSettings();
-            return response()->json([
-                "status" => true,
-                "title" => 'SUCCESS!',
-                "type" => "success",
-                "msg" => ' Successfully Done'
-            ]);
+            return successResponse();
         } catch (\Throwable $exception) {
             throw  $exception;
         }
@@ -47,7 +49,10 @@ class SettingController extends Controller
     public function list(Request $request)
     {
         try {
-            return Setting::query()->select(['id', 'key', 'value'])->orderBy('key', 'ASC')->get();
+            return Setting::query()
+                ->select(['id', 'key', 'value'])
+                ->orderBy('key', 'ASC')
+                ->get();
         } catch (\Throwable $exception) {
             throw  $exception;
         }
