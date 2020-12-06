@@ -1,18 +1,23 @@
 <template>
     <div>
         <b-row class="mb-3">
-            <b-col md="4" sm="12">
+            <b-col md="3" sm="12">
                 <b-card :title="__('total_purchased_amount','Total Purchased Amount')">
                     {{fund_summery.payable | currency}}
                 </b-card>
             </b-col>
-            <b-col md="4" sm="12">
+            <b-col md="3" sm="12">
                 <b-card :title="__('purchases_paid','Purchases Paid')">
                     {{fund_summery.paid | currency}}
                 </b-card>
             </b-col>
-            <b-col md="4" sm="12">
-                <b-card :title="__('purchases_balance','Purchases Balance')">
+            <b-col md="3" sm="12">
+                <b-card :title="__('returned_total','Returned Total')">
+                    {{fund_summery.returned | currency}}
+                </b-card>
+            </b-col>
+            <b-col md="3" sm="12">
+                <b-card :title="__('balance','Balance')">
                     {{fund_summery.balance | currency}}
                 </b-card>
             </b-col>
