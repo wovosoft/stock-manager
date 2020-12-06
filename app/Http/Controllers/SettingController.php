@@ -30,7 +30,7 @@ class SettingController extends Controller
             }
             \Artisan::call("env:set", [
                 "key" => "TIMEZONE",
-                "value" => $request->post('timezone') ?? "Asia/Dhaka"
+                "value" => '"' . $request->post('timezone') . '"' ?? '"Asia/Dhaka"'
             ]);
             //Artisan::call("config:cache");
 
