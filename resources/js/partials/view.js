@@ -13,7 +13,7 @@ export default {
     methods: {
         obj2Table,
         startCase,
-        getItem
+        getItem,
     },
     data() {
         return {

@@ -293,12 +293,19 @@
                 id="print_invoice"
                 aspect="16by9"
                 allowfullscreen
-                :src="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'pdf'})"/>
+                :src="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'html'})"/>
             <template v-slot:modal-footer="{close}">
-                <!--                <b-button variant="primary" @click="invoice_type=invoice_type==='pdf'?'html':'pdf'">-->
-                <!--                    Type : {{invoice_type}}-->
-                <!--                </b-button>-->
-                <b-button @click="printInvoice" variant="primary">Print</b-button>
+                <b-button
+                    :href="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'pdf'})"
+                    target="_blank"
+                    variant="primary">
+                    <i class="fa fa-file-pdf"></i>
+                    {{__('pdf','PDF')}}
+                </b-button>
+                <b-button @click="printInvoice" variant="primary">
+                    <i class="fa fa-print"></i>
+                    {{__('print','Print')}}
+                </b-button>
                 <b-button @click="close" variant="secondary">Close</b-button>
             </template>
         </b-modal>

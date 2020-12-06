@@ -273,8 +273,8 @@ class SaleController extends Controller
         if ($type == "html") {
             return view("pages.sales.invoice", [
                 "sale" => $sale,
-                "is_delivery" => $request->get('is_delivery'),
-                "invoice_both" => $request->get('invoice_both'),
+                "is_delivery" => $request->get('is_delivery') == "yes",
+                "invoice_both" => $request->get('invoice_both') == "yes",
             ]);
         }
 

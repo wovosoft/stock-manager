@@ -54,7 +54,7 @@
                             <b-button variant="dark"
                                       :title="__('view_invoice','View Invoice')"
                                       v-b-modal:invoice-modal
-                                      @click="currentItem=JSON.parse(JSON.stringify(row.item))">
+                                      @click="invoice_is_delivery=false,currentItem=JSON.parse(JSON.stringify(row.item))">
                                 <i class="fa fa-file-invoice"></i>
                             </b-button>
                             <b-button variant="warning"
@@ -105,9 +105,19 @@
                 id="print_invoice"
                 aspect="16by9"
                 allowfullscreen
-                :src="route('Backend.Sales.Invoice.PDF',{sale:currentItem.id,type:'pdf',is_delivery:invoice_is_delivery?'yes':'no',invoice_both:invoice_both?'yes':'no'})"/>
+                :src="route('Backend.Sales.Invoice.PDF',{sale:currentItem.id,type:'html',is_delivery:invoice_is_delivery?'yes':'no',invoice_both:invoice_both?'yes':'no'})"/>
             <template v-slot:modal-footer="{close}">
-                <b-button @click="printInvoice" variant="primary">Print</b-button>
+                <b-button
+                    :href="route('Backend.Sales.Invoice.PDF',{sale:currentItem.id,type:'pdf',is_delivery:invoice_is_delivery?'yes':'no',invoice_both:invoice_both?'yes':'no'})"
+                    target="_blank"
+                    variant="dark">
+                    <i class="fa fa-file-pdf"></i>
+                    {{__('pdf','PDF')}}
+                </b-button>
+                <b-button @click="printInvoice" variant="primary">
+                    <i class="fa fa-print"></i>
+                    {{__('print','Print')}}
+                </b-button>
                 <b-button @click="close" variant="secondary">Close</b-button>
             </template>
         </b-modal>
