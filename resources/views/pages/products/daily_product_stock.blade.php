@@ -68,21 +68,28 @@
     </thead>
     <tbody>
     @foreach($items as $item)
-        @php
-            $previous_stock =(($item->prev_purchased_items - $item->prev_purchase_returned_items)-($item->prev_sold_items - $item->prev_sold_returned_items));
-            $todays_stock=(($item->purchased_items - $item->purchase_returned_items)-($item->sold_items - $item->sold_returned_items));
-        @endphp
         <tr>
             <td>{{\App\Drivers\BanglaConverter::en2bn($item->id)}}</td>
             <td>{{$item->name}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn($previous_stock)}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn(($item->purchased_items - $item->purchase_returned_items))}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn(($item->sold_items - $item->sold_returned_items))}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn($todays_stock)}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn(($previous_stock + $todays_stock))}}</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn($item->current_stock)}}</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn(($item->addition))}}</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn(($item->subtraction))}}</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn($item->remains)}}</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn($item->stock)}}</td>
         </tr>
     @endforeach
     </tbody>
+    <tfoot>
+    <tr>
+        <td>মোট</td>
+        <td>{{\App\Drivers\BanglaConverter::en2bn($items->count())}}টি পণ্য</td>
+        <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('current_stock'))}}</td>
+        <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('addition'))}}</td>
+        <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('subtraction'))}}</td>
+        <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('remains'))}}</td>
+        <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('stock'))}}</td>
+    </tr>
+    </tfoot>
 </table>
 </body>
 </html>

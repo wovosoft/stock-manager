@@ -80,8 +80,32 @@
         "en": "Capital Funds"
     },
     "balance": {
-        "bn": "ব্যাল্যান্স",
+        "bn": "জের",
         "en": "Balance"
+    },
+    "capital": {
+        "bn": "মূলধন",
+        "en": "Capital"
+    },
+    "purchase_amount": {
+        "bn": "ক্রয়মূল্য",
+        "en": "Purchase Amount"
+    },
+    "purchase_payable": {
+        "bn": "মোট ক্রয়",
+        "en": "Purchase Payable"
+    },
+    "sale_amount": {
+        "bn": "বিক্রয়মূল্য",
+        "en": "Sale Amount"
+    },
+    "others": {
+        "bn": "অন্যান্য",
+        "en": "Others"
+    },
+    "remaining": {
+        "bn": "অবশিষ্ট",
+        "en": "Remaining"
     },
     "previous_balance": {
         "bn": "পূর্বের জের",
@@ -899,13 +923,21 @@
         "bn": "ক্রয়মূল্য প্রদেয়",
         "en": "Purchases Payable"
     },
+    "total_purchases": {
+        "bn": "মোট ক্রয়",
+        "en": "Total Purchases"
+    },
     "purchases_paid": {
-        "bn": "ক্রয়মূল্য পরিশোধিত",
+        "bn": "পরিশোধিত ক্রয়মূল্য",
         "en": "Purchases Paid"
     },
     "purchases_balance": {
         "bn": "ক্রয়মূল্য জের",
         "en": "Purchases Balance"
+    },
+    "total_purchased_amount": {
+        "bn": "ক্রয়কৃত পণ্যের মূল্য",
+        "en": "Total Purchased Amount"
     },
     "add_more_fund": {
         "bn": "আরও তহবিল যুক্ত করুন",

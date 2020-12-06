@@ -111,50 +111,56 @@
                 form: {},
                 date: dayjs().format('YYYY-MM-DD'),
                 fields: [
-                    {key: 'id', label: _t('id', 'ID')},
-                    {key: 'name', label: _t('name', 'Name')},
+                    {key: 'id', label: _t('id', 'ID'), sortable: true},
+                    {key: 'name', label: _t('name', 'Name'), sortable: true},
                     {
-                        key: 'code', label: _t('code', 'Code')
+                        key: 'code', label: _t('code', 'Code'), sortable: true
                     },
                     {
                         key: 'current_stock',
                         label: _t('reports.current_stock', 'Current Stock'),
+                        sortable: true,
                         formatter: (v, i, r) => {
-                            let vv = ((r.prev_purchased_items - r.prev_purchase_returned_items) - (r.prev_sold_items - r.prev_sold_returned_items));
-                            return this.$options.filters.localNumber(vv || 0)
+                            // let vv = ((r.prev_purchased_items - r.prev_purchase_returned_items) - (r.prev_sold_items - r.prev_sold_returned_items));
+                            // return this.$options.filters.localNumber(vv || 0)
+                            return this.$options.filters.localNumber(r.current_stock || 0)
                         }
                     },
                     {
                         key: 'addition',
                         label: _t('reports.addition', 'Addition'),
+                        sortable: true,
                         formatter: (v, i, r) => {
-                            let vv = (r.purchased_items - r.purchase_returned_items);
-                            return this.$options.filters.localNumber(vv || 0)
+                            // let vv = (r.purchased_items - r.purchase_returned_items);
+                            return this.$options.filters.localNumber(r.addition || 0)
                         }
                     },
                     {
                         key: 'subtraction',
                         label: _t('reports.subtraction', 'Subtraction'),
+                        sortable: true,
                         formatter: (v, i, r) => {
-                            let vv = (r.sold_items - r.sold_returned_items);
-                            return this.$options.filters.localNumber(vv || 0)
+                            // let vv = (r.sold_items - r.sold_returned_items);
+                            return this.$options.filters.localNumber(r.subtraction || 0)
                         }
                     },
                     {
                         key: 'remains',
                         label: _t('reports.remains', 'Remains'),
+                        sortable: true,
                         formatter: (v, i, r) => {
-                            let vv = ((r.purchased_items - r.purchase_returned_items) - (r.sold_items - r.sold_returned_items));
-                            return this.$options.filters.localNumber(vv || 0)
+                            // let vv = ((r.purchased_items - r.purchase_returned_items) - (r.sold_items - r.sold_returned_items));
+                            return this.$options.filters.localNumber(r.remains || 0)
                         }
                     },
                     {
                         key: 'stock',
                         label: _t('reports.stock', 'Stock'),
+                        sortable: true,
                         formatter: (v, i, r) => {
-                            let previous_stock = ((r.prev_purchased_items - r.prev_purchase_returned_items) - (r.prev_sold_items - r.prev_sold_returned_items));
-                            let todays_stock = ((r.purchased_items - r.purchase_returned_items) - (r.sold_items - r.sold_returned_items));
-                            return this.$options.filters.localNumber(previous_stock + todays_stock || 0)
+                            // let previous_stock = ((r.prev_purchased_items - r.prev_purchase_returned_items) - (r.prev_sold_items - r.prev_sold_returned_items));
+                            // let todays_stock = ((r.purchased_items - r.purchase_returned_items) - (r.sold_items - r.sold_returned_items));
+                            return this.$options.filters.localNumber(r.stock || 0)
                         }
                     },
 

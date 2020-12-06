@@ -26,8 +26,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.interceptors.request.use(function (config) {
     // Do something before request is sent
     // console.log("request sending");
-    if (document.getElementById('main-loader'))
+    if (document.getElementById('main-loader')){
         document.getElementById('main-loader').classList.remove('d-none');
+    }
     return config;
 }, function (error) {
     // Do something with request error

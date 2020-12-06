@@ -37,7 +37,7 @@
             </template>
             <template v-slot:header_dropdowns>
                 <b-button size="sm" variant="primary" v-b-modal:returns-add>
-                    {{_t('add', 'Add')}}
+                    {{__('add', 'Add')}}
                 </b-button>
             </template>
         </dt-table>

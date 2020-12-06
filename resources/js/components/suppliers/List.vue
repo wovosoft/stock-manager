@@ -2,7 +2,7 @@
     <div>
         <b-row class="mb-3">
             <b-col md="4" sm="12">
-                <b-card :title="__('purchases_amount','Purchases Amount')">
+                <b-card :title="__('total_purchased_amount','Total Purchased Amount')">
                     {{fund_summery.payable | currency}}
                 </b-card>
             </b-col>
@@ -25,6 +25,11 @@
             enable-date-range
             @refreshDatatable="$refs.datatable.refresh()"
             :custom_buttons="custom_buttons">
+            <template #header_dropdowns>
+                <b-button size="sm" variant="dark" @click="$refs.datatable.refresh()">
+                    <i class="fa fa-sync"></i>
+                </b-button>
+            </template>
             <template v-slot:table>
                 <b-table ref="datatable" v-bind="commonDtOptions()"
                          @refreshed="fund_summery=JSON.parse(headers.fund_summery||'{}')">
@@ -33,6 +38,9 @@
                     </template>
                     <template v-slot:foot(paid)="row">
                         {{colSum(datatable.items,'paid') | currency}}
+                    </template>
+                    <template v-slot:foot(returned)="row">
+                        {{colSum(datatable.items,'returned') | currency}}
                     </template>
                     <template v-slot:foot(balance)="row">
                         {{colSum(datatable.items,'balance') | currency}}
@@ -200,7 +208,7 @@
                         key: 'payable',
                         searchable: false,
                         sortable: true,
-                        label: _t('payable', 'Payable'),
+                        label: _t('total_purchases', 'Total Purchased'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {
@@ -208,6 +216,13 @@
                         searchable: false,
                         sortable: true,
                         label: _t('suppliers.paid', 'Paid'),
+                        formatter: v => this.$options.filters.currency(v)
+                    },
+                    {
+                        key: 'returned',
+                        searchable: false,
+                        sortable: true,
+                        label: _t('returned', 'Returned'),
                         formatter: v => this.$options.filters.currency(v)
                     },
                     {

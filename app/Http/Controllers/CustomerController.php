@@ -185,31 +185,52 @@ class CustomerController extends Controller
     public function shortFinancialReport($customer_id, string $type = "pdf", Request $request)
     {
         try {
-            $customer = Customer::query()->select(["customers.*"])->findOrFail($customer_id);
-
-            $start_date = ($request->has('start_date') && $request->get('start_date')) ? $request->get('start_date') : null;
-            $end_date = ($request->has('end_date') && $request->get('end_date')) ? $request->get('end_date') : null;
-
-            $payable = $customer->sales();
-            $paid = $customer->salePayments();
-            $returned = $customer->saleItems();
-
-            if ($start_date) {
-                $payable->whereDate('created_at', '>=', $start_date);
-                $paid->whereDate('created_at', '>=', $start_date);
-                $returned->whereDate('created_at', '>=', $start_date);
-            }
-            if ($end_date) {
-                $payable->whereDate('created_at', '<=', $end_date);
-                $paid->whereDate('created_at', '<=', $end_date);
-                $returned->whereDate('created_at', '<=', $end_date);
-            }
+            $start_date = ($request->has('start_date') && $request->input('start_date')) ? $request->input('start_date') : null;
+            $end_date = ($request->has('end_date') && $request->input('end_date')) ? $request->input('end_date') : null;
 
 
-            $customer->payable = $payable->sum('payable');
-            $customer->paid = $paid->sum('payment_amount');
-            $customer->returned = $returned->sum('returned_total');
-            $customer->balance = $customer->payable - $customer->paid - $customer->returned;
+            $customer = Customer::query()
+                ->select([
+                    "customers.*",
+                    "payable" => function (Builder $builder) use ($end_date, $start_date) {
+                        $builder->from("sales")
+                            ->where("sales.customer_id", "=", DB::raw("customers.id"))
+                            ->whereNull("sales.deleted_at")
+                            ->selectRaw("IFNULL(SUM(sales.payable),0)");
+                        if ($start_date) {
+                            $builder->whereDate('created_at', '>=', $start_date);
+                        }
+                        if ($end_date) {
+                            $builder->whereDate('created_at', '<=', $end_date);
+                        }
+                    },
+                    "paid" => function (Builder $builder) use ($end_date, $start_date) {
+                        $builder->from('sale_payments')
+                            ->where("sale_payments.customer_id", "=", DB::raw("customers.id"))
+                            ->whereNull("sale_payments.deleted_at")
+                            ->selectRaw("IFNULL(SUM(sale_payments.payment_amount),0)");
+                        if ($start_date) {
+                            $builder->whereDate('created_at', '>=', $start_date);
+                        }
+                        if ($end_date) {
+                            $builder->whereDate('created_at', '<=', $end_date);
+                        }
+                    },
+                    "returned" => function (Builder $builder) use ($end_date, $start_date) {
+                        $builder->from("sale_returns")
+                            ->where("sale_returns.customer_id", "=", DB::raw("customers.id"))
+                            ->whereNull("sale_returns.deleted_at")
+                            ->selectRaw("IFNULL(SUM(sale_returns.amount),0)");
+                        if ($start_date) {
+                            $builder->whereDate('created_at', '>=', $start_date);
+                        }
+                        if ($end_date) {
+                            $builder->whereDate('created_at', '<=', $end_date);
+                        }
+                    },
+                    DB::raw("(select (payable - returned - paid)) as balance")
+                ])
+                ->findOrFail($customer_id);
 
             if ($type == 'html') {
                 return view("pages.customers.short_financial_report", [

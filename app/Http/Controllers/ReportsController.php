@@ -39,6 +39,7 @@ class ReportsController extends Controller
     {
         try {
             return Product::query()
+                ->orderBy($request->input('orderBy') ?? 'id', $request->input('order') ?? 'asc')
                 ->select([
                     "id",
                     "name",
@@ -106,6 +107,24 @@ class ReportsController extends Controller
                             ->whereDate("sale_returns.created_at", "=", $date)
                             ->where("sale_returns.product_id", "=", DB::raw("products.id"))
                             ->selectRaw("IFNULL(SUM(sale_returns.quantity),0)");
+                    },
+                    //previous days stock.
+                    'current_stock' => function (Builder $builder) {
+                        $builder->selectRaw('prev_purchased_items - prev_purchase_returned_items - prev_sold_items + prev_sold_returned_items');
+                    },
+                    'addition' => function (Builder $builder) {
+                        $builder->selectRaw('purchased_items + sold_returned_items');
+                    },
+                    'subtraction' => function (Builder $builder) {
+                        $builder->selectRaw('sold_items  + purchase_returned_items ');
+                    },
+                    'remains' => function (Builder $builder) {
+                        $builder->selectRaw('purchased_items - purchase_returned_items - sold_items + sold_returned_items');
+                    },
+                    'stock' => function (Builder $builder) {
+                        $previous_stock = "((prev_purchased_items - prev_purchase_returned_items) - (prev_sold_items - prev_sold_returned_items))";
+                        $todays_stock = "((purchased_items - purchase_returned_items) - (sold_items - sold_returned_items))";
+                        $builder->selectRaw("$previous_stock + $todays_stock");
                     }
                 ]);
 
@@ -305,10 +324,14 @@ class ReportsController extends Controller
     {
         try {
             $expenses = Expense::query()
-                ->leftJoin("expense_categories", "expense_categories.id", "=", "expenses.expense_category_id")
                 ->select([
                     DB::raw("'expense' as title"),
-                    DB::raw('expense_categories.name as description'),
+                    'description' => function (Builder $builder) {
+                        //deleted_at can be not null.
+                        $builder->from('expense_categories')
+                            ->where('expense_categories.id', '=', DB::raw('expenses.expense_category_id'))
+                            ->select('expense_categories.name');
+                    },
                     DB::raw("expenses.amount as expense"),
                     DB::raw("0 as income"),
                     DB::raw("expenses.created_at as date")
@@ -317,10 +340,14 @@ class ReportsController extends Controller
                 ->whereDate("expenses.created_at", "=", $date);
 
             $purchase_payments = PurchasePayment::query()
-                ->leftJoin("suppliers", 'suppliers.id', '=', 'purchase_payments.supplier_id')
                 ->select([
                     DB::raw("'purchase_payment' as title"),
-                    DB::raw('suppliers.name as description'),
+                    'description' => function (Builder $builder) {
+                        //deleted_at can be not null.
+                        $builder->from('suppliers')
+                            ->where('suppliers.id', '=', DB::raw('purchase_payments.supplier_id'))
+                            ->select('suppliers.name');
+                    },
                     DB::raw("purchase_payments.payment_amount as expense"),
                     DB::raw("0 as income"),
                     DB::raw("purchase_payments.created_at as date")
@@ -329,10 +356,14 @@ class ReportsController extends Controller
                 ->whereDate("purchase_payments.created_at", "=", $date);
 
             $purchase_returns = PurchaseReturn::query()
-                ->leftJoin("suppliers", 'suppliers.id', '=', 'purchase_returns.supplier_id')
                 ->select([
                     DB::raw("'purchase_return' as title"),
-                    DB::raw('suppliers.name as description'),
+                    'description' => function (Builder $builder) {
+                        //deleted_at can be not null.
+                        $builder->from('suppliers')
+                            ->where('suppliers.id', '=', DB::raw('purchase_returns.supplier_id'))
+                            ->select('suppliers.name');
+                    },
                     DB::raw("0 as expense"),
                     DB::raw("purchase_returns.amount as income"),
                     DB::raw("purchase_returns.created_at as date")
@@ -341,10 +372,14 @@ class ReportsController extends Controller
                 ->whereDate("purchase_returns.created_at", "=", $date);
 
             $employee_salaries = EmployeeSalary::query()
-                ->leftJoin("employees", 'employees.id', '=', 'employee_salaries.employee_id')
                 ->select([
                     DB::raw("'employee_salary' as title"),
-                    DB::raw('employees.name as description'),
+                    'description' => function (Builder $builder) {
+                        //deleted_at can be not null.
+                        $builder->from('employees')
+                            ->where('employees.id', '=', DB::raw('employee_salaries.employee_id'))
+                            ->select('employees.name');
+                    },
                     DB::raw("employee_salaries.payment_amount as expense"),
                     DB::raw("0 as income"),
                     DB::raw("employee_salaries.created_at as date")
@@ -354,10 +389,14 @@ class ReportsController extends Controller
 
 
             $sale_returns = SaleReturn::query()
-                ->leftJoin("customers", 'customers.id', '=', 'sale_returns.customer_id')
                 ->select([
                     DB::raw("'sale_return' as title"),
-                    DB::raw('customers.name as description'),
+                    'description' => function (Builder $builder) {
+                        //deleted_at can be not null.
+                        $builder->from('customers')
+                            ->where('customers.id', '=', DB::raw('sale_returns.customer_id'))
+                            ->select('customers.name');
+                    },
                     DB::raw("sale_returns.amount as expense"),
                     DB::raw("0 as income"),
                     DB::raw("sale_returns.created_at as date")
@@ -388,10 +427,15 @@ class ReportsController extends Controller
                 ->whereDate("created_at", "=", $date);
 
             return SalePayment::query()
-                ->leftJoin("customers", 'customers.id', '=', 'sale_payments.customer_id')
                 ->select([
                     DB::raw("'sale_payment' as title"),
-                    DB::raw('customers.name as description'),
+                    'description' => function (Builder $builder) {
+                        //deleted_at can be not null.
+                        $builder->from('customers')
+                            ->where('customers.id', '=', DB::raw('sale_payments.customer_id'))
+                            ->select('customers.name');
+                    },
+
                     DB::raw("0 as expense"),
                     DB::raw("sale_payments.payment_amount as income"),
                     DB::raw("sale_payments.created_at as date")
@@ -472,6 +516,12 @@ class ReportsController extends Controller
                     "capital_balance" => function (Builder $builder) use ($request) {
                         $builder->selectRaw("capital_deposit - capital_withdraw");
                     },
+                    "purchase_payable" => function (Builder $builder) use ($request) {
+                        $builder->from("purchases")
+                            ->whereNull('purchases.deleted_at')
+                            ->selectRaw("IFNULL(SUM(purchases.payable),0)");
+                        $this->setDateRanges($builder, $request);
+                    },
                     "purchase_payment" => function (Builder $builder) use ($request) {
                         $builder->from("purchase_payments")
                             ->whereNull('purchase_payments.deleted_at')
@@ -485,7 +535,13 @@ class ReportsController extends Controller
                         $this->setDateRanges($builder, $request);
                     },
                     "purchase_balance" => function (Builder $builder) {
-                        $builder->selectRaw("purchase_payment - purchase_return");
+                        $builder->selectRaw("purchase_payable - purchase_payment - purchase_return");
+                    },
+                    "sales_payable" => function (Builder $builder) use ($request) {
+                        $builder->from("sales")
+                            ->whereNull('sales.deleted_at')
+                            ->selectRaw("IFNULL(SUM(sales.payable),0)");
+                        $this->setDateRanges($builder, $request);
                     },
                     "sale_payment" => function (Builder $builder) use ($request) {
                         $builder->from("sale_payments")

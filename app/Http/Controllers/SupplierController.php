@@ -17,26 +17,25 @@ class SupplierController extends Controller
     public array $search_selects;
     public array $search_fields;
 
-    private string $payable, $returned, $paid;
+    private Builder $payable, $paid, $returned;
     use Crud;
 
     public function __construct()
     {
-        $this->payable = DB::table('purchases')
-            ->whereNull('purchases.deleted_at')
-            ->where('purchases.supplier_id', '=', DB::raw('suppliers.id'))
-            ->selectRaw("IFNULL(SUM(purchases.payable),0)")
-            ->toSql();
-        $this->returned = DB::table('purchase_returns')
-            ->whereNull('purchase_returns.deleted_at')
-            ->where('purchase_returns.supplier_id', '=', DB::raw('suppliers.id'))
-            ->selectRaw("IFNULL(SUM(purchase_returns.amount),0)")
-            ->toSql();
+        $this->payable = DB::table("purchases")
+            ->where("purchases.supplier_id", "=", DB::raw("suppliers.id"))
+            ->whereNull("purchases.deleted_at")
+            ->selectRaw("IFNULL(SUM(purchases.payable),0)");
         $this->paid = DB::table('purchase_payments')
-            ->whereNull('purchase_payments.deleted_at')
-            ->where('purchase_payments.supplier_id', '=', DB::raw('suppliers.id'))
-            ->selectRaw("IFNULL(SUM(purchase_payments.payment_amount),0)")
-            ->toSql();
+            ->where("purchase_payments.supplier_id", "=", DB::raw("suppliers.id"))
+            ->whereNull("purchase_payments.deleted_at")
+            ->selectRaw("IFNULL(SUM(purchase_payments.payment_amount),0)");
+
+        $this->returned = DB::table("purchase_returns")
+            ->where("purchase_returns.supplier_id", "=", DB::raw("suppliers.id"))
+            ->whereNull("purchase_returns.deleted_at")
+            ->selectRaw("IFNULL(SUM(purchase_returns.amount),0)");
+
 
         $this->search_selects = $this->search_fields = [
             'id',
@@ -50,9 +49,9 @@ class SupplierController extends Controller
             'village',
             'shipping_address',
             'shipping_address',
-            'balance' => function (Builder $builder) {
-                $builder->selectRaw("($this->payable) - ($this->paid) - ($this->returned)");
-            }
+            "balance" => function (Builder $builder) {
+                $builder->selectRaw("({$this->payable->toSql()}) - ({$this->paid->toSql()}) - ({$this->returned->toSql()})");
+            },
         ];
     }
 
@@ -107,10 +106,12 @@ class SupplierController extends Controller
             throw $exception;
         }
     }
+
     public function getById($id, Request $request)
     {
         return Supplier::query()->select($this->search_selects)->findOrFail($id);
     }
+
     public function addPayment(Supplier $supplier, Request $request)
     {
         try {
@@ -134,12 +135,16 @@ class SupplierController extends Controller
     public function list(Request $request)
     {
         try {
+            $payable = $this->payable->toSql();
+            $paid = $this->paid->toSql();
+            $returned = $this->returned->toSql();
+
             $items = Supplier::query()
                 ->select([
                     "suppliers.*",
-                    DB::raw("(($this->payable)) as payable"),
-                    DB::raw("(($this->paid)) as paid"),
-                    DB::raw("(($this->returned)) as returned"),
+                    DB::raw("(($payable)) as payable"),
+                    DB::raw("(($paid)) as paid"),
+                    DB::raw("(($returned)) as returned"),
                     DB::raw("(select (payable - returned - paid)) as balance")
                 ]);
             if ($request->has('id')) {
@@ -149,10 +154,10 @@ class SupplierController extends Controller
             return response()
                 ->json($items->defaultDatatable($request))
                 ->header("fund_summery", json_encode(resetQueryForOverview($items)->select([
-                    DB::raw("SUM(IFNULL(($this->payable),0)) as payable"),
-                    DB::raw("SUM(IFNULL(($this->returned),0))  as returned"),
-                    DB::raw("SUM(IFNULL(($this->paid),0))  as paid"),
-                    DB::raw("SUM(IFNULL(($this->payable) - ($this->returned) - ($this->paid),0))  as balance"),
+                    DB::raw("SUM(IFNULL(($payable),0)) as payable"),
+                    DB::raw("SUM(IFNULL(($returned),0))  as returned"),
+                    DB::raw("SUM(IFNULL(($paid),0))  as paid"),
+                    DB::raw("SUM(IFNULL(($payable) - ($returned) - ($paid),0))  as balance"),
                 ])->first()));
         } catch (\Throwable $exception) {
             throw $exception;
@@ -162,31 +167,51 @@ class SupplierController extends Controller
     public function shortFinancialReport($supplier_id, string $type = "pdf", Request $request)
     {
         try {
-            $supplier = Supplier::query()->select(["suppliers.*"])->findOrFail($supplier_id);
+            $start_date = ($request->has('start_date') && $request->input('start_date')) ? $request->input('start_date') : null;
+            $end_date = ($request->has('end_date') && $request->input('end_date')) ? $request->input('end_date') : null;
+            $supplier = Supplier::query()
+                ->select([
+                    "suppliers.*",
+                    "payable" => function (Builder $builder) use ($end_date, $start_date) {
+                        $builder->from("purchases")
+                            ->where("purchases.supplier_id", "=", DB::raw("suppliers.id"))
+                            ->whereNull("purchases.deleted_at")
+                            ->selectRaw("IFNULL(SUM(purchases.payable),0)");
+                        if ($start_date) {
+                            $builder->whereDate('created_at', '>=', $start_date);
+                        }
+                        if ($end_date) {
+                            $builder->whereDate('created_at', '<=', $end_date);
+                        }
+                    },
+                    "paid" => function (Builder $builder) use ($end_date, $start_date) {
+                        $builder->from('purchase_payments')
+                            ->where("purchase_payments.supplier_id", "=", DB::raw("suppliers.id"))
+                            ->whereNull("purchase_payments.deleted_at")
+                            ->selectRaw("IFNULL(SUM(purchase_payments.payment_amount),0)");
+                        if ($start_date) {
+                            $builder->whereDate('created_at', '>=', $start_date);
+                        }
+                        if ($end_date) {
+                            $builder->whereDate('created_at', '<=', $end_date);
+                        }
+                    },
+                    "returned" => function (Builder $builder) use ($end_date, $start_date) {
+                        $builder->from("purchase_returns")
+                            ->where("purchase_returns.supplier_id", "=", DB::raw("suppliers.id"))
+                            ->whereNull("purchase_returns.deleted_at")
+                            ->selectRaw("IFNULL(SUM(purchase_returns.amount),0)");
+                        if ($start_date) {
+                            $builder->whereDate('created_at', '>=', $start_date);
+                        }
+                        if ($end_date) {
+                            $builder->whereDate('created_at', '<=', $end_date);
+                        }
+                    },
+                    DB::raw("(select (payable - returned - paid)) as balance")
+                ])
+                ->findOrFail($supplier_id);
 
-            $start_date = ($request->has('start_date') && $request->get('start_date')) ? $request->get('start_date') : null;
-            $end_date = ($request->has('end_date') && $request->get('end_date')) ? $request->get('end_date') : null;
-
-            $payable = $supplier->purchases();
-            $paid = $supplier->purchasePayments();
-            $returned = $supplier->purchaseItems();
-
-            if ($start_date) {
-                $payable->whereDate('created_at', '>=', $start_date);
-                $paid->whereDate('created_at', '>=', $start_date);
-                $returned->whereDate('created_at', '>=', $start_date);
-            }
-            if ($end_date) {
-                $payable->whereDate('created_at', '<=', $end_date);
-                $paid->whereDate('created_at', '<=', $end_date);
-                $returned->whereDate('created_at', '<=', $end_date);
-            }
-
-
-            $supplier->payable = $payable->sum('payable');
-            $supplier->paid = $paid->sum('payment_amount');
-            $supplier->returned = $returned->sum('returned_total');
-            $supplier->balance = $supplier->payable - $supplier->paid - $supplier->returned;
 
             if ($type == 'html') {
                 return view("pages.customers.short_financial_report", [
@@ -209,8 +234,8 @@ class SupplierController extends Controller
 
     public function fullFinancialReport(Supplier $supplier, string $type = 'pdf', Request $request)
     {
-        $start_date = ($request->has('start_date') && $request->get('start_date')) ? $request->get('start_date') : null;
-        $end_date = ($request->has('end_date') && $request->get('end_date')) ? $request->get('end_date') : null;
+        $start_date = ($request->has('start_date') && $request->input('start_date')) ? $request->input('start_date') : null;
+        $end_date = ($request->has('end_date') && $request->input('end_date')) ? $request->input('end_date') : null;
         /**
          * I am confused about debit & credit. so , the reference are as below:
          * resource/money goes to customer => to_customer
@@ -326,7 +351,7 @@ class SupplierController extends Controller
                     "suppliers.name",
                     "suppliers.phone",
                     "suppliers.company",
-                    DB::raw("($this->payable - $this->paid - $this->returned) as balance")
+                    DB::raw("(({$this->payable->toSql()}) - ({$this->paid->toSql()}) - ({$this->returned->toSql()})) as balance")
                 ])
                 ->limit($request->post('limit') ?? 30);
 

@@ -30,6 +30,11 @@
             enable-date-range
             @refreshDatatable="$refs.datatable.refresh()"
             :custom_buttons="custom_buttons">
+            <template #header_dropdowns>
+                <b-button size="sm" variant="dark" @click="$refs.datatable.refresh()">
+                    <i class="fa fa-sync"></i>
+                </b-button>
+            </template>
             <template v-slot:table>
                 <b-table
                     ref="datatable"
