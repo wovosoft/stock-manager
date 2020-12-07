@@ -170,7 +170,7 @@ class SaleController extends Controller
                 ->json($items->defaultDatatable($request, "sales.created_at"))
                 ->header("overview", json_encode(
                     resetQueryForOverview($items)
-                        ->distinct()
+                        ->whereNull('sales.deleted_at')
                         ->select([
                             DB::raw("SUM(sales.payable) as sales_payable"),
                             DB::raw("COUNT(sales.id) as sales_quantity"),

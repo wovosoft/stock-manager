@@ -177,7 +177,7 @@ class PurchaseController extends Controller
                 ->json($items->defaultDatatable($request, "purchases.created_at"))
                 ->header("overview", json_encode(
                     resetQueryForOverview($items)
-                        ->distinct()
+                        ->whereNull('purchases.deleted_at')
                         ->select([
                             DB::raw("SUM(purchases.payable) as purchases_payable"),
                             DB::raw("SUM(purchases.returned) as purchases_returned"),
