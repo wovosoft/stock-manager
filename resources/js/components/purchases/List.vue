@@ -102,9 +102,19 @@
                 id="print_invoice"
                 aspect="16by9"
                 allowfullscreen
-                :src="route('Backend.Purchases.Invoice.PDF',{purchase:currentItem.id,type:'pdf'})"/>
+                :src="route('Backend.Purchases.Invoice.PDF',{purchase:currentItem.id,type:'html'})"/>
             <template v-slot:modal-footer="{close}">
-                <b-button @click="printInvoice" variant="primary">Print</b-button>
+                <b-button
+                    :href="route('Backend.Purchases.Invoice.PDF',{purchase:currentItem.id,type:'pdf'})"
+                    target="_blank"
+                    variant="dark">
+                    <i class="fa fa-file-pdf"></i>
+                    {{__('pdf','PDF')}}
+                </b-button>
+                <b-button @click="printInvoice" variant="primary">
+                    <i class="fa fa-print"></i>
+                    {{__('print','Print')}}
+                </b-button>
                 <b-button @click="close" variant="secondary">Close</b-button>
             </template>
         </b-modal>

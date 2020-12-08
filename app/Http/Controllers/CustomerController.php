@@ -16,6 +16,7 @@ class CustomerController extends Controller
     public array $search_selects;
     public array $search_fields;
     private string $payable, $paid, $returned;
+    private bool $withDues = false;
 
     public function __construct()
     {
@@ -62,6 +63,7 @@ class CustomerController extends Controller
     {
         Route::name('Customers.')->prefix('customers')->group(function () {
             Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("list/with/dues", [self::class, 'listWithDues'])->name('ListWithDues');
             Route::post("customer/exact/{id}", [self::class, 'getById'])->name('GetByID');
             Route::post("{customer}/returns", [self::class, 'returns'])->name('Returns');
             Route::post("{customer}/payments", [self::class, 'payments'])->name('Payments');
@@ -135,6 +137,16 @@ class CustomerController extends Controller
         }
     }
 
+    public function listWithDues(Request $request)
+    {
+        try {
+            $this->withDues = true;
+            return $this->list($request);
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
     public function list(Request $request)
     {
         try {
@@ -146,6 +158,10 @@ class CustomerController extends Controller
                     $builder->selectRaw("payable - paid - returned");
                 },
             ]));
+            if ($this->withDues) {
+                //because .0001 can be remain as balance. we use 0.1 rather than 0.0
+                $items->having('balance', '>', 0.1);
+            }
             if ($request->has('id')) {
                 return $items->findOrFail($request->post('id'));
             }
@@ -154,6 +170,7 @@ class CustomerController extends Controller
                 ->json($items->defaultDatatable($request))
                 ->header("fund_summery", json_encode(
                     resetQueryForOverview($items)
+                        ->whereNull('customers.deleted_at')
                         ->select([
                             DB::raw("SUM(IFNULL(($this->payable),0)) as payable"),
                             DB::raw("SUM(IFNULL(($this->returned),0))  as returned"),

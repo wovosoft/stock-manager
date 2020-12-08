@@ -48,23 +48,31 @@
     </style>
 </head>
 <body>
-<span style="position: absolute;top:0;">
-    ক্রমিক নং- {{\App\Drivers\BanglaConverter::en2bn($purchase->id)}}
-</span>
-<div class="text-center">
-    {!! _s('invoice_header') !!}
-</div>
-<br>
+<h3 style="text-align: center;margin: 0;padding: 0;">
+    বিসমিল্লাহির রাহমানির রাহিম<br>
+</h3>
 <table style="width: 100%">
     <tr>
-        <td>সরবরাহকারীর নামঃ {{$purchase->supplier->name}}</td>
-        <td class="text-center">মোবাইল নং: {{\App\Drivers\BanglaConverter::en2bn($purchase->supplier->phone)}}</td>
-        <td class="text-right">
+        <td style="width: 50%;vertical-align: top;">
+            ক্রমিক নং- {{\App\Drivers\BanglaConverter::en2bn($purchase->id)}}<br>
+            সরবরাহকারীর নামঃ {{$purchase->supplier->name}}<br>
+            মোবাইল নং: {{\App\Drivers\BanglaConverter::en2bn($purchase->supplier->phone)}}<br>
+
             @php
                 $purchase_date=\Carbon\Carbon::parse($purchase->created_at)->locale('bn-BD');
             @endphp
             তারিখ : {{\App\Drivers\BanglaConverter::en2bn($purchase_date->format('d-m-Y'))}},
             {{$purchase_date->dayName}}
+        </td>
+        <td style="text-align: right;vertical-align: top;">
+            @if(_s('invoice_header'))
+                {!! _s('invoice_header') !!}
+            @else
+                <h3 style="margin: 0;padding: 0;"> বিসমিল্লাহ এন্টারপ্রাইজ</h3>
+                প্রোঃ মোঃ আনোয়ার হোসেন<br>
+                ঠাকুরগাঁও রোড, ঠাকুরগাঁও<br>
+                মোবাইল নং: {{\App\Drivers\BanglaConverter::en2bn("01728316509")}}
+            @endif
         </td>
     </tr>
 </table>

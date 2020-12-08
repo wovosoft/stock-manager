@@ -87,7 +87,8 @@
                 </b-button-group>
             </template>
         </b-table>
-        <b-card :header="__('add_product','Add Product')" body-class="p-2">
+        <b-card :header="__('add_product','Add Product')"
+                body-class="p-2">
             <b-form-group class="mb-1">
                 <b-input-group>
                     <template #prepend>

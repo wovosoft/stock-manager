@@ -1,4 +1,4 @@
-@include("pages.sales.invoice_header")
+
 <div style="text-align: center;">
     ক্যাশ মেমো
 </div>

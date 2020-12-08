@@ -1,4 +1,4 @@
-@include("pages.sales.invoice_header")
+
 <div style="text-align: center;">
     ডেলিভারি স্লিপ
 </div>

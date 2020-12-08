@@ -41,7 +41,7 @@ Route::middleware(['auth'])->prefix('backend')->name('Backend.')->group(function
     CC\SaleItemController::routes();
     CC\PurchaseController::routes();
     CC\PurchasePaymentController::routes();
-//    CC\PurchaseItemController::routes();
+    CC\PurchaseItemController::routes();
     CC\CustomerBalanceController::routes();
     CC\SupplierBalanceController::routes();
     CC\SalePaymentController::routes();

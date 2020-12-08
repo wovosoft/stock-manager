@@ -48,6 +48,7 @@
     </style>
 </head>
 <body>
+@include("pages.sales.invoice_header")
 @if($is_delivery)
     @include("pages.sales.delivery_slip")
 @elseif($invoice_both)

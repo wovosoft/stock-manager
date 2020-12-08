@@ -31,6 +31,10 @@
             @refreshDatatable="$refs.datatable.refresh()"
             :custom_buttons="custom_buttons">
             <template #header_dropdowns>
+                <b-checkbox size="sm" @change="changeApiUrl" inline
+                            :title="__('customers_with_due','Customers With Due')" switch>
+                    {{__('with_due','With Due')}}
+                </b-checkbox>
                 <b-button size="sm" variant="dark" @click="$refs.datatable.refresh()">
                     <i class="fa fa-sync"></i>
                 </b-button>
@@ -69,7 +73,7 @@
                                 @click="currentItem=JSON.parse(JSON.stringify(row.item))">
                                 <i class="fa fa-money-check"></i>
                             </b-button>
-                            <b-dropdown right  size="sm">
+                            <b-dropdown right size="sm">
                                 <b-dropdown-item
                                     :title="__('returns_history','Returns History')"
                                     v-b-modal:returns-modal
@@ -136,7 +140,13 @@
 <script>
     import DtHeader from '@/partials/DtHeader'
     import DtFooter from '@/partials/DtFooter'
-    import Datatable, {colCount, colSum, commonDtOptions, BasicModalOptions} from "@/partials/datatable";
+    import Datatable, {
+        colCount,
+        colSum,
+        commonDtOptions,
+        BasicModalOptions,
+        isTrue
+    } from "@/partials/datatable";
     import DtTable from "@/partials/DtTable";
     import AddFund from "@/components/customers/AddFund";
     import Payments from "@/components/customers/Payments";
@@ -158,10 +168,7 @@
                 type: String,
                 default: _t('customers', 'Customers')
             },
-            api_url: {
-                type: String,
-                default: () => route('Backend.Customers.List').url()
-            },
+
             trash_url: {
                 type: String,
                 default: () => route('Backend.Customers.Delete').url()
@@ -192,10 +199,19 @@
             },
         },
         methods: {
-            colCount, colSum, commonDtOptions
+            colCount, colSum, commonDtOptions,
+            changeApiUrl(value) {
+                if (isTrue(value)) {
+                    this.api_url = route('Backend.Customers.ListWithDues').url();
+                } else {
+                    this.api_url = route('Backend.Customers.List').url();
+                }
+                this.$refs.datatable.refresh();
+            }
         },
         data() {
             return {
+                api_url: route('Backend.Customers.List').url(),
                 the: this,
                 BasicModalOptions,
                 form: {},
