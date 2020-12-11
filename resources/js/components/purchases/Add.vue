@@ -252,6 +252,7 @@
             no-close-on-esc
             @hidden="sale_id=null">
             <b-embed
+                v-if="purchase_id"
                 id="print_invoice"
                 aspect="16by9"
                 allowfullscreen

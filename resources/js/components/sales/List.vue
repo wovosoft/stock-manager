@@ -102,12 +102,14 @@
                  v-if="currentItem"
                  @hidden="currentItem={},invoice_is_delivery=false,invoice_both=false">
             <b-embed
+                v-if="currentItem && currentItem.id"
                 id="print_invoice"
                 aspect="16by9"
                 allowfullscreen
                 :src="route('Backend.Sales.Invoice.PDF',{sale:currentItem.id,type:'html',is_delivery:invoice_is_delivery?'yes':'no',invoice_both:invoice_both?'yes':'no'})"/>
             <template v-slot:modal-footer="{close}">
                 <b-button
+                    v-if="currentItem && currentItem.id"
                     :href="route('Backend.Sales.Invoice.PDF',{sale:currentItem.id,type:'pdf',is_delivery:invoice_is_delivery?'yes':'no',invoice_both:invoice_both?'yes':'no'})"
                     target="_blank"
                     variant="dark">

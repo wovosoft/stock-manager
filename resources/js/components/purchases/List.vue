@@ -99,12 +99,14 @@
                  footer-bg-variant="dark"
                  footer-text-variant="light">
             <b-embed
+                v-if="currentItem && currentItem.id"
                 id="print_invoice"
                 aspect="16by9"
                 allowfullscreen
                 :src="route('Backend.Purchases.Invoice.PDF',{purchase:currentItem.id,type:'html'})"/>
             <template v-slot:modal-footer="{close}">
                 <b-button
+                    v-if="currentItem && currentItem.id"
                     :href="route('Backend.Purchases.Invoice.PDF',{purchase:currentItem.id,type:'pdf'})"
                     target="_blank"
                     variant="dark">
