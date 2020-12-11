@@ -13,14 +13,14 @@
     <link rel="stylesheet" href="{{mix("css/app.css")}}">
     <script>
         function listLanguages() {
-            return <?php echo json_encode($list_languages); ?>;
+            return @json($list_languages);
         }
 
         function _u(key, fallback) {
             if (!fallback) {
                 fallback = key;
             }
-            const u =<?php echo json_encode(auth()->user()->only('name'))?>;
+            const u =@json(auth()->user()->only('name'));
             if (!key) {
                 return u;
             }
@@ -39,45 +39,26 @@
             return (typeof s[key] !== "undefined") ? s[key] : fallback;
         }
 
-        var translation_collector = null;
-
+        {{--var translation_collector = null;--}}
 
         function _t(key, fallback) {
             // const TRANSLATION_COLLECTOR_ENABLED = true;
             if (!fallback) {
                 fallback = key;
             }
-                {{--                @if(app()->environment('production'))--}}
-                {{--                    const t =@php echo json_encode(currentLangTranslations());@endphp;--}}
-                {{--                @else--}}
-                {{--                    @php--}}
-                {{--                        $local_trans = json_decode(\Illuminate\Support\Facades\File::get(resource_path("lang/full.json")));--}}
-                {{--                        $tt = [];--}}
-                {{--                        foreach ($local_trans as $key => $value) {--}}
-                {{--                            $tt[$key] = $value->bn;--}}
-                {{--                        }--}}
-                {{--                    @endphp--}}
-                {{--                    const t =<?php echo json_encode($tt);?>;--}}
-                {{--                @endif--}}
-                @php
-                    $local_trans = json_decode(\Illuminate\Support\Facades\File::get(resource_path("lang/full.json")));
-                    $tt = [];
-                    foreach ($local_trans as $key => $value) {
-                        $tt[$key] = $value->bn;
-                    }
-                @endphp
-            const t =<?php echo json_encode($tt);?>;
-            // if (!translation_collector) {
-            //     translation_collector = t;
-            // }
-            // if (TRANSLATION_COLLECTOR_ENABLED && !(key in translation_collector)) {
-            //     translation_collector[key] = fallback;
-            //     console.log(Object.keys(translation_collector).length)
-            // }
+            const t = @json($translations);
+            {{--
+             if (!translation_collector) {
+                translation_collector = t;
+            }
+            if (TRANSLATION_COLLECTOR_ENABLED && !(key in translation_collector)) {
+                translation_collector[key] = fallback;
+                console.log(Object.keys(translation_collector).length)
+            }
+            --}}
             if (!key) {
                 return t;
             }
-
             return (typeof t[key] !== "undefined") ? t[key] : fallback;
         }
     </script>
@@ -85,14 +66,7 @@
     <script defer src="{{ mix('js/app.js') }}"></script>
 </head>
 <body class="h-100" style="overflow-x: hidden;">
-<div id="app"></div>
-
-{{--{!!--}}
-{{--    ssr('js/app-server.js')--}}
-{{--    ->fallback('<div id="app"></div>')--}}
-{{--    ->render()--}}
-{{--!!}--}}
-
 <form id="logout-form" style="display: none" method="post" action="{{route('logout')}}">@csrf</form>
+<div id="app"></div>
 </body>
 </html>

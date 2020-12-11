@@ -71,8 +71,23 @@ Route::get('routes', function () {
     return response()->json(Artisan::output());
 });
 Route::middleware(['auth'])->group(function () {
-    Route::get('/{url?}', fn () => view('layouts.dashboard', [
-        "list_languages" => \App\Models\Language::query()->select(['id', 'name'])->get()->pluck('id', 'name')
-    ]))->name('Admin');
+    Route::get('/{url?}', function () {
+//        if (app()->environment('production')) {
+//            $tt = currentLangTranslations();
+//        } else {
+//            $local_trans = json_decode(\Illuminate\Support\Facades\File::get(resource_path("lang/full.json")));
+//            $tt = [];
+//            foreach ($local_trans as $key => $value) {
+//                $tt[$key] = $value->bn;
+//            }
+//        }
+        return view('layouts.dashboard', [
+            "list_languages" => \App\Models\Language::query()
+                ->select(['id', 'name'])
+                ->get()
+                ->pluck('id', 'name'),
+            "translations" => currentLangTranslations()
+        ]);
+    })->name('Admin');
 });
 
