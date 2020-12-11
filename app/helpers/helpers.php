@@ -234,3 +234,20 @@ if (!function_exists('getSqlWithBindings')) {
         })->toArray());
     }
 }
+if (!function_exists('generateDummyData')) {
+    function generateDummyData($query)
+    {
+        try {
+            Database\Factories\CategoryFactory::new()->count($count_create)->create();
+            Database\Factories\BrandFactory::new()->count($count_create)->create();
+            Database\Factories\ProductFactory::new()->count(20)->create();
+            Database\Factories\SupplierFactory::new()->count($count_create)->create();
+            Database\Factories\CustomerFactory::new()->count($count_create)->create();
+            Database\Factories\EmployeeFactory::new()->count($count_create)->create();
+            Database\Factories\ExpenseCategoryFactory::new()->count($count_create)->create();
+            return true;
+        } catch (Throwable $exception) {
+            throw $exception;
+        }
+    }
+}
