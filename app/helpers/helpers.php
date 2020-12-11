@@ -235,12 +235,12 @@ if (!function_exists('getSqlWithBindings')) {
     }
 }
 if (!function_exists('generateDummyData')) {
-    function generateDummyData()
+    function generateDummyData(int $count_create = 10)
     {
         try {
             Database\Factories\CategoryFactory::new()->count($count_create)->create();
             Database\Factories\BrandFactory::new()->count($count_create)->create();
-            Database\Factories\ProductFactory::new()->count(20)->create();
+            Database\Factories\ProductFactory::new()->count($count_create)->create();
             Database\Factories\SupplierFactory::new()->count($count_create)->create();
             Database\Factories\CustomerFactory::new()->count($count_create)->create();
             Database\Factories\EmployeeFactory::new()->count($count_create)->create();
