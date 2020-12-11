@@ -97,7 +97,7 @@
         props: {
             submit_url: {
                 type: String,
-                default: () => route('Backend.Languages.Store').url()
+                default: () => route('Backend.Languages.Store')
             }
         },
         mounted() {

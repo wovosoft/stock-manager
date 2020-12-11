@@ -112,15 +112,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Capital.Deposits.List').url()
+                default: () => route('Backend.Capital.Deposits.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Capital.Deposits.Delete').url()
+                default: () => route('Backend.Capital.Deposits.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Capital.Deposits.Store').url()
+                default: () => route('Backend.Capital.Deposits.Store')
             },
             custom_buttons: {
                 type: Array,

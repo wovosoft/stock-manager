@@ -25,7 +25,7 @@
                         </b-button>
                         <b-button size="sm" variant="dark"
                                   target="_blank"
-                                  :href="route('Backend.Reports.Customers.Sales', {start_date: browse.start_date,end_date: browse.end_date,pdf:'pdf'}).url()">
+                                  :href="route('Backend.Reports.Customers.Sales', {start_date: browse.start_date,end_date: browse.end_date,pdf:'pdf'})">
                             {{__('export',"Export")}}
                         </b-button>
                     </b-col>
@@ -71,7 +71,7 @@
                 :per-page="dt.per_page"
                 foot-clone
                 foot-variant="light"
-                :api-url="route('Backend.Reports.Customers.Sales', {start_date: browse.start_date,end_date: browse.end_date,page:dt.current_page}).url()">
+                :api-url="route('Backend.Reports.Customers.Sales', {start_date: browse.start_date,end_date: browse.end_date,page:dt.current_page})">
                 <template #foot(payable)="row">
                     {{colSum(dt.data,'payable') | currency}}
                 </template>

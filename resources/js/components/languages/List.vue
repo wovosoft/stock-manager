@@ -62,15 +62,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Languages.List').url()
+                default: () => route('Backend.Languages.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Languages.Delete').url()
+                default: () => route('Backend.Languages.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Languages.Store').url()
+                default: () => route('Backend.Languages.Store')
             },
             custom_buttons: {
                 type: Array,

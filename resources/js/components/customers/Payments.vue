@@ -13,19 +13,19 @@
                     <b-button-group size="sm">
                         <b-button variant="primary"
                                   target="_blank"
-                                  :href="route('Backend.Payments.Sales.Invoice',{salePayment:row.item.id,pdf:'html'}).url()"
+                                  :href="route('Backend.Payments.Sales.Invoice',{salePayment:row.item.id,pdf:'html'})"
                                   :title="__('invoice','Invoice')">
                             <i class="fa fa-eye"></i>
                         </b-button>
                         <b-button variant="dark"
                                   target="_blank"
-                                  :href="route('Backend.Payments.Sales.Invoice',{salePayment:row.item.id,pdf:'pdf'}).url()"
+                                  :href="route('Backend.Payments.Sales.Invoice',{salePayment:row.item.id,pdf:'pdf'})"
                                   :title="__('invoice','Invoice')">
                             <i class="fa fa-file-invoice"></i>
                         </b-button>
                         <b-button variant="danger"
                                   target="_blank"
-                                  @click="trash(row.item.id,'customer_payments',route('Backend.Payments.Sales.Delete').url())"
+                                  @click="trash(row.item.id,'customer_payments',route('Backend.Payments.Sales.Delete'))"
                                   :title="__('trash','Trash')">
                             <i class="fa fa-trash"></i>
                         </b-button>
@@ -74,7 +74,7 @@
             commonDtOptions
         },
         mounted() {
-            this.api_url = route('Backend.Customers.Payments', {customer: this.customerId}).url();
+            this.api_url = route('Backend.Customers.Payments', {customer: this.customerId});
         },
         data() {
             return {

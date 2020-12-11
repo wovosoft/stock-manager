@@ -96,7 +96,7 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Capital.Balance').url()
+                default: () => route('Backend.Capital.Balance')
             },
             custom_buttons: {
                 type: Array,

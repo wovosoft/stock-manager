@@ -59,15 +59,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.SMS.List').url()
+                default: () => route('Backend.SMS.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.SMS.Delete').url()
+                default: () => route('Backend.SMS.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.SMS.Store').url()
+                default: () => route('Backend.SMS.Store')
             },
             custom_buttons: {
                 type: Array,

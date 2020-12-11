@@ -57,15 +57,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Brands.List').url()
+                default: () => route('Backend.Brands.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Brands.Delete').url()
+                default: () => route('Backend.Brands.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Brands.Store').url()
+                default: () => route('Backend.Brands.Store')
             },
             custom_buttons: {
                 type: Array,

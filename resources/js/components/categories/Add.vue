@@ -66,7 +66,7 @@
         props: {
             submit_url: {
                 type: String,
-                default: () => route('Backend.Categories.Store').url()
+                default: () => route('Backend.Categories.Store')
             },
             subcatfields: {
                 type: Array,

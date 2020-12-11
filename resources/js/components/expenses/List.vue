@@ -38,7 +38,7 @@
                                     :required="true"
                                     @input="v=>$set(datatable.search_columns,'expense_category_id',v?v.id:undefined)"
                                     v-model="datatable.expense_category"
-                                    :api_url="route('Backend.Expenses.Categories.Search').url()">
+                                    :api_url="route('Backend.Expenses.Categories.Search')">
                                     <template v-slot:option="op">
                                         {{[op.item.id,op.item.name].join(' # ')}}
                                     </template>
@@ -144,15 +144,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Expenses.List').url()
+                default: () => route('Backend.Expenses.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Expenses.Delete').url()
+                default: () => route('Backend.Expenses.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Expenses.Store').url()
+                default: () => route('Backend.Expenses.Store')
             },
             custom_buttons: {
                 type: Array,

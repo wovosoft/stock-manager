@@ -5,7 +5,7 @@
                 :required="true"
                 @input="customerSelected"
                 v-model="form.customer"
-                :api_url="route('Backend.Customers.Search').url()">
+                :api_url="route('Backend.Customers.Search')">
                 <template v-slot:option="op">
                     {{[op.item.id,op.item.name,op.item.phone,op.item.email].join(' # ')}}
                 </template>
@@ -118,7 +118,7 @@
                 }
             },
             getCustomer(id) {
-                axios.post(route("Backend.Balance.Customers.Single").url(), {
+                axios.post(route("Backend.Balance.Customers.Single"), {
                     customer_id: id
                 }).then(res => {
                     this.$set(this, 'output', res.data);

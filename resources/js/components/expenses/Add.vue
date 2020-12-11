@@ -22,7 +22,7 @@
                         :required="true"
                         @input="v=>form.expense_category_id=v?v.id:null"
                         v-model="form.expense_category"
-                        :api_url="route('Backend.Expenses.Categories.Search').url()">
+                        :api_url="route('Backend.Expenses.Categories.Search')">
                         <template v-slot:option="op">
                             {{[op.item.id,op.item.name].join(' # ')}}
                         </template>
@@ -73,7 +73,7 @@
         props: {
             submit_url: {
                 type: String,
-                default: () => route('Backend.Expenses.Store').url()
+                default: () => route('Backend.Expenses.Store')
             },
             routerBackOnClose: {
                 type: Boolean,

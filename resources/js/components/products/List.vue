@@ -47,7 +47,7 @@
                                                 $set(datatable,'subcategories',v.subcategories);
                                             }"
                                             v-model="datatable.category"
-                                            :api_url="route('Backend.Categories.Search').url()">
+                                            :api_url="route('Backend.Categories.Search')">
                                             <template v-slot:option="op">
                                                 {{[op.item.id,op.item.name].join(' # ')}}
                                             </template>
@@ -90,7 +90,7 @@
                                             :init-options="true"
                                             @input="v=>$set(datatable.search_columns,'brand_id',v?v.id:undefined)"
                                             v-model="datatable.brand"
-                                            :api_url="route('Backend.Brands.Search').url()">
+                                            :api_url="route('Backend.Brands.Search')">
                                             <template v-slot:option="op">
                                                 {{[op.item.id,op.item.name].join(' # ')}}
                                             </template>
@@ -201,15 +201,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Products.List').url()
+                default: () => route('Backend.Products.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Products.Delete').url()
+                default: () => route('Backend.Products.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Products.Store').url()
+                default: () => route('Backend.Products.Store')
             },
             custom_buttons: {
                 type: Array,

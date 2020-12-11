@@ -5,7 +5,7 @@
                 :required="true"
                 @input="supplierSelected"
                 v-model="form.supplier"
-                :api_url="route('Backend.Suppliers.Search').url()">
+                :api_url="route('Backend.Suppliers.Search')">
                 <template v-slot:option="op">
                     {{[op.item.id,op.item.name,op.item.phone,op.item.email].join(' # ')}}
                 </template>
@@ -118,7 +118,7 @@
                 }
             },
             getSupplier(id) {
-                axios.post(route("Backend.Balance.Suppliers.Single").url(), {
+                axios.post(route("Backend.Balance.Suppliers.Single"), {
                     supplier_id: id
                 }).then(res => {
                     this.$set(this, 'output', res.data);

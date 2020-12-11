@@ -34,7 +34,7 @@
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Expenses.Store').url()
+                default: () => route('Backend.Expenses.Store')
             }
         },
         mounted() {

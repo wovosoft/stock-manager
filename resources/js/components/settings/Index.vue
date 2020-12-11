@@ -79,7 +79,7 @@
         props: {
             submit_url: {
                 type: String,
-                default: () => route('Backend.Settings.Store').url()
+                default: () => route('Backend.Settings.Store')
             }
         },
         mounted() {
@@ -115,7 +115,7 @@
             msgBox,
             getSettings() {
                 axios
-                    .post(route('Backend.Settings.List').url())
+                    .post(route('Backend.Settings.List'))
                     .then(res => {
                         let data = {};
                         if (isArray(res.data)) {

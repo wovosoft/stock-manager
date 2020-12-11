@@ -124,7 +124,7 @@
         props: {
             submit_url: {
                 type: String,
-                default: () => route('Backend.Employees.Store').url()
+                default: () => route('Backend.Employees.Store')
             }
         },
 

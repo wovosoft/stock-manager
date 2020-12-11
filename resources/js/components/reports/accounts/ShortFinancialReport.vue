@@ -11,7 +11,7 @@
                             <i class="fa fa-sync"></i>
                         </b-button>
                         <b-button size="sm" target="_blank" variant="dark"
-                                  :href="route('Backend.Reports.ShortFinancialReport',{pdf:'pdf'}).url()">
+                                  :href="route('Backend.Reports.ShortFinancialReport',{pdf:'pdf'})">
                             {{__('export','Export')}}
                         </b-button>
                     </b-col>
@@ -106,7 +106,7 @@
             pluck,
             obj2Table,
             getItems() {
-                axios.post(route('Backend.Reports.ShortFinancialReport').url())
+                axios.post(route('Backend.Reports.ShortFinancialReport'))
                     .then(res => {
                         this.$set(this, 'report', res.data);
                     })

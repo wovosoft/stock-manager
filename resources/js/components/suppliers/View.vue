@@ -81,14 +81,14 @@
                             variant="primary"
                             v-if="the_item && the_item.id"
                             target="_blank"
-                            :href="route('Backend.Suppliers.Payments.shortFinancialReport',{supplier:the_item.id,type:'pdf',start_date:browse.start_date,end_date:browse.end_date}).url()">
+                            :href="route('Backend.Suppliers.Payments.shortFinancialReport',{supplier:the_item.id,type:'pdf',start_date:browse.start_date,end_date:browse.end_date})">
                             {{__('short_report','Short Report')}}
                         </b-button>
                         <b-button
                             variant="dark"
                             v-if="the_item && the_item.id"
                             target="_blank"
-                            :href="route('Backend.Suppliers.Payments.fullFinancialReport',{supplier:the_item.id,type:'pdf',start_date:browse.start_date,end_date:browse.end_date}).url()">
+                            :href="route('Backend.Suppliers.Payments.fullFinancialReport',{supplier:the_item.id,type:'pdf',start_date:browse.start_date,end_date:browse.end_date})">
                             {{__('full_report','Full Report')}}
                         </b-button>
                     </template>

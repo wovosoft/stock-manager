@@ -44,7 +44,7 @@
                     </b-col>
                     <b-col>
                         <b-button size="sm" target="_blank" variant="dark"
-                                  :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'pdf'}).url()">
+                                  :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'pdf'})">
                             Export
                         </b-button>
                     </b-col>
@@ -65,7 +65,7 @@
                 :fields="fields"
                 head-variant="dark"
                 foot-clone
-                :api-url="route('Backend.Reports.IncomeExpense',{date:date}).url()"
+                :api-url="route('Backend.Reports.IncomeExpense',{date:date})"
                 :items="getItems">
                 <template #cell(sl)="row">
                     {{row.index+1 | localNumber}}

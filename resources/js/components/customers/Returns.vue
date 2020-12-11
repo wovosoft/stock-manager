@@ -51,7 +51,7 @@
             colSum, commonDtOptions
         },
         mounted() {
-            this.api_url = route('Backend.Customers.Returns', {customer: this.customerId}).url();
+            this.api_url = route('Backend.Customers.Returns', {customer: this.customerId});
         },
         data() {
             return {

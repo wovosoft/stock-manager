@@ -63,15 +63,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Units.List').url()
+                default: () => route('Backend.Units.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Units.Delete').url()
+                default: () => route('Backend.Units.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Units.Store').url()
+                default: () => route('Backend.Units.Store')
             },
             custom_buttons: {
                 type: Array,

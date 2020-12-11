@@ -69,7 +69,7 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.History.List').url()
+                default: () => route('Backend.History.List')
             },
             custom_buttons: {
                 type: Array,

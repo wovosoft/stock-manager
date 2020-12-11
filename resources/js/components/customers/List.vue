@@ -171,11 +171,11 @@
 
             trash_url: {
                 type: String,
-                default: () => route('Backend.Customers.Delete').url()
+                default: () => route('Backend.Customers.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Customers.Store').url()
+                default: () => route('Backend.Customers.Store')
             },
             custom_buttons: {
                 type: Array,
@@ -202,16 +202,16 @@
             colCount, colSum, commonDtOptions,
             changeApiUrl(value) {
                 if (isTrue(value)) {
-                    this.api_url = route('Backend.Customers.ListWithDues').url();
+                    this.api_url = route('Backend.Customers.ListWithDues');
                 } else {
-                    this.api_url = route('Backend.Customers.List').url();
+                    this.api_url = route('Backend.Customers.List');
                 }
                 this.$refs.datatable.refresh();
             }
         },
         data() {
             return {
-                api_url: route('Backend.Customers.List').url(),
+                api_url: route('Backend.Customers.List'),
                 the: this,
                 BasicModalOptions,
                 form: {},

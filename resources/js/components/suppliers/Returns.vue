@@ -52,7 +52,7 @@
             colSum, commonDtOptions
         },
         mounted() {
-            this.api_url = route('Backend.Suppliers.Returns', {supplier: this.supplierId}).url();
+            this.api_url = route('Backend.Suppliers.Returns', {supplier: this.supplierId});
         },
         data() {
             return {

@@ -1,5 +1,9 @@
 <?php
 return [
-    'only' => ['backend.*'],
-//    'except' => ['debugbar.*', 'horizon.*', 'admin.*'],
+//    'only' => ['Backend.*'],
+    'groups' => [
+        'Backend' => ['Backend.*', 'Wovosoft.*'],
+        'Api' => ['Api.*'],
+    ],
+//    'except' => ['_debugbar.*', 'horizon.*', 'api.*'],
 ];

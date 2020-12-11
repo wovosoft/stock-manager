@@ -88,7 +88,7 @@
                     return false;
                 }
                 console.log(id)
-                axios.post(route('Backend.Settings.setCurrentLanguage').url(), {
+                axios.post(route('Backend.Settings.setCurrentLanguage'), {
                     language_id: id
                 }).then(res => {
                     this.msgBox(res.data);

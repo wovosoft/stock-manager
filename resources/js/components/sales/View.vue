@@ -104,7 +104,7 @@
                         v-model="product_temp"
                         :option-text="op=>op?[op.id, op.name, op.code].join(' # '):__('not_selected','Not Selected')"
                         :tag-text="op=>op?[op.id, op.name, op.code].join(' # '):__('not_selected','Not Selected')"
-                        :api_url="route('Backend.Products.Search').url()">
+                        :api_url="route('Backend.Products.Search')">
                     </vue-select>
                 </b-input-group>
             </b-form-group>
@@ -160,7 +160,7 @@
             handleSubmit() {
                 if (this.form.items.length) {
                     axios
-                        .post(route('Backend.SaleItems.Store', {sale: this.the_item.id}).url(), JSON.parse(JSON.stringify(this.form)))
+                        .post(route('Backend.SaleItems.Store', {sale: this.the_item.id}), JSON.parse(JSON.stringify(this.form)))
                         .then(res => {
                             this.dirty = true;
                             this.getItem(this.the_item.id, this.$parent.$props.api_url)
@@ -181,7 +181,7 @@
                         .post(route('Backend.SaleItems.Delete', {
                             sale: item.sale_id,
                             sale_item: item.id
-                        }).url()).then(res => {
+                        })).then(res => {
                         this.dirty = true;
                         this.getItem(this.the_item.id, this.$parent.$props.api_url).then(res => {
                             this.the_item = res.data

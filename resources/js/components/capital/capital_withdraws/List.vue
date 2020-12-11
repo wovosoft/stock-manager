@@ -124,15 +124,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Capital.Withdraws.List').url()
+                default: () => route('Backend.Capital.Withdraws.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Capital.Withdraws.Delete').url()
+                default: () => route('Backend.Capital.Withdraws.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Capital.Withdraws.Store').url()
+                default: () => route('Backend.Capital.Withdraws.Store')
             },
             custom_buttons: {
                 type: Array,

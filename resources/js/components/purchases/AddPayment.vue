@@ -62,7 +62,7 @@
                     alert("Payment Amount Can't be 0");
                     return false;
                 }
-                axios.post(route('Backend.Payments.Purchases.Store', {purchase: this.purchase.id}).url(), this.form)
+                axios.post(route('Backend.Payments.Purchases.Store', {purchase: this.purchase.id}), this.form)
                     .then(res => {
                         this.$emit('msgBox', res.data);
                         this.$emit("success", true);

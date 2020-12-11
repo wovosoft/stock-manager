@@ -28,7 +28,7 @@
             :sort-by.sync="dt.sortBy"
             :per-page="dt.per_page"
             :current-page="dt.current_page"
-            :api-url="route('Backend.Capital.Withdraws.List', {page: dt.current_page, date: date}).url()"
+            :api-url="route('Backend.Capital.Withdraws.List', {page: dt.current_page, date: date})"
             :fields="fields"
             :items="getItems">
             <template #foot(payment_amount)="row">
@@ -150,7 +150,7 @@
             startCase, colSum, colCount, msgBox,
             handleSubmit(hide) {
                 axios
-                    .post(route('Backend.Capital.Withdraws.Store').url(), this.form)
+                    .post(route('Backend.Capital.Withdraws.Store'), this.form)
                     .then(res => {
                         hide();
                         this.msgBox(res.data);

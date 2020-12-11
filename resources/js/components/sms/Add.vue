@@ -82,7 +82,7 @@
         props: {
             submit_url: {
                 type: String,
-                default: () => route('Backend.SMS.Store').url()
+                default: () => route('Backend.SMS.Store')
             }
         },
         methods: {

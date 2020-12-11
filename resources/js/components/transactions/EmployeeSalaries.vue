@@ -53,7 +53,7 @@
                             }"
                             :tag-text="o=>o?[o.id,o.name].join(' # '):__('not_selected','Not Selected')"
                             :option-text="o=>o?[o.id,o.name].join(' # '):''"
-                            :api_url="route('Backend.Employees.Search').url()"/>
+                            :api_url="route('Backend.Employees.Search')"/>
                     </b-form-group>
                     <b-form-row>
                         <b-col sm="12" md="6">
@@ -170,7 +170,7 @@
                 }
             },
             getItems(ctx) {
-                return axios.post(route('Backend.Employees.Salaries.List', {page: ctx.currentPage}).url(), {
+                return axios.post(route('Backend.Employees.Salaries.List', {page: ctx.currentPage}), {
                     date: this.date,
                     per_page: ctx.perPage || 10,
                     orderBy: ctx.sortBy || 'id',
@@ -187,7 +187,7 @@
             msgBox,
             handleSubmit(hide) {
                 axios
-                    .post(route('Backend.Employees.Salaries.Store', {employee: this.employeeId}).url(), this.form)
+                    .post(route('Backend.Employees.Salaries.Store', {employee: this.employeeId}), this.form)
                     .then(res => {
                         hide();
                         this.msgBox(res.data);

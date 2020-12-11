@@ -149,15 +149,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Sales.List').url()
+                default: () => route('Backend.Sales.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Sales.Delete').url()
+                default: () => route('Backend.Sales.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Sales.Store').url()
+                default: () => route('Backend.Sales.Store')
             },
             custom_buttons: {
                 type: Array,

@@ -143,15 +143,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Employees.List').url()
+                default: () => route('Backend.Employees.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Employees.Delete').url()
+                default: () => route('Backend.Employees.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Employees.Store').url()
+                default: () => route('Backend.Employees.Store')
             },
             custom_buttons: {
                 type: Array,

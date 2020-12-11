@@ -93,7 +93,7 @@
         props: {
             submit_url: {
                 type: String,
-                default: () => route('Backend.Customers.Store').url()
+                default: () => route('Backend.Customers.Store')
             },
             hiddenCallback: {
                 type: Function,

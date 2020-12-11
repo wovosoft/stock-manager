@@ -51,7 +51,7 @@
         },
         methods: {
             handleSubmit() {
-                axios.post(route('Backend.Suppliers.Payments.Store', {supplier: this.supplier_id}).url(), this.form)
+                axios.post(route('Backend.Suppliers.Payments.Store', {supplier: this.supplier_id}), this.form)
                     .then(res => {
                         this.$root.msgBox(res.data);
                         this.$emit('success', true);

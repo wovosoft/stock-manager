@@ -53,7 +53,7 @@
                             }"
                             :tag-text="o=>o?[o.id,o.name,o.village].join(' # '):__('not_selected','Not Selected')"
                             :option-text="o=>o?o.id+' | ' + o.name + ' | ' +  o.village +' | ' + ($options.filters.currency(o.balance)):''"
-                            :api_url="route('Backend.Customers.SearchWithDues').url()"/>
+                            :api_url="route('Backend.Customers.SearchWithDues')"/>
                     </b-form-group>
                     <b-form-row>
                         <b-col md="6" sm="12">
@@ -158,7 +158,7 @@
                 }
             },
             getItems(ctx) {
-                return axios.post(route('Backend.Payments.Sales.List', {page: ctx.currentPage}).url(), {
+                return axios.post(route('Backend.Payments.Sales.List', {page: ctx.currentPage}), {
                     date: this.date,
                     per_page: ctx.perPage || 10,
                     orderBy: ctx.sortBy || 'id',
@@ -175,7 +175,7 @@
             msgBox,
             handleSubmit(hide) {
                 axios
-                    .post(route('Backend.Customers.Payments.Add', {customer: this.employeeId}).url(), this.form)
+                    .post(route('Backend.Customers.Payments.Add', {customer: this.employeeId}), this.form)
                     .then(res => {
                         hide();
                         this.msgBox(res.data);

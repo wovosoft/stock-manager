@@ -117,15 +117,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Expenses.Categories.List').url()
+                default: () => route('Backend.Expenses.Categories.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Expenses.Categories.Delete').url()
+                default: () => route('Backend.Expenses.Categories.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Expenses.Categories.Store').url()
+                default: () => route('Backend.Expenses.Categories.Store')
             },
             custom_buttons: {
                 type: Array,

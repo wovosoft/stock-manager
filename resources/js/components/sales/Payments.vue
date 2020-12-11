@@ -76,7 +76,7 @@
         methods: {
             getItems(sale_id) {
                 axios
-                    .post(route("Backend.Payments.Single.Sales.Payments", {sale: sale_id}).url())
+                    .post(route("Backend.Payments.Single.Sales.Payments", {sale: sale_id}))
                     .then(res => {
                         this.$set(this, 'items', res.data);
                     })

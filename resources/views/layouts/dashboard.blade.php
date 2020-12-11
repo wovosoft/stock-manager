@@ -81,7 +81,7 @@
             return (typeof t[key] !== "undefined") ? t[key] : fallback;
         }
     </script>
-    @routes
+    @routes('Backend')
     <script defer src="{{ mix('js/app.js') }}"></script>
 </head>
 <body class="h-100" style="overflow-x: hidden;">

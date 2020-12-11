@@ -7,11 +7,11 @@
                 </b-col>
                 <b-col>
                     <b-button size="sm" target="_blank" variant="dark"
-                              :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'html'}).url()">
+                              :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'html'})">
                         View
                     </b-button>
                     <b-button size="sm" target="_blank" variant="dark"
-                              :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'pdf'}).url()">
+                              :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'pdf'})">
                         Export
                     </b-button>
                 </b-col>

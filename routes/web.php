@@ -1,24 +1,33 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use \App\Http\Controllers as CC;
+use App\User;
 use Illuminate\Http\Request;
+use \App\Http\Controllers as CC;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Validation\ValidationException;
 
 Auth::routes(["register" => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::post('/sanctum/token', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+        'device_name' => 'required',
+    ]);
 
-Route::get('/access-token', function (Request $request) {
-    $credentials = $request->only('email', 'password');
+    $user = User::where('email', $request->email)->first();
 
-    if (Auth::attempt($credentials)) {
-        // Authentication passed...
-        $user = Auth::user();
-        $token = $user->createToken('Token Name')->accessToken;
-
-        return response()->json($token);
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        throw ValidationException::withMessages([
+            'email' => ['The provided credentials are incorrect.'],
+        ]);
     }
+
+    return $user->createToken($request->device_name)->plainTextToken;
 });
 
 
@@ -32,10 +41,10 @@ Route::middleware(['auth'])->prefix('backend')->name('Backend.')->group(function
     CC\EmployeeSalaryController::routes();
     CC\BrandController::routes();
     CC\UnitController::routes();
-//    CC\SubcategoryController::routes();
+    // CC\SubcategoryController::routes();
     CC\ProductController::routes();
     CC\HistoryController::routes();
-//    CC\WidgetsController::routes();
+    //CC\WidgetsController::routes();
     CC\SettingController::routes();
     CC\SaleController::routes();
     CC\SaleItemController::routes();
@@ -57,8 +66,12 @@ Route::middleware(['auth'])->prefix('backend')->name('Backend.')->group(function
     CC\SaleReturnController::routes();
     CC\PurchaseReturnController::routes();
 });
+Route::get('routes', function () {
+    Artisan::call('route:list');
+    return response()->json(Artisan::output());
+});
 Route::middleware(['auth'])->group(function () {
-    Route::get('/{url?}', fn() => view('layouts.dashboard', [
+    Route::get('/{url?}', fn () => view('layouts.dashboard', [
         "list_languages" => \App\Models\Language::query()->select(['id', 'name'])->get()->pluck('id', 'name')
     ]))->name('Admin');
 });

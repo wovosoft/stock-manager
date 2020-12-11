@@ -17,12 +17,11 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "imliam/laravel-env-set-command": "^1.2",
         "laravel/framework": "^8.0",
-        "laravel/passport": "^10.0",
         "laravel/sanctum": "^2.8",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "niklasravnsborg/laravel-pdf": "^4.0",
-        "tightenco/ziggy": "^0.9.2",
+        "tightenco/ziggy": "^1.0",
         "wovosoft/laravel-permissions": "^1.0"
     },
     "require-dev": {

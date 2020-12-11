@@ -84,7 +84,7 @@
                     },
                 ],
                 datatable: {},
-                api_url: route('Backend.Employees.Paid.Salaries', {employee: this.employee.id}).url()
+                api_url: route('Backend.Employees.Paid.Salaries', {employee: this.employee.id})
             }
         },
 
@@ -118,7 +118,7 @@
                     })
                     .then(value => {
                         if (value) {
-                            axios.post(route('Backend.Employees.Salaries.Delete').url(), {
+                            axios.post(route('Backend.Employees.Salaries.Delete'), {
                                 id: id,
                             }).then(res => {
                                 this.paid_salary = Number(this.paid_salary) - Number(amount);

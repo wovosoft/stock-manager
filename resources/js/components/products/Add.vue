@@ -118,7 +118,7 @@
                                     <vue-select
                                         @input="v=>{form.category_id=v?v.id:null;form.subcategory_id=null}"
                                         v-model="form.category"
-                                        :api_url="route('Backend.Categories.Search').url()">
+                                        :api_url="route('Backend.Categories.Search')">
                                         <template v-slot:option="op">
                                             {{[op.item.id,op.item.name].join(' # ')}}
                                         </template>
@@ -155,7 +155,7 @@
                                     <vue-select
                                         @input="v=>{form.brand_id=v?v.id:null}"
                                         v-model="form.brand"
-                                        :api_url="route('Backend.Brands.Search').url()">
+                                        :api_url="route('Backend.Brands.Search')">
                                         <template v-slot:option="op">
                                             {{[op.item.id,op.item.name].join(' # ')}}
                                         </template>
@@ -211,7 +211,7 @@
         props: {
             submit_url: {
                 type: String,
-                default: () => route('Backend.Products.Store').url()
+                default: () => route('Backend.Products.Store')
             }
         },
         methods: {
@@ -245,7 +245,7 @@
             }
         },
         mounted() {
-            axios.post(route('Backend.Products.Get.Category.Unit').url())
+            axios.post(route('Backend.Products.Get.Category.Unit'))
                 .then(res => {
                     this.categories = res.data.categories;
                     this.units = res.data.units;

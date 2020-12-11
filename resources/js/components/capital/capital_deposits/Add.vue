@@ -64,7 +64,7 @@
         props: {
             submit_url: {
                 type: String,
-                default: () => route('Backend.Capital.Deposits.Store').url()
+                default: () => route('Backend.Capital.Deposits.Store')
             }
         },
         data() {

@@ -21,7 +21,7 @@
                                     v-model="form.supplier"
                                     :tag-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): __('not_selected', 'Not Selected')"
                                     :option-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): ''"
-                                    :api_url="route('Backend.Suppliers.Search').url()">
+                                    :api_url="route('Backend.Suppliers.Search')">
                                 </vue-select>
                                 <template v-slot:append>
                                     <b-button
@@ -52,7 +52,7 @@
                                     v-model="form.product_temp"
                                     :option-text="op=>op?[op.id, op.name, op.code].join(' # '):__('not_selected','Not Selected')"
                                     :tag-text="op=>op?[op.id, op.name, op.code].join(' # '):__('not_selected','Not Selected')"
-                                    :api_url="route('Backend.Products.Search').url()">
+                                    :api_url="route('Backend.Products.Search')">
                                 </vue-select>
                             </b-input-group>
                         </b-form-group>
@@ -177,7 +177,7 @@
                                 :init-options="true"
                                 :option-text="(op) => [op.id, op.name, op.code].join(' # ')"
                                 :tag-text="(op) =>op? [op.id, op.name, op.code].join(' # '): __('not_selected', 'Not Selected')"
-                                :api_url="route('Backend.Categories.Search').url()"
+                                :api_url="route('Backend.Categories.Search')"
                             >
                             </vue-select>
                         </b-input-group>
@@ -285,7 +285,7 @@
         props: {
             submit_url: {
                 type: String,
-                default: () => route("Backend.Purchases.Store").url(),
+                default: () => route("Backend.Purchases.Store"),
             },
             payment_options: {
                 type: Array,
@@ -411,7 +411,7 @@
             },
             getCatProducts(url = null) {
                 axios
-                    .post(url ? url : route("Backend.Products.POS.Items").url(), {
+                    .post(url ? url : route("Backend.Products.POS.Items"), {
                         category_id: this.search_category ? this.search_category.id : null,
                     })
                     .then((res) => {

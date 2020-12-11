@@ -70,15 +70,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.ReturnedSales.List').url()
+                default: () => route('Backend.ReturnedSales.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.ReturnedSales.Delete').url()
+                default: () => route('Backend.ReturnedSales.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.ReturnedSales.Store').url()
+                default: () => route('Backend.ReturnedSales.Store')
             },
             custom_buttons: {
                 type: Array,

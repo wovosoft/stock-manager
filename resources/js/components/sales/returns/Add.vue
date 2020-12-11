@@ -11,7 +11,7 @@
                             v-model="customer"
                             :tag-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): __('not_selected', 'Not Selected')"
                             :option-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): ''"
-                            :api_url="route('Backend.Customers.Search').url()">
+                            :api_url="route('Backend.Customers.Search')">
                         </vue-select>
                         <template v-slot:append>
                             <b-button @click="customer = null, form.customer_id = null" class="font-weight-bold">
@@ -32,7 +32,7 @@
                     v-model="product_temp"
                     :option-text="op=>op?[op.id, op.name, op.code].join(' # '):__('not_selected','Not Selected')"
                     :tag-text="op=>op?[op.id, op.name, op.code].join(' # '):__('not_selected','Not Selected')"
-                    :api_url="route('Backend.Products.Search').url()">
+                    :api_url="route('Backend.Products.Search')">
                 </vue-select>
             </b-input-group>
             <b-table
@@ -113,7 +113,7 @@
                     this.$set(this.item, 'items', []);
                 }
                 if (this.item.customer_id) {
-                    axios.post(route('Backend.Customers.GetByID', {id: this.item.customer_id}).url())
+                    axios.post(route('Backend.Customers.GetByID', {id: this.item.customer_id}))
                         .then(res => {
                             // console.log(res.data)
                             this.customer = res.data;
@@ -151,7 +151,7 @@
             handleSubmit() {
                 if (Array.isArray(this.form.items) && this.form.items.length > 0) {
                     axios
-                        .post(route('Backend.SaleReturns.Store').url(), this.form)
+                        .post(route('Backend.SaleReturns.Store'), this.form)
                         .then(res => {
                             this.$root.msgBox(res.data);
                             this.resetForm();

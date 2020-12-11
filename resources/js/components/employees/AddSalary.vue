@@ -85,7 +85,7 @@
             msgBox, rangeIndexed,
             handleSubmit() {
                 axios
-                    .post(route('Backend.Employees.Salaries.Store', {employee: this.employeeId}).url(), this.form)
+                    .post(route('Backend.Employees.Salaries.Store', {employee: this.employeeId}), this.form)
                     .then(res => {
                         this.$emit('message', res.data);
                         this.$emit('success', true);

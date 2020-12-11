@@ -108,7 +108,7 @@
         },
         methods: {
             getItems() {
-                return axios.post(route("Backend.Purchases.Due", {supplier: this.supplierRecord.id}).url())
+                return axios.post(route("Backend.Purchases.Due", {supplier: this.supplierRecord.id}))
                     .then(res => {
                         this.items = res.data;
                         return res.data;
@@ -124,7 +124,7 @@
                     sdata.supplier_id = this.supplierRecord.id;
                     sdata.payment_method = "Credit";
                     axios
-                        .post(route('Backend.Payments.Purchases.Store', {purchase: sdata.id}).url(), sdata)
+                        .post(route('Backend.Payments.Purchases.Store', {purchase: sdata.id}), sdata)
                         .then(res => {
                             this.$emit("success", true);
                             this.$emit("message", res.data);

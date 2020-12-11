@@ -60,15 +60,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Categories.List').url()
+                default: () => route('Backend.Categories.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Categories.Delete').url()
+                default: () => route('Backend.Categories.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Categories.Store').url()
+                default: () => route('Backend.Categories.Store')
             },
             custom_buttons: {
                 type: Array,

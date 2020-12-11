@@ -157,15 +157,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.Suppliers.List').url()
+                default: () => route('Backend.Suppliers.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.Suppliers.Delete').url()
+                default: () => route('Backend.Suppliers.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.Suppliers.Store').url()
+                default: () => route('Backend.Suppliers.Store')
             },
             custom_buttons: {
                 type: Array,

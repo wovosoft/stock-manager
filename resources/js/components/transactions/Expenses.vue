@@ -127,7 +127,7 @@
             startCase, colSum, colCount, msgBox,
             getTodaysExpenses(ctx) {
                 return axios
-                    .post(route("Backend.Expenses.List", {page: ctx.currentPage}).url(), {
+                    .post(route("Backend.Expenses.List", {page: ctx.currentPage}), {
                         date: this.date,
                         per_page: ctx.perPage || 10,
                         orderBy: ctx.sortBy || 'id',

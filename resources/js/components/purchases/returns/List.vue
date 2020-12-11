@@ -78,15 +78,15 @@
             },
             api_url: {
                 type: String,
-                default: () => route('Backend.PurchaseReturns.List').url()
+                default: () => route('Backend.PurchaseReturns.List')
             },
             trash_url: {
                 type: String,
-                default: () => route('Backend.PurchaseReturns.Delete').url()
+                default: () => route('Backend.PurchaseReturns.Delete')
             },
             submit_url: {
                 type: String,
-                default: () => route('Backend.PurchaseReturns.Store').url()
+                default: () => route('Backend.PurchaseReturns.Store')
             },
             custom_buttons: {
                 type: Array,

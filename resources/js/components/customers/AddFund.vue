@@ -49,7 +49,7 @@
         },
         methods: {
             handleSubmit() {
-                axios.post(route('Backend.Customers.Payments.Add', {customer: this.customer_id}).url(), this.form)
+                axios.post(route('Backend.Customers.Payments.Add', {customer: this.customer_id}), this.form)
                     .then(res => {
                         this.$root.msgBox(res.data);
                         this.$emit('success', true);

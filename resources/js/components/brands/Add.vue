@@ -33,7 +33,7 @@
         props: {
             submit_url: {
                 type: String,
-                default: () => route('Backend.Brands.Store').url()
+                default: () => route('Backend.Brands.Store')
             }
         },
         data() {

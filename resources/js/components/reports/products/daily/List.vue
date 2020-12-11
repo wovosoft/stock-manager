@@ -21,7 +21,7 @@
                     <b-col md="9" sm="12" class="text-right">
                         <b-button variant="dark" size="sm" class="mr-3"
                                   target="_blank"
-                                  :href="route('Backend.Reports.Products.Daily', { date:date,export:'pdf'}).url()"
+                                  :href="route('Backend.Reports.Products.Daily', { date:date,export:'pdf'})"
                                   :title="__('export_report','Export Report')">
                             {{__('export_report',"Export Report")}}
                         </b-button>
@@ -40,7 +40,7 @@
                 small
                 striped
                 bordered
-                :api-url="route('Backend.Reports.Products.Daily', { date,page: dt.current_page}).url()"
+                :api-url="route('Backend.Reports.Products.Daily', { date,page: dt.current_page})"
                 :current-page="dt.current_page"
                 head-variant="dark"
                 :fields="fields"
