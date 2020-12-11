@@ -75,13 +75,13 @@ class DatabaseSeeder extends Seeder
             UnitFactory::new()->create(['name' => $key, 'description' => $value]);
         }
 
-        CategoryFactory::new()->count($count_create)->create();
-        BrandFactory::new()->count($count_create)->create();
-        ProductFactory::new()->count(20)->create();
-        SupplierFactory::new()->count($count_create)->create();
-        CustomerFactory::new()->count($count_create)->create();
-        EmployeeFactory::new()->count($count_create)->create();
-        ExpenseCategoryFactory::new()->count($count_create)->create();
+//        CategoryFactory::new()->count($count_create)->create();
+//        BrandFactory::new()->count($count_create)->create();
+//        ProductFactory::new()->count(20)->create();
+//        SupplierFactory::new()->count($count_create)->create();
+//        CustomerFactory::new()->count($count_create)->create();
+//        EmployeeFactory::new()->count($count_create)->create();
+//        ExpenseCategoryFactory::new()->count($count_create)->create();
 
 
         refreshLanguages();
