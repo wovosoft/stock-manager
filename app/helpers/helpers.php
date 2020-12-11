@@ -235,7 +235,7 @@ if (!function_exists('getSqlWithBindings')) {
     }
 }
 if (!function_exists('generateDummyData')) {
-    function generateDummyData($query)
+    function generateDummyData()
     {
         try {
             Database\Factories\CategoryFactory::new()->count($count_create)->create();
