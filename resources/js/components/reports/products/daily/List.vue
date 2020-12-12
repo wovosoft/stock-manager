@@ -51,14 +51,20 @@
                 <template #foot(id)="row">
                     {{colCount(dt.data,'id')|localNumber}}
                 </template>
-                <template #foot(sales_payable)="row">
-                    {{colSum(dt.data,'sales_payable')|currency}}
+                <template #foot(current_stock)="row">
+                    {{colSum(dt.data,'current_stock')|localNumber}}
                 </template>
-                <template #foot(sales_quantity)="row">
-                    {{colSum(dt.data,'sales_quantity')|localNumber}}
+                <template #foot(addition)="row">
+                    {{colSum(dt.data,'addition')|localNumber}}
                 </template>
-                <template #foot(quantity)="row">
-                    {{colSum(dt.data,'quantity')|localNumber}}
+                <template #foot(subtraction)="row">
+                    {{colSum(dt.data,'subtraction')|localNumber}}
+                </template>
+                <template #foot(remains)="row">
+                    {{colSum(dt.data,'remains')|localNumber}}
+                </template>
+                <template #foot(stock)="row">
+                    {{colSum(dt.data,'stock')|localNumber}}
                 </template>
             </b-table>
             <template #footer>
