@@ -68,7 +68,7 @@
                             <template v-slot:cell(price)="row">
                                 <b-input-group size="sm" :append="$options.filters.currencySymbol(0)">
                                     <b-input type="number" step="any" v-model="row.item.price"
-                                             style="min-width: 80px;"
+                                             style="min-width: 100px;"
                                              :placeholder="__('sales.price', 'Price')" :required="true"/>
                                 </b-input-group>
                             </template>
@@ -357,9 +357,14 @@
                 customer_add_modal_visible: false,
                 item_fields: [
                     {key: "action", label: _t("action", "Action")},
-                    {key: "product_id", label: _t("pid", "PID")},
-                    {key: "name", label: _t("name", "Name")},
-                    {key: "code", label: _t("code", "Code")},
+                    // {key: "product_id", label: _t("pid", "PID")},
+                    {
+                        key: "name", label: _t("name", "Name"),
+                        formatter: (k, d, r) => {
+                            return [r.product_id, r.name, r.code].join(' # ')
+                        }
+                    },
+                    // {key: "code", label: _t("code", "Code")},
                     {key: "price", label: _t("sales.price", "Price")},
                     {key: "quantity", label: _t("quantity", "Quantity")},
                     // {key:'total',label:_t('total','Total')},
