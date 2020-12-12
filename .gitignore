@@ -1,15 +1,8 @@
 /node_modules
 /public/hot
 /public/storage
-/public/course_chapters_sitemap.xml
-/public/courses_sitemap.xml
-/public/job_circulars_sitemap.xml
-/public/question_papers_sitemap.xml
-/public/questions_sitemap.xml
-/public/sitemap_index.xml
-/public/posts_sitemap.xml
-/public/pages_sitemap.xml
 /storage/*.key
+/storage/backups/*.sql
 /storage/app/product_records
 /vendor
 .env
