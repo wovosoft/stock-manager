@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+        <loc>https://questionbook.test/questions_sitemap.xml</loc>
+    
+        <lastmod>2020-06-29T20:42:58+00:00</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://questionbook.test/question_papers_sitemap.xml</loc>
+    
+        <lastmod>2020-06-29T20:42:58+00:00</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://questionbook.test/job_circulars_sitemap.xml</loc>
+    
+        <lastmod>2020-06-29T20:42:58+00:00</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://questionbook.test/courses_sitemap.xml</loc>
+    
+        <lastmod>2020-06-29T20:42:58+00:00</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://questionbook.test/course_chapters_sitemap.xml</loc>
+    
+        <lastmod>2020-06-29T20:42:58+00:00</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://questionbook.test/posts_sitemap.xml</loc>
+    
+        <lastmod>2020-06-29T20:42:58+00:00</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://questionbook.test/pages_sitemap.xml</loc>
+    
+        <lastmod>2020-06-29T20:42:58+00:00</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://questionbook.test/categories_sitemap.xml</loc>
+    
+        <lastmod>2020-06-29T20:42:58+00:00</lastmod>
+    </sitemap>
+</sitemapindex>
