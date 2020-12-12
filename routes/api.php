@@ -14,11 +14,11 @@ use \App\Http\Controllers as CC;
 |
 */
 
-Route::middleware('auth:api')->post('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->post('/user', function (Request $request) {
+    return $request->user()->only(['id', 'name', 'email']);
 });
 
-Route::middleware('auth:api')->name('Api.')->group(function () {
+Route::middleware('auth:sanctum')->name('Api.')->group(function () {
     CC\CategoryController::routes();
     CC\SupplierController::routes();
     CC\CustomerController::routes();

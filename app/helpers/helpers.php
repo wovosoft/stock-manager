@@ -1,10 +1,13 @@
 <?php
 
+use App\Models\Customer;
 use App\Models\Language;
 use App\Models\Setting;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 if (!function_exists('bInitData')) {
     /**

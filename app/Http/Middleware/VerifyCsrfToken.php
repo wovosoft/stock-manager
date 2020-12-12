@@ -12,9 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        'ckfinder/*',
         'sanctum/token',
-        'sanctum/csrf-cookie',
         'api/*'
     ];
 }

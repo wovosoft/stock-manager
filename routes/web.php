@@ -26,8 +26,7 @@ Route::post('/sanctum/token', function (Request $request) {
             'email' => ['The provided credentials are incorrect.'],
         ]);
     }
-
-    return $user->createToken($request->device_name)->plainTextToken;
+    return ["token" => $user->createToken($request->device_name)->plainTextToken];
 });
 
 
@@ -72,15 +71,15 @@ Route::get('routes', function () {
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/{url?}', function () {
-//        if (app()->environment('production')) {
-//            $tt = currentLangTranslations();
-//        } else {
-//            $local_trans = json_decode(\Illuminate\Support\Facades\File::get(resource_path("lang/full.json")));
-//            $tt = [];
-//            foreach ($local_trans as $key => $value) {
-//                $tt[$key] = $value->bn;
-//            }
-//        }
+        //        if (app()->environment('production')) {
+        //            $tt = currentLangTranslations();
+        //        } else {
+        //            $local_trans = json_decode(\Illuminate\Support\Facades\File::get(resource_path("lang/full.json")));
+        //            $tt = [];
+        //            foreach ($local_trans as $key => $value) {
+        //                $tt[$key] = $value->bn;
+        //            }
+        //        }
         return view('layouts.dashboard', [
             "list_languages" => \App\Models\Language::query()
                 ->select(['id', 'name'])
@@ -90,4 +89,3 @@ Route::middleware(['auth'])->group(function () {
         ]);
     })->name('Admin');
 });
-

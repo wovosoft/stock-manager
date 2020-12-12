@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Sale;
+use App\Models\SaleItem;
 use App\Traits\Crud;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
@@ -63,6 +65,8 @@ class CustomerController extends Controller
     {
         Route::name('Customers.')->prefix('customers')->group(function () {
             Route::post("list", [self::class, 'list'])->name('List');
+            Route::get("export_balances", [self::class, 'exportBalances'])->name('ExportBalances');
+            Route::match(['get', 'post'], "input_balances", [self::class, 'inputBalances'])->name('InputBalances');
             Route::post("list/with/dues", [self::class, 'listWithDues'])->name('ListWithDues');
             Route::post("customer/exact/{id}", [self::class, 'getById'])->name('GetByID');
             Route::post("{customer}/returns", [self::class, 'returns'])->name('Returns');
@@ -142,6 +146,74 @@ class CustomerController extends Controller
         try {
             $this->withDues = true;
             return $this->list($request);
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function inputBalances(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return view('pages.importer.customer_balance');
+        }
+        try {
+            $request->validate([
+                "items" => ["required", "json"],
+                "fake_product" => ["required", "numeric"]
+            ]);
+            DB::beginTransaction();
+            $items = json_decode($request->post('items'));
+            foreach ($items as $item) {
+                if ($item->balance > 0.1) {
+                    $sale = new Sale();
+                    $sale
+                        ->forceFill([
+                            "customer_id" => $item->id,
+                            "tax" => 0,
+                            "discount" => 0,
+                            "date" => Carbon::now()->format('Y-m-d'),
+                            "status" => "Processed",
+                            "note" => null,
+                            "paid" => 0,
+                            "total" => $item->balance,
+                            "payable" => $item->balance,
+                            "previous_balance" => 0,
+                            "current_balance" => $item->balance,
+                        ])
+                        ->saveOrFail();
+
+                    (new SaleItem())
+                        ->forceFill([
+                            "sale_id" => $sale->id,
+                            "product_id" => $request->post('fake_product'),
+                            "customer_id" => $sale->customer_id,
+                            "quantity" => 1,
+                            "price" => $item->balance,
+                        ])
+                        ->saveOrFail();
+                }
+            }
+            DB::commit();
+            return successResponse();
+        } catch (\Throwable $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
+    }
+
+    public function exportBalances(Request $request)
+    {
+        try {
+            $items = Customer::query()->select([
+                "customers.id",
+                DB::raw("round(($this->payable),2) as payable"),
+                DB::raw("round(($this->paid),2) as paid"),
+                DB::raw("round(($this->returned),2) as returned"),
+                "balance" => function (Builder $builder) {
+                    $builder->selectRaw("round((payable - paid - returned),2)");
+                },
+            ]);
+            return response()->json($items->get());
         } catch (\Throwable $exception) {
             throw $exception;
         }
