@@ -124,7 +124,7 @@
                                         {{ __('total', 'Total') }}
                                     </b-td>
                                     <b-td :colspan="4" class="text-right font-weight-bold">
-                                        {{(customer_balance + getPayable)|currency}}
+                                        {{(Number(customer_balance) + Number(getPayable))|currency}}
                                     </b-td>
                                 </b-tr>
                             </template>
@@ -146,7 +146,7 @@
                                             v-model="form.payment_amount"/>
                                         <template #append>
                                             <b-button variant="dark"
-                                                      @click="form.payment_amount = (getPayable + customer_balance)">
+                                                      @click="form.payment_amount = (Number(getPayable) + Number(customer_balance))">
                                                 {{ __("full", "Full") }}
                                             </b-button>
                                         </template>
@@ -164,10 +164,8 @@
                             <b-col md="6" sm="12">
                                 <b-form-group :label="__('current_balance', 'Current Balance')">
                                     <div class="form-control">
-                                        {{
-                                        (Number(customer_balance) +
-                                        Number(getPayable) - Number(form.payment_amount)) |
-                                        currency}}
+                                        {{(Number(customer_balance) + Number(getPayable) - Number(form.payment_amount))
+                                        |currency}}
                                     </div>
                                 </b-form-group>
                             </b-col>
