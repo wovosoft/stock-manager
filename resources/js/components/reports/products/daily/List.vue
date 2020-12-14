@@ -19,12 +19,19 @@
                         </b-input-group>
                     </b-col>
                     <b-col md="9" sm="12" class="text-right">
-                        <b-button variant="dark" size="sm" class="mr-3"
-                                  target="_blank"
-                                  :href="route('Backend.Reports.Products.Daily', { date:date,export:'pdf'})"
-                                  :title="__('export_report','Export Report')">
-                            {{__('export_report',"Export Report")}}
-                        </b-button>
+                        <b-button-group size="sm" class="mr-3">
+                            <b-button variant="dark"
+                                      :title="__('refresh','Refresh')"
+                                      @click="$refs.dt_table.refresh()">
+                                <i class="fa fa-sync"></i>
+                            </b-button>
+                            <b-button variant="primary"
+                                      target="_blank"
+                                      :href="route('Backend.Reports.Products.Daily', { date:date,export:'pdf'})"
+                                      :title="__('export_report','Export Report')">
+                                {{__('export_report',"Export Report")}}
+                            </b-button>
+                        </b-button-group>
                         <div class="float-right">
                             <b-input-group :prepend="__('date','Date')" size="sm">
                                 <b-input v-model="date" type="date"/>

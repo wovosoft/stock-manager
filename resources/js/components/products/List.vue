@@ -27,10 +27,18 @@
                   @refreshDatatable="$refs.datatable.refresh()"
         >
             <template v-slot:header_dropdowns>
-                <b-button size="sm" @click="advance_search_shown=!advance_search_shown">
-                    <i class="fa fa-search"/> More
-                    <i class="fa" :class="{'fa-caret-down':!advance_search_shown,'fa-caret-up':advance_search_shown}"/>
-                </b-button>
+                <b-button-group size="sm">
+                    <b-button variant="dark"
+                              :title="__('refresh','Refresh')"
+                              @click="$refs.datatable.refresh()">
+                        <i class="fa fa-sync"></i>
+                    </b-button>
+                    <b-button variant="primary" @click="advance_search_shown=!advance_search_shown">
+                        <i class="fa fa-search"/> More
+                        <i class="fa"
+                           :class="{'fa-caret-down':!advance_search_shown,'fa-caret-up':advance_search_shown}"/>
+                    </b-button>
+                </b-button-group>
             </template>
             <template v-slot:header_bottom_panel>
                 <b-collapse v-model="advance_search_shown">
