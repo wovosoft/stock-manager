@@ -1694,5 +1694,9 @@
     "deposit_payment": {
         "bn": "মূলধন জমা দিন",
         "en": "Deposit Payment"
+    },
+    "cash_collection": {
+        "bn": "নগদ আদায়",
+        "en": "Cash Collection"
     }
 }

@@ -2,6 +2,7 @@
     $types=[
       "expense"=>"দৈনিক খরচ",
       "purchase_payment"=>"বকেয়া পরিশোধ",
+      "cash_collection"=>"নগদ আদায়",
       "purchase_return"=>"ক্রয়কৃত মাল ফেরত",
       "employee_salary"=>"কর্মকর্তা/কর্মচারী বেতন",
       "sale_return"=>"বিক্রিত মাল ফেরত",

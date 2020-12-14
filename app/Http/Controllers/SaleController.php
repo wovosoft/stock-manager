@@ -66,6 +66,7 @@ class SaleController extends Controller
                     $request->post("bank"),
                     $request->post("check"),
                     $request->post("transaction_no"),
+                    true,
                     Carbon::now()->add(CarbonInterval::milliseconds(500))->toDateTimeString()
                 );
                 DB::commit();

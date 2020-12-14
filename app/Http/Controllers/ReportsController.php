@@ -428,7 +428,10 @@ class ReportsController extends Controller
 
             return SalePayment::query()
                 ->select([
-                    DB::raw("'sale_payment' as title"),
+//                    DB::raw("'sale_payment' as title"),
+                    'title' => function (Builder $builder) {
+                        $builder->selectRaw("CASE WHEN sale_payments.is_cash_collection = true THEN 'cash_collection' ELSE 'sale_payment' END");
+                    },
                     'description' => function (Builder $builder) {
                         //deleted_at can be not null.
                         $builder->from('customers')

@@ -29,6 +29,7 @@ class Customer extends BaseModel
         ?string $bank = null,
         ?string $check = null,
         ?string $transaction_no = null,
+        ?bool $isCashCollection = false,
         ?string $created_at = null
     )
     {
@@ -42,6 +43,7 @@ class Customer extends BaseModel
                 "bank" => $bank,
                 "check" => $check,
                 "transaction_no" => $transaction_no,
+                "is_cash_collection" => $isCashCollection ?? false,
                 "created_at" => $created_at ?? Carbon::now()->toDateTimeString()
             ]);
 
