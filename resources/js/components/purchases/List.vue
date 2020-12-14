@@ -132,6 +132,7 @@
     import DtFooter from '@/partials/DtFooter'
     import Datatable, {colSum, colCount} from "@/partials/datatable";
     import DtTable from "@/partials/DtTable";
+    import dayjs from "dayjs";
 
     export default {
         components: {
@@ -186,6 +187,9 @@
                 el.focus();
                 el.print();
             }
+        },
+        mounted() {
+            this.datatable.search_columns.starting_date = dayjs().format('YYYY-MM-DD');
         },
         data() {
             return {

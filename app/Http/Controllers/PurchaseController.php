@@ -61,7 +61,7 @@ class PurchaseController extends Controller
      */
     private function applyPayment(Purchase $purchase, Request $request)
     {
-        if ($request->post('payment_amount')) {
+        if ($request->has('payment_amount') && (float)$request->post('payment_amount')) {
             try {
                 DB::beginTransaction();
                 $supplier = Supplier::query()->findOrFail($purchase->supplier_id);
