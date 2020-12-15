@@ -11,6 +11,10 @@ return [
         [
             "name" => "has dashboard access",
             "description" => "Has Dashboard Access"
+        ],
+        [
+            "name" => "online_order_system",
+            "description" => "Online Order System"
         ]
     ],
     "default_roles" => [

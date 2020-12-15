@@ -23,7 +23,7 @@ export default {
     mounted() {
         this.the_item = this.item;
         if (!this.the_item || !Object.keys(this.item).length) {
-            this.getItem(this.$route.params.id, this.$parent.$props.api_url)
+            this.getItem(this.$route.params.id, this.$parent.$props.api_url || this.$parent._data.api_url)
                 .then(res => {
                     this.the_item = res.data
                 })
