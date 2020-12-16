@@ -43,6 +43,9 @@ Route::middleware('auth:sanctum')->name('Api.')->group(function () {
     Route::post('my-orders/list', [CC\OrderController::class, 'myOrders']);
     Route::post('my-orders/{order}/delete', [CC\OrderController::class, 'delete']);
     Route::post('my-orders/{order}/delete-items/{order_item}', [CC\OrderController::class, 'deleteOrderItem']);
+    Route::post('my-collections/store', [CC\OrderCollectionController::class, 'store']);
+    Route::post('my-collections/list', [CC\OrderCollectionController::class, 'myCollections']);
+    Route::post('my-collections/{order_collection}/delete', [CC\OrderCollectionController::class, 'delete']);
 //    CC\CategoryController::routes();
 //    CC\SupplierController::routes();
 //    CC\CustomerController::routes();

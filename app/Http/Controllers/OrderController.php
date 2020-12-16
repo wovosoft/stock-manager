@@ -39,7 +39,7 @@ class OrderController extends Controller
                     "customer_id" => $request->post('customer_id'),
                     "total" => $total,
                     "paid" => $request->post('paid') ?? 0,
-                    "status" => $request->post('status') ?? "processed",
+                    "status" => $request->post('status') ?? "pending",
                     "note" => $request->post('note') ?? null,
                 ]);
             $order->saveOrFail();
