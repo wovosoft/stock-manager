@@ -37,6 +37,25 @@ Route::post('/auth/login', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->name('Api.')->group(function () {
+    Route::post('my/summery', function (Request $request) {
+        $date = \Carbon\Carbon::parse($request->post('date'))->toDateString();
+
+        $orders = \App\Models\Order::query()
+            ->whereDate('created_at', $date)
+            ->where('user_id', '=', auth()->id());
+
+        $collections = \App\Models\OrderCollection::query()
+            ->whereDate('created_at', $date)
+            ->where('user_id', '=', auth()->id());
+
+        return response()->json([
+            "order_amount" => $orders->sum('total'),
+            "order_quantity" => $orders->count('id'),
+            "order_paid" => $orders->sum('paid'),
+            "collection_amount" => $collections->sum('payment_amount'),
+            "collection_quantity" => $collections->count('id')
+        ]);
+    });
     Route::post('customers/search', [CC\CustomerController::class, 'search']);
     Route::post('products/search', [CC\ProductController::class, 'search']);
     Route::post('orders/store', [CC\OrderController::class, 'store']);
