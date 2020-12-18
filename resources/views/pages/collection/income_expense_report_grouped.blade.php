@@ -145,7 +145,7 @@
             <tr>
                 <th>ক্রঃনং</th>
                 <th>বিবরণ</th>
-                <th>{{$source['title']}}</th>
+                <th>টাকার পরিমাণ</th>
                 <th style="text-align: right;">সময়</th>
             </tr>
             </thead>
