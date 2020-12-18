@@ -63,7 +63,7 @@
     তারিখ : {{\App\Drivers\BanglaConverter::en2bn($date->format('d-m-Y'))}},
     {{$date->locale('bn-BD')->dayName}}
 </div>
-<br>
+<hr>
 <h2 style="text-align: center;">আয়</h2>
 <table style="width: 100%;">
     <thead>
