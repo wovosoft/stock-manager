@@ -388,21 +388,21 @@ class ReportsController extends Controller
                 ->whereDate("employee_salaries.created_at", "=", $date);
 
 
-//            $sale_returns = SaleReturn::query()
-//                ->select([
-//                    DB::raw("'sale_return' as title"),
-//                    'description' => function (Builder $builder) {
-//                        //deleted_at can be not null.
-//                        $builder->from('customers')
-//                            ->where('customers.id', '=', DB::raw('sale_returns.customer_id'))
-//                            ->select('customers.name');
-//                    },
-//                    DB::raw("sale_returns.amount as expense"),
-//                    DB::raw("0 as income"),
-//                    DB::raw("sale_returns.created_at as date")
-//                ])
-//                ->whereNull('sale_returns.deleted_at')
-//                ->whereDate("sale_returns.created_at", "=", $date);
+            $sale_returns = SaleReturn::query()
+                ->select([
+                    DB::raw("'sale_return' as title"),
+                    'description' => function (Builder $builder) {
+                        //deleted_at can be not null.
+                        $builder->from('customers')
+                            ->where('customers.id', '=', DB::raw('sale_returns.customer_id'))
+                            ->select('customers.name');
+                    },
+                    DB::raw("sale_returns.amount as expense"),
+                    DB::raw("0 as income"),
+                    DB::raw("sale_returns.created_at as date")
+                ])
+                ->whereNull('sale_returns.deleted_at')
+                ->whereDate("sale_returns.created_at", "=", $date);
 
             $capital_deposits = CapitalDeposit::query()
                 ->select([
@@ -447,7 +447,7 @@ class ReportsController extends Controller
                 ->union($expenses)
                 ->union($purchase_payments)
                 ->union($purchase_returns)
-//                ->union($sale_returns)
+                ->union($sale_returns)
                 ->union($employee_salaries)
                 ->union($capital_deposits)
                 ->union($capital_withdraws)
@@ -461,7 +461,7 @@ class ReportsController extends Controller
     public function incomeExpense(string $date, ?string $pdf = null, Request $request)
     {
         try {
-            $yesterday_items = $this->getIncomeExpenseReport(Carbon::parse($date)->addDays(-1)->format('Y-m-d'), $request)->get();
+            $yesterday_items = $this->getIncomeExpenseReport(Carbon::parse($date)->previous('day')->toDateString(), $request);
             $previous_balance = $yesterday_items->sum('income') - $yesterday_items->sum('expense');
             if ($pdf == 'pdf') {
                 return \PDF::loadView("pages.collection.income_expense_report", [
