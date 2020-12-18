@@ -117,9 +117,6 @@
         </td>
     </tr>
 </table>
-@if(!$html)
-    <pagebreak></pagebreak>
-@endif
 @php
     $sources=[
         'income'=>[
