@@ -64,6 +64,7 @@
     {{$date->locale('bn-BD')->dayName}}
 </div>
 <br>
+<h2 style="text-align: center;">আয়</h2>
 <table style="width: 100%;">
     <thead>
     <tr>
@@ -101,6 +102,7 @@
     </tr>
     </tfoot>
 </table>
+<h2 style="text-align: center;">ব্যয়</h2>
 <table style="width: 100%;">
     <thead>
     <tr>
