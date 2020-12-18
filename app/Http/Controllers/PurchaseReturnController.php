@@ -15,6 +15,7 @@ class PurchaseReturnController extends Controller
     protected string $model = PurchaseReturn::class;
     public array $search_selects;
     public array $search_fields;
+    public string $date_range_by = "purchase_returns.created_at";
     public array $listWith;
     use Crud;
 

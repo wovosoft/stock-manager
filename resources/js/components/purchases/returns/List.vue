@@ -2,8 +2,10 @@
     <div>
         <dt-table :title="__(title,startCase(title))"
                   v-model="search"
+                  enable-date-range
                   :fields="fields"
                   :datatable="datatable"
+                  @refreshDatatable="$refs.datatable.refresh()"
                   :custom_buttons="custom_buttons">
             <template v-slot:table>
                 <b-table ref="datatable" v-bind="commonDtOptions()">
@@ -37,7 +39,7 @@
             </template>
             <template v-slot:header_dropdowns>
                 <b-button size="sm" variant="primary" v-b-modal:returns-add>
-                    {{_t('add', 'Add')}}
+                    {{__('add', 'Add')}}
                 </b-button>
             </template>
         </dt-table>
@@ -110,6 +112,10 @@
                 });
                 this.$bvModal.show('returns-add');
             }
+        },
+        beforeMount() {
+            let date = new Date();
+            this.datatable.search_columns.starting_date = [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('-');
         },
         data() {
             return {

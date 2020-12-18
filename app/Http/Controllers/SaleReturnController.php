@@ -15,6 +15,7 @@ class SaleReturnController extends Controller
     protected string $model = SaleReturn::class;
     public array $search_selects;
     public array $search_fields;
+    public string $date_range_by = "sale_returns.created_at";
     public array $listWith;
     use Crud;
 

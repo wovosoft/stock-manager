@@ -1,10 +1,13 @@
 <template>
     <div>
-        <dt-table :title="__(title,startCase(title))"
-                  v-model="search"
-                  :fields="fields"
-                  :datatable="datatable"
-                  :custom_buttons="custom_buttons">
+        <dt-table
+            enable-date-range
+            :title="__(title,startCase(title))"
+            v-model="search"
+            :fields="fields"
+            :datatable="datatable"
+            @refreshDatatable="$refs.datatable.refresh()"
+            :custom_buttons="custom_buttons">
             <template v-slot:table>
                 <b-table ref="datatable" v-bind="commonDtOptions()">
                     <template v-slot:cell(action)="row">
@@ -92,6 +95,10 @@
                 type: Array,
                 default: () => []
             },
+        },
+        beforeMount() {
+            let date = new Date();
+            this.datatable.search_columns.starting_date = [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('-');
         },
         methods: {
             colSum,
