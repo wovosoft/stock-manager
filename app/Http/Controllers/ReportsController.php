@@ -31,6 +31,7 @@ class ReportsController extends Controller
             Route::match(['get', 'post'], 'customers/sales/export/{pdf?}', [self::class, 'customerSalesReport'])->name("Customers.Sales");
             Route::match(['get', 'post'], 'suppliers/purchases/{pdf?}', [self::class, 'supplierPurchasesReport'])->name("Suppliers.Purchases");
             Route::match(['get', 'post'], 'income_expenses/{date}/{pdf?}', [self::class, 'incomeExpense'])->name("IncomeExpense");
+            Route::match(['get', 'post'], 'income_expenses_grouped/{date}/{pdf?}', [self::class, 'incomeExpenseGrouped'])->name("IncomeExpenseGrouped");
             Route::match(['get', 'post'], 'financial_report/{pdf?}', [self::class, 'financialReport'])->name("ShortFinancialReport");
         });
     }
@@ -482,6 +483,31 @@ class ReportsController extends Controller
             return $this
                 ->getIncomeExpenseReport($date, '=', $request)
                 ->paginate($request->post('per_page') ?? 30);
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function incomeExpenseGrouped(string $date, ?string $pdf = null, Request $request)
+    {
+        try {
+            $yesterday_items = $this->getIncomeExpenseReport($date, '<', $request);
+            $previous_balance = $yesterday_items->sum('income') - $yesterday_items->sum('expense');
+
+            if ($pdf == 'pdf') {
+                return \PDF::loadView("pages.collection.income_expense_report_grouped", [
+                    "items" => $this->getIncomeExpenseReport($date, '=', $request)->get(),
+                    "date" => Carbon::parse($date),
+                    "previous_balance" => $previous_balance,
+                    "html" => false
+                ])->stream("supplier_purchases_report.pdf");
+            }
+            return view("pages.collection.income_expense_report_grouped", [
+                "items" => $this->getIncomeExpenseReport($date, '=', $request)->get(),
+                "date" => Carbon::parse($date),
+                "previous_balance" => $previous_balance,
+                "html" => true
+            ]);
         } catch (\Throwable $exception) {
             throw $exception;
         }
