@@ -356,21 +356,21 @@ class ReportsController extends Controller
                 ->whereNull('purchase_payments.deleted_at')
                 ->whereDate("purchase_payments.created_at", $condition, $date);
 
-            $purchase_returns = PurchaseReturn::query()
-                ->select([
-                    DB::raw("'purchase_return' as title"),
-                    'description' => function (Builder $builder) {
-                        //deleted_at can be not null.
-                        $builder->from('suppliers')
-                            ->where('suppliers.id', '=', DB::raw('purchase_returns.supplier_id'))
-                            ->select('suppliers.name');
-                    },
-                    DB::raw("0 as expense"),
-                    DB::raw("purchase_returns.amount as income"),
-                    DB::raw("purchase_returns.created_at as date")
-                ])
-                ->whereNull('purchase_returns.deleted_at')
-                ->whereDate("purchase_returns.created_at", $condition, $date);
+//            $purchase_returns = PurchaseReturn::query()
+//                ->select([
+//                    DB::raw("'purchase_return' as title"),
+//                    'description' => function (Builder $builder) {
+//                        //deleted_at can be not null.
+//                        $builder->from('suppliers')
+//                            ->where('suppliers.id', '=', DB::raw('purchase_returns.supplier_id'))
+//                            ->select('suppliers.name');
+//                    },
+//                    DB::raw("0 as expense"),
+//                    DB::raw("purchase_returns.amount as income"),
+//                    DB::raw("purchase_returns.created_at as date")
+//                ])
+//                ->whereNull('purchase_returns.deleted_at')
+//                ->whereDate("purchase_returns.created_at", $condition, $date);
 
             $employee_salaries = EmployeeSalary::query()
                 ->select([
@@ -389,21 +389,21 @@ class ReportsController extends Controller
                 ->whereDate("employee_salaries.created_at", $condition, $date);
 
 
-            $sale_returns = SaleReturn::query()
-                ->select([
-                    DB::raw("'sale_return' as title"),
-                    'description' => function (Builder $builder) {
-                        //deleted_at can be not null.
-                        $builder->from('customers')
-                            ->where('customers.id', '=', DB::raw('sale_returns.customer_id'))
-                            ->select('customers.name');
-                    },
-                    DB::raw("sale_returns.amount as expense"),
-                    DB::raw("0 as income"),
-                    DB::raw("sale_returns.created_at as date")
-                ])
-                ->whereNull('sale_returns.deleted_at')
-                ->whereDate("sale_returns.created_at", $condition, $date);
+//            $sale_returns = SaleReturn::query()
+//                ->select([
+//                    DB::raw("'sale_return' as title"),
+//                    'description' => function (Builder $builder) {
+//                        //deleted_at can be not null.
+//                        $builder->from('customers')
+//                            ->where('customers.id', '=', DB::raw('sale_returns.customer_id'))
+//                            ->select('customers.name');
+//                    },
+//                    DB::raw("sale_returns.amount as expense"),
+//                    DB::raw("0 as income"),
+//                    DB::raw("sale_returns.created_at as date")
+//                ])
+//                ->whereNull('sale_returns.deleted_at')
+//                ->whereDate("sale_returns.created_at", $condition, $date);
 
             $capital_deposits = CapitalDeposit::query()
                 ->select([
@@ -447,8 +447,8 @@ class ReportsController extends Controller
                 ->whereDate("sale_payments.created_at", $condition, $date)
                 ->union($expenses)
                 ->union($purchase_payments)
-                ->union($purchase_returns)
-                ->union($sale_returns)
+//                ->union($purchase_returns)
+//                ->union($sale_returns)
                 ->union($employee_salaries)
                 ->union($capital_deposits)
                 ->union($capital_withdraws)

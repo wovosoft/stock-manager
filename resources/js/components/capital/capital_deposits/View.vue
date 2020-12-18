@@ -1,5 +1,5 @@
 <template>
-    <b-modal @hidden="$router.go(-1)"
+    <b-modal @hidden="$router.go(-1),$emit('reset',true)"
              visible
              size="xl"
              header-bg-variant="dark"

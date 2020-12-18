@@ -3,11 +3,11 @@
         "cash_collection"=>"নগদ আদায়",
         "sale_payment"=>"বকেয়া আদায়",
         "capital_deposit"=>"মূলধন জমা",
-        "purchase_return"=>"ক্রয়কৃত মাল ফেরত",
+        //"purchase_return"=>"ক্রয়কৃত মাল ফেরত",
     ];
     $expense_types=[
          "expense"=>"দৈনিক খরচ",
-         "sale_return"=>"বিক্রিত মাল ফেরত",
+         //"sale_return"=>"বিক্রিত মাল ফেরত",
          "purchase_payment"=>"বকেয়া পরিশোধ",
          "employee_salary"=>"কর্মকর্তা/কর্মচারী বেতন",
          "capital_withdraw"=>"মূলধন উত্তোলন",
