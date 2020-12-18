@@ -1,18 +1,22 @@
 <template>
-    <b-card body-class="p-0">
+    <b-card body-class="p-0" header-class="w-100">
         <template #header>
             <b-row>
-                <b-col md="7" sm="12">
+                <b-col md="4" sm="12">
                     <h4>{{__('daily_transactions','Daily Transaction')}}</h4>
                 </b-col>
-                <b-col>
+                <b-col md="5" sm="12">
                     <b-button size="sm" target="_blank" variant="dark"
                               :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'html'})">
-                        View
+                        {{__('view','View')}}
                     </b-button>
                     <b-button size="sm" target="_blank" variant="dark"
                               :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'pdf'})">
-                        Export
+                        {{__('export','Export')}}
+                    </b-button>
+                    <b-button size="sm" target="_blank" variant="dark"
+                              :href="route('Backend.Reports.IncomeExpenseGrouped',{date:date,pdf:'pdf'})">
+                        Grouped Export
                     </b-button>
                 </b-col>
                 <b-col md="3" sm="12">

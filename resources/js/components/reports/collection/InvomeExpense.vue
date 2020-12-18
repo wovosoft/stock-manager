@@ -47,6 +47,10 @@
                                   :href="route('Backend.Reports.IncomeExpense',{date:date,pdf:'pdf'})">
                             Export
                         </b-button>
+                        <b-button size="sm" target="_blank" variant="dark"
+                                  :href="route('Backend.Reports.IncomeExpenseGrouped',{date:date,pdf:'pdf'})">
+                            Grouped Export
+                        </b-button>
                     </b-col>
                     <b-col>
                         <b-input-group prepend="Per Page" size="sm">
