@@ -164,12 +164,12 @@
     </tr>
     <tr>
         <td style="border: 0;">মোট খরচঃ</td>
-        <td style="border: 0;">{{\App\Drivers\BanglaConverter::en2bn(number_format($items->sum('expense'),2))}}টাকা
+        <td style="border: 0;">{{\App\Drivers\BanglaConverter::en2bn(number_format($items->sum('expense'),2))}} টাকা
         </td>
     </tr>
     <tr>
         <td style="border: 0;"> অবশিষ্টঃ</td>
-        <td style="border: 0;">{{\App\Drivers\BanglaConverter::en2bn(number_format($previous_balance +$items->sum('income')- $items->sum('expense'),2))}}
+        <td style="border: 0;">{{\App\Drivers\BanglaConverter::en2bn(number_format(($previous_balance + $items->sum('income') - $items->sum('expense')),2))}}
             টাকা
         </td>
     </tr>
