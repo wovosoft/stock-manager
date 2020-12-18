@@ -320,7 +320,7 @@ class ReportsController extends Controller
         }
     }
 
-    private function getIncomeExpenseReport(string $date, Request $request)
+    private function getIncomeExpenseReport(string $date, string $condition = '=', Request $request)
     {
         try {
             $expenses = Expense::query()
@@ -337,7 +337,7 @@ class ReportsController extends Controller
                     DB::raw("expenses.created_at as date")
                 ])
                 ->whereNull('expenses.deleted_at')
-                ->whereDate("expenses.created_at", "=", $date);
+                ->whereDate("expenses.created_at", $condition, $date);
 
             $purchase_payments = PurchasePayment::query()
                 ->select([
@@ -353,7 +353,7 @@ class ReportsController extends Controller
                     DB::raw("purchase_payments.created_at as date")
                 ])
                 ->whereNull('purchase_payments.deleted_at')
-                ->whereDate("purchase_payments.created_at", "=", $date);
+                ->whereDate("purchase_payments.created_at", $condition, $date);
 
             $purchase_returns = PurchaseReturn::query()
                 ->select([
@@ -369,7 +369,7 @@ class ReportsController extends Controller
                     DB::raw("purchase_returns.created_at as date")
                 ])
                 ->whereNull('purchase_returns.deleted_at')
-                ->whereDate("purchase_returns.created_at", "=", $date);
+                ->whereDate("purchase_returns.created_at", $condition, $date);
 
             $employee_salaries = EmployeeSalary::query()
                 ->select([
@@ -385,7 +385,7 @@ class ReportsController extends Controller
                     DB::raw("employee_salaries.created_at as date")
                 ])
                 ->whereNull('employee_salaries.deleted_at')
-                ->whereDate("employee_salaries.created_at", "=", $date);
+                ->whereDate("employee_salaries.created_at", $condition, $date);
 
 
             $sale_returns = SaleReturn::query()
@@ -402,7 +402,7 @@ class ReportsController extends Controller
                     DB::raw("sale_returns.created_at as date")
                 ])
                 ->whereNull('sale_returns.deleted_at')
-                ->whereDate("sale_returns.created_at", "=", $date);
+                ->whereDate("sale_returns.created_at", $condition, $date);
 
             $capital_deposits = CapitalDeposit::query()
                 ->select([
@@ -413,7 +413,7 @@ class ReportsController extends Controller
                     DB::raw("created_at as date")
                 ])
                 ->whereNull('capital_deposits.deleted_at')
-                ->whereDate("created_at", "=", $date);
+                ->whereDate("created_at", $condition, $date);
 
             $capital_withdraws = CapitalWithdraw::query()
                 ->select([
@@ -424,7 +424,7 @@ class ReportsController extends Controller
                     DB::raw("created_at as date")
                 ])
                 ->whereNull('capital_withdraws.deleted_at')
-                ->whereDate("created_at", "=", $date);
+                ->whereDate("created_at", $condition, $date);
 
             return SalePayment::query()
                 ->select([
@@ -443,7 +443,7 @@ class ReportsController extends Controller
                     DB::raw("sale_payments.created_at as date")
                 ])
                 ->whereNull('sale_payments.deleted_at')
-                ->whereDate("sale_payments.created_at", "=", $date)
+                ->whereDate("sale_payments.created_at", $condition, $date)
                 ->union($expenses)
                 ->union($purchase_payments)
                 ->union($purchase_returns)
@@ -461,24 +461,26 @@ class ReportsController extends Controller
     public function incomeExpense(string $date, ?string $pdf = null, Request $request)
     {
         try {
-            $yesterday_items = $this->getIncomeExpenseReport(Carbon::parse($date)->previous('day')->toDateString(), $request);
+            $yesterday_items = $this->getIncomeExpenseReport($date, '<', $request);
             $previous_balance = $yesterday_items->sum('income') - $yesterday_items->sum('expense');
+
             if ($pdf == 'pdf') {
                 return \PDF::loadView("pages.collection.income_expense_report", [
-                    "items" => $this->getIncomeExpenseReport($date, $request)->get(),
+                    "items" => $this->getIncomeExpenseReport($date, '=', $request)->get(),
                     "date" => Carbon::parse($date),
                     "previous_balance" => $previous_balance,
                     "html" => false
                 ])->stream("supplier_purchases_report.pdf");
             } elseif ($pdf == 'html') {
                 return view("pages.collection.income_expense_report", [
-                    "items" => $this->getIncomeExpenseReport($date, $request)->get(),
+                    "items" => $this->getIncomeExpenseReport($date, '=', $request)->get(),
                     "date" => Carbon::parse($date),
                     "previous_balance" => $previous_balance,
                     "html" => true
                 ]);
             }
-            return $this->getIncomeExpenseReport($date, $request)
+            return $this
+                ->getIncomeExpenseReport($date, '=', $request)
                 ->paginate($request->post('per_page') ?? 30);
         } catch (\Throwable $exception) {
             throw $exception;
