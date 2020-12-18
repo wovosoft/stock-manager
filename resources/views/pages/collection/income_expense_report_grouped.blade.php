@@ -134,6 +134,9 @@
     ];
 @endphp
 @foreach($sources as $source_key=>$source)
+    @if(!$html)
+        <pagebreak></pagebreak>
+    @endif
     <h2 style="text-align: center;">{{$source['title']}}</h2>
     @foreach($source['types'] as $type_key=>$type_value)
         <h3 style="text-align: center;">{{$type_value}}</h3>
