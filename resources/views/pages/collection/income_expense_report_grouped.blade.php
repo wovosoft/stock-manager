@@ -120,7 +120,6 @@
 @if(!$html)
     <pagebreak></pagebreak>
 @endif
-<h2 style="text-align: center;">বিস্তারিত বিবরণ</h2>
 @php
     $sources=[
         'income'=>[
@@ -137,6 +136,7 @@
     @if(!$html)
         <pagebreak></pagebreak>
     @endif
+    <h2 style="text-align: center;">বিস্তারিত বিবরণ</h2>
     <h2 style="text-align: center;">{{$source['title']}}</h2>
     @foreach($source['types'] as $type_key=>$type_value)
         <h3 style="text-align: center;">{{$type_value}}</h3>
