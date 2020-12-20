@@ -4,16 +4,17 @@
 <table style="width: 100%">
     <tr>
         <td style="width: 50%;vertical-align: top;">
+
             {{$sale->customer->name}}<br>
             {{$sale->customer->village}}<br>
             মোবাইল নং: {{\App\Drivers\BanglaConverter::en2bn($sale->customer->phone)}}<br>
+            @php
+                $sale_date=\Carbon\Carbon::parse($sale->created_at)->locale('bn-BD');
+            @endphp
         </td>
         <td style="text-align: right;vertical-align: top;">
             ক্রমিক নং- {{\App\Drivers\BanglaConverter::en2bn($sale->id)}}<br>
             তারিখ : {{\App\Drivers\BanglaConverter::en2bn($sale_date->format('d-m-Y'))}},
-            @php
-                $sale_date=\Carbon\Carbon::parse($sale->created_at)->locale('bn-BD');
-            @endphp
             {{$sale_date->dayName}}
         </td>
     </tr>
