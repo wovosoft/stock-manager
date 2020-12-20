@@ -1,10 +1,9 @@
 <h3 style="text-align: center;margin: 0;padding: 0;">
-    বিসমিল্লাহির রাহমানির রাহিম<br>
+    বিসমিল্লাহির রাহমানির রাহিম
 </h3>
-<table style="width: 100%">
+<table style="width: 100%;font-size: small;">
     <tr>
         <td style="width: 50%;vertical-align: top;">
-
             {{$sale->customer->name}}<br>
             {{$sale->customer->village}}<br>
             মোবাইল নং: {{\App\Drivers\BanglaConverter::en2bn($sale->customer->phone)}}<br>

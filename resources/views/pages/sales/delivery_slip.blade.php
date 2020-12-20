@@ -2,7 +2,7 @@
 <div style="text-align: center;">
     ডেলিভারি স্লিপ
 </div>
-<table style="width: 100%" class="invoice table table-sm table-striped table-bordered">
+<table style="width: 100%;font-size: small;" class="invoice table table-sm table-striped table-bordered">
     <thead class="bg-dark text-white">
     <tr>
         <td>বর্ণনা</td>

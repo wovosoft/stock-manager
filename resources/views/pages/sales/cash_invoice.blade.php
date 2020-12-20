@@ -1,10 +1,10 @@
-<div style="text-align: center;">
+<div style="text-align: center;font-size: small;">
     ক্যাশ মেমো
 </div>
-<table style="width: 100%" class="invoice table table-sm table-striped table-bordered">
+<table style="width: 100%;font-size: small;" class="invoice table table-sm table-striped table-bordered">
     <thead class="bg-dark text-white">
     <tr>
-        <td>বর্ণনা</td>
+        <td style="min-width: 30%;">বর্ণনা</td>
         <td>দর</td>
         <td>পরিমাণ</td>
         <td>মোট</td>

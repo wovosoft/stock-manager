@@ -47,7 +47,7 @@
         }
     </style>
 </head>
-<body style="width: 45%;">
+<body style="width: 48%;">
 
 @if($is_delivery)
     @include("pages.sales.invoice_header")
