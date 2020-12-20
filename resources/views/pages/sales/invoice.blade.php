@@ -18,7 +18,7 @@
         }
 
         table.invoice th, table.invoice td {
-            padding: 5px 10px;
+            padding: 3px 5px;
         }
 
         /*table.invoice tbody tr:nth-child(odd) {*/
