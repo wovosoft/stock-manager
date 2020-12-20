@@ -96,7 +96,7 @@
     </tr>
     </tfoot>
 </table>
-<div style="text-align: center;position: absolute;margin-top: -50px;margin-left: 20px;">
+<div style="text-align: center;position: absolute;margin-top: -50px;margin-left: 10px;">
     .............................<br>
     স্বাক্ষর ও তারিখ
 </div>
