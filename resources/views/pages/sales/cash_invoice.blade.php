@@ -1,4 +1,3 @@
-
 <div style="text-align: center;">
     ক্যাশ মেমো
 </div>
@@ -19,7 +18,7 @@
             </td>
 
             <td>
-                {{\App\Drivers\BanglaConverter::en2bn(number_format($sale_item->price,2))}} টাকা
+                {{\App\Drivers\BanglaConverter::en2bn(number_format($sale_item->price,2))}}
             </td>
 
             <td>
@@ -30,7 +29,7 @@
             </td>
 
             <td>
-                {{\App\Drivers\BanglaConverter::en2bn(number_format($sale_item->total,2))}} টাকা
+                {{\App\Drivers\BanglaConverter::en2bn(number_format($sale_item->total,2))}}
             </td>
 
         </tr>
@@ -51,17 +50,24 @@
             মোটঃ
         </td>
         <td>
-            {{\App\Drivers\BanglaConverter::en2bn($sale->payable)}} টাকা
+            {{\App\Drivers\BanglaConverter::en2bn($sale->payable)}}
         </td>
     </tr>
 
-    <tr>
+    <tr style="border-bottom: 1px solid lightgray;">
         <td colspan="3" class="text-right">
             পূর্বের জেরঃ
         </td>
         <td>
             {{\App\Drivers\BanglaConverter::en2bn(number_format($sale->previous_balance ,2))}}
-            টাকা
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3" class="text-right">
+            সর্বমোটঃ
+        </td>
+        <td>
+            {{\App\Drivers\BanglaConverter::en2bn(number_format(($sale->previous_balance + $sale->payable),2))}}
         </td>
     </tr>
     <tr>
@@ -69,25 +75,28 @@
             জমাঃ
         </td>
         <td>
-            {{\App\Drivers\BanglaConverter::en2bn(number_format($sale->paid,2))}} টাকা
+            {{\App\Drivers\BanglaConverter::en2bn(number_format($sale->paid,2))}}
         </td>
     </tr>
-    <tr>
+    <tr style="border-top:1px solid lightgray;">
         <td colspan="3" class="text-right">
             বর্তমান জেরঃ
         </td>
         <td>
             {{\App\Drivers\BanglaConverter::en2bn(number_format($sale->current_balance,2))}}
-            টাকা
-        </td>
-    </tr>
-
-    <tr>
-        <td style="font-size: small;">
-            @php($date=\Carbon\Carbon::now()->locale('bn-BD'))
-            আজকের তারিখঃ {{\App\Drivers\BanglaConverter::en2bn($date->format('d-m-Y'))}},
-            {{$date->dayName}} । <span style="color: lightgray;">Developed by - WovoSoft</span>
         </td>
     </tr>
     </tfoot>
 </table>
+<br>
+<br>
+<br>
+<div style="text-align: center;">
+    .............................<br>
+    স্বাক্ষর ও তারিখ
+</div>
+<div style="font-size: smaller;">
+    @php($date=\Carbon\Carbon::now()->locale('bn-BD'))
+    আজকের তারিখঃ {{\App\Drivers\BanglaConverter::en2bn($date->format('d-m-Y'))}},
+    {{$date->dayName}} । <span style="color: lightgray;">Developed by - WovoSoft</span>
+</div>
