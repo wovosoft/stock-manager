@@ -100,8 +100,8 @@
     .............................<br>
     স্বাক্ষর ও তারিখ
 </div>
-<div style="font-size: smaller;">
-    @php($date=\Carbon\Carbon::now()->locale('bn-BD'))
-    আজকের তারিখঃ {{\App\Drivers\BanglaConverter::en2bn($date->format('d-m-Y'))}},
-    {{$date->dayName}} । <span style="color: lightgray;">Developed by - WovoSoft</span>
-</div>
+{{--<div style="font-size: smaller;">--}}
+{{--    @php($date=\Carbon\Carbon::now()->locale('bn-BD'))--}}
+{{--    আজকের তারিখঃ {{\App\Drivers\BanglaConverter::en2bn($date->format('d-m-Y'))}},--}}
+{{--    {{$date->dayName}} । <span style="color: lightgray;">Developed by - WovoSoft</span>--}}
+{{--</div>--}}
