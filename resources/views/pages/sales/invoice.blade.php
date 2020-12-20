@@ -21,8 +21,11 @@
             padding: 5px 10px;
         }
 
-        table.invoice tbody tr:nth-child(odd) {
-            background-color: lightgray;
+        /*table.invoice tbody tr:nth-child(odd) {*/
+        /*    background-color: lightgray;*/
+        /*}*/
+        table.invoice tbody tr {
+            border: 1px solid lightgray;
         }
 
         table.invoice thead tr {
