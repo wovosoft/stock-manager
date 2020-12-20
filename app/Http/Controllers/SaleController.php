@@ -276,6 +276,7 @@ class SaleController extends Controller
                 "sale" => $sale,
                 "is_delivery" => $request->get('is_delivery') == "yes",
                 "invoice_both" => $request->get('invoice_both') == "yes",
+                "type"=>$type
             ]);
         }
 
@@ -283,6 +284,7 @@ class SaleController extends Controller
             "sale" => $sale,
             "is_delivery" => $request->get('is_delivery') == "yes",
             "invoice_both" => $request->get('invoice_both') == "yes",
+            "type"=>$type
         ])->stream("invoice-$sale_id.pdf");
     }
 

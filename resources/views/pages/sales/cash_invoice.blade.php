@@ -54,13 +54,17 @@
         </td>
     </tr>
 
-    <tr style="border-bottom: 1px solid lightgray;">
+    <tr>
         <td colspan="3" class="text-right">
             পূর্বের জেরঃ
         </td>
         <td>
             {{\App\Drivers\BanglaConverter::en2bn(number_format($sale->previous_balance ,2))}}
         </td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+        <td colspan="2" style="border-top: 1px solid lightgray;"></td>
     </tr>
     <tr>
         <td colspan="3" class="text-right">
@@ -78,7 +82,11 @@
             {{\App\Drivers\BanglaConverter::en2bn(number_format($sale->paid,2))}}
         </td>
     </tr>
-    <tr style="border-top:1px solid lightgray;">
+    <tr>
+        <td colspan="2"></td>
+        <td colspan="2" style="border-top: 1px solid lightgray;"></td>
+    </tr>
+    <tr>
         <td colspan="3" class="text-right">
             বর্তমান জেরঃ
         </td>
@@ -88,10 +96,7 @@
     </tr>
     </tfoot>
 </table>
-<br>
-<br>
-<br>
-<div style="text-align: center;">
+<div style="text-align: center;position: absolute;margin-top: -50px;margin-left: 20px;">
     .............................<br>
     স্বাক্ষর ও তারিখ
 </div>
