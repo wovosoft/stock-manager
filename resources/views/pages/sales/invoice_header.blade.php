@@ -4,27 +4,18 @@
 <table style="width: 100%">
     <tr>
         <td style="width: 50%;vertical-align: top;">
-            ক্রমিক নং- {{\App\Drivers\BanglaConverter::en2bn($sale->id)}}<br>
-            ক্রেতার নামঃ {{$sale->customer->name}}<br>
+            {{$sale->customer->name}}<br>
+            {{$sale->customer->village}}<br>
             মোবাইল নং: {{\App\Drivers\BanglaConverter::en2bn($sale->customer->phone)}}<br>
-            ঠিকানা: {{$sale->customer->village}}<br>
-
+        </td>
+        <td style="text-align: right;vertical-align: top;">
+            ক্রমিক নং- {{\App\Drivers\BanglaConverter::en2bn($sale->id)}}<br>
+            তারিখ : {{\App\Drivers\BanglaConverter::en2bn($sale_date->format('d-m-Y'))}},
             @php
                 $sale_date=\Carbon\Carbon::parse($sale->created_at)->locale('bn-BD');
             @endphp
-            তারিখ : {{\App\Drivers\BanglaConverter::en2bn($sale_date->format('d-m-Y'))}},
             {{$sale_date->dayName}}
         </td>
-        {{--        <td style="text-align: right;vertical-align: top;">--}}
-        {{--            @if(_s('invoice_header'))--}}
-        {{--                {!! _s('invoice_header') !!}--}}
-        {{--            @else--}}
-        {{--                <h3 style="margin: 0;padding: 0;"> বিসমিল্লাহ এন্টারপ্রাইজ</h3>--}}
-        {{--                প্রোঃ মোঃ আনোয়ার হোসেন<br>--}}
-        {{--                ঠাকুরগাঁও রোড, ঠাকুরগাঁও<br>--}}
-        {{--                মোবাইল নং: {{\App\Drivers\BanglaConverter::en2bn("01728316509")}}--}}
-        {{--            @endif--}}
-        {{--        </td>--}}
     </tr>
 </table>
 
