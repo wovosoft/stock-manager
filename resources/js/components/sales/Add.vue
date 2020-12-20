@@ -292,10 +292,10 @@
                 id="print_invoice"
                 aspect="16by9"
                 allowfullscreen
-                :src="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'html'})"/>
+                :src="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'html',invoice_both:'yes'})"/>
             <template v-slot:modal-footer="{close}">
                 <b-button
-                    :href="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'pdf'})"
+                    :href="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'pdf',invoice_both:'yes'})"
                     target="_blank"
                     variant="primary">
                     <i class="fa fa-file-pdf"></i>

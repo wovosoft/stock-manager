@@ -77,8 +77,7 @@ class SaleController extends Controller
         }
     }
 
-    private
-    function applySaleItems(Sale $sale, Request $request)
+    private function applySaleItems(Sale $sale, Request $request)
     {
         try {
             foreach ($request->post('items') as $si) {
@@ -97,8 +96,7 @@ class SaleController extends Controller
         }
     }
 
-    public
-    function store(Request $request)
+    public function store(Request $request)
     {
         try {
             $request->validate([
@@ -147,8 +145,7 @@ class SaleController extends Controller
         }
     }
 
-    public
-    function list(Request $request)
+    public function list(Request $request)
     {
         try {
             $items = Sale::query()

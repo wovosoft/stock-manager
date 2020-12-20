@@ -17,6 +17,7 @@ class CreateOrderCollectionsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('payment_id')->nullable();
             $table->double('previous_balance', null, 2)->default(0);
             $table->double('payment_amount', null, 2)->default(0);
             $table->double('current_balance', null, 2)->default(0);

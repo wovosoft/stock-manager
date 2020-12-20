@@ -52,6 +52,7 @@
                         <b-col md="6" sm="12">
                             <b-form-group :label="__('payment_amount','Payment Amount')">
                                 <b-input
+                                    :min="0"
                                     type="number"
                                     step="any"
                                     :required="true"
@@ -149,6 +150,10 @@
         methods: {
             startCase, colSum, colCount, msgBox,
             handleSubmit(hide) {
+                if (!Number(this.form.payment_amount)) {
+                    alert("Invalid Data");
+                    return false;
+                }
                 axios
                     .post(route('Backend.Capital.Deposits.Store'), this.form)
                     .then(res => {
@@ -185,7 +190,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

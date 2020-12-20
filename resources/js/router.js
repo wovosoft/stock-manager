@@ -126,6 +126,32 @@ export default new VueRouter({
                             component: () => import("@/components/sales/returns/View")
                         },
                     ]
+                },
+                {
+                    path: 'order_list',
+                    name: 'OrdersList',
+                    meta: {breadcrumb: 'Orders List', title: _t('order_returns', 'List Orders')},
+                    component: () => import("@/components/sales/orders/List"),
+                    children: [
+                        {
+                            path: 'add',
+                            name: 'OrdersAdd',
+                            meta: {breadcrumb: 'Add', title: _t('new_order', 'New Order')},
+                            component: () => import("@/components/sales/orders/Add")
+                        },
+                        {
+                            path: 'add/:id?',
+                            name: 'OrdersEdit',
+                            meta: {breadcrumb: 'Add', title: _t('edit_order', 'Edit Order')},
+                            component: () => import("@/components/sales/orders/Add")
+                        },
+                        {
+                            path: 'view/:id?',
+                            name: 'OrdersView',
+                            meta: {breadcrumb: 'View Return', title: _t('view_order', 'View Order')},
+                            component: () => import("@/components/sales/orders/View")
+                        },
+                    ]
                 }
             ]
         },
@@ -249,7 +275,46 @@ export default new VueRouter({
                 }
             ]
         },
-
+        {
+            name: "Transactions",
+            path: '/collections',
+            redirect: "/transactions/collections",
+            component: {
+                render: (c) => c('router-view')
+            },
+            meta: {
+                breadcrumb: 'Transactions'
+            },
+            children: [
+                //show verified payments here
+                {
+                    path: 'list',
+                    name: 'CollectionsList',
+                    meta: {breadcrumb: 'List Collections', title: 'List Collections'},
+                    component: () => import("@/components/collections/List"),
+                    children: [
+                        {
+                            path: 'add',
+                            name: 'CollectionsAdd',
+                            meta: {breadcrumb: 'Add'},
+                            component: () => import("@/components/collections/Add")
+                        },
+                        {
+                            path: ':id/edit',
+                            name: 'CollectionsEdit',
+                            meta: {breadcrumb: 'Edit'},
+                            component: () => import("@/components/collections/Add")
+                        },
+                        {
+                            path: ':id/view',
+                            name: 'CollectionsView',
+                            meta: {breadcrumb: 'View'},
+                            component: () => import("@/components/collections/View")
+                        },
+                    ]
+                },
+            ]
+        },
         {
             name: "CapitalFunds",
             path: '/capital',

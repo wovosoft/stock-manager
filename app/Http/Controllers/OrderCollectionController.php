@@ -9,16 +9,38 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 class OrderCollectionController extends Controller
 {
     protected string $model = OrderCollection::class;
     public array $search_selects = ['id',];
     public array $search_fields = ['id',];
+    public array $listWith;
     use Crud;
+
+    public function __construct()
+    {
+        $this->listWith = [
+            "user:id,name",
+            "customer:id,name,phone,email",
+        ];
+    }
+
+    public static function routes()
+    {
+        Route::name("Collections.")->prefix("collections")->group(function () {
+            Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("search", [self::class, 'search'])->name('Search');
+            Route::post("store", [self::class, 'store'])->name('Store');
+            Route::post("make_payment/{customer}/{order_collection}", [self::class, 'makePayment'])->name('MakePayment');
+            Route::post("delete/{order}", [self::class, 'delete'])->name('Delete');
+        });
+    }
 
     public function store(Request $request): JsonResponse
     {
+        DB::beginTransaction();
         try {
             $request->validate([
                 "customer_id" => ["required", "numeric"],
@@ -28,7 +50,7 @@ class OrderCollectionController extends Controller
                 ->select(['id'])
                 ->findOrFail($request->post('customer_id'));
             $current_balance = $customer->current_balance;
-            DB::beginTransaction();
+
             OrderCollection::query()
                 ->findOrNew($request->post('id'))
                 ->forceFill([
@@ -43,6 +65,23 @@ class OrderCollectionController extends Controller
                 ->saveOrFail();
             DB::commit();
             return successResponse();
+        } catch (\Throwable $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
+    }
+
+    public function makePayment(Customer $customer, OrderCollection $orderCollection, Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $payment = $customer->addPayment($orderCollection->payment_amount);
+            $orderCollection->payment_id = $payment->id;
+            $orderCollection->saveOrFail();
+            DB::commit();
+            return successResponse([
+                "payment_id" => $payment->id
+            ]);
         } catch (\Throwable $exception) {
             DB::rollBack();
             throw $exception;

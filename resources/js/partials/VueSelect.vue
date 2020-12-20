@@ -1,6 +1,11 @@
 <template>
     <div class="vue-select form-control p-0"
-         :class="{'is-invalid':(state!==null) && state,'is-valid':((state!==null) && !state)}">
+         :class="{
+            'is-invalid':(state!==null) && state,'is-valid':((state!==null) && !state),
+            'form-control-sm':size==='sm',
+            'form-control-lg':size==='lg',
+            'form-control-xl':size==='xl',
+        }">
         <input v-if="required"
                v-bind:value="value?'initialized':''"
                style="height: 0;position: absolute;top: 0;border: 0;outline: 0;z-index: -1;"
@@ -16,6 +21,7 @@
             block
             lazy
             :variant="dropdownVariant"
+            :size="size"
             :disabled="disabled"
             toggle-class="text-left m-0 border-0 border-radius-0"
             :class="{'hide-dd-icon':hideDdIcon,disabled:disabled}"

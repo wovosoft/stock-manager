@@ -49,6 +49,7 @@ class Customer extends BaseModel
 
             $payment->saveOrFail();
             DB::commit();
+            return $payment;
         } catch (\Throwable $exception) {
             DB::rollBack();
             throw $exception;

@@ -48,14 +48,18 @@
     </style>
 </head>
 <body>
-@include("pages.sales.invoice_header")
+
 @if($is_delivery)
+    @include("pages.sales.invoice_header")
     @include("pages.sales.delivery_slip")
 @elseif($invoice_both)
+    @include("pages.sales.invoice_header")
     @include("pages.sales.cash_invoice")
     <div style="border-top:1px dotted gray;margin-top: 20px;margin-bottom: 20px;"></div>
+    @include("pages.sales.invoice_header")
     @include("pages.sales.delivery_slip")
 @else
+    @include("pages.sales.invoice_header")
     @include("pages.sales.cash_invoice")
 @endif
 {!! _s('invoice_footer') !!}

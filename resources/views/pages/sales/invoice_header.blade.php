@@ -7,6 +7,7 @@
             ক্রমিক নং- {{\App\Drivers\BanglaConverter::en2bn($sale->id)}}<br>
             ক্রেতার নামঃ {{$sale->customer->name}}<br>
             মোবাইল নং: {{\App\Drivers\BanglaConverter::en2bn($sale->customer->phone)}}<br>
+            ঠিকানা: {{join(', ',$sale->customer->only(['village','thana','district']))}}<br>
 
             @php
                 $sale_date=\Carbon\Carbon::parse($sale->created_at)->locale('bn-BD');

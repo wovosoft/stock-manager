@@ -61,6 +61,12 @@ export default [
                 url: {name: 'ReturnsList'},
                 icon: 'nav-icon fas fa-chevron-right',
                 active: false
+            },
+            {
+                name: _t('list_orders', 'List Orders'),
+                url: {name: 'OrdersList'},
+                icon: 'nav-icon fas fa-chevron-right',
+                active: false
             }
         ]
     },
@@ -111,6 +117,20 @@ export default [
             {
                 name: _t('employees', 'Employees'),
                 url: {name: 'ContactEmployees'},
+                icon: 'nav-icon fas fa-chevron-right',
+                active: false
+            },
+        ]
+    },
+    {
+        name: _t('collections', 'Collections'),
+        url: false,
+        icon: 'fa fa-money-check-alt',
+        active: false,
+        children: [
+            {
+                name: _t('list_collections', 'List Collections'),
+                url: {name: 'CollectionsList'},
                 icon: 'nav-icon fas fa-chevron-right',
                 active: false
             },

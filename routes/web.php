@@ -47,6 +47,9 @@ Route::middleware(['auth'])->prefix('backend')->name('Backend.')->group(function
     CC\SettingController::routes();
     CC\SaleController::routes();
     CC\SaleItemController::routes();
+    CC\OrderController::routes();
+    CC\OrderCollectionController::routes();
+
     CC\PurchaseController::routes();
     CC\PurchasePaymentController::routes();
     CC\PurchaseItemController::routes();
@@ -64,6 +67,7 @@ Route::middleware(['auth'])->prefix('backend')->name('Backend.')->group(function
     CC\ReportsController::routes();
     CC\SaleReturnController::routes();
     CC\PurchaseReturnController::routes();
+
 });
 Route::get('routes', function () {
     Artisan::call('route:list');
