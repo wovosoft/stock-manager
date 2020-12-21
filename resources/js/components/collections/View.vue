@@ -19,7 +19,6 @@
                         class="mb-0"
                         :fields="[{key:'key',formatter:v=>__(v)},'value']"
                         :items="obj2Table(the_item.customer)">
-
                     </b-table>
                 </b-card>
                 <b-card
@@ -75,6 +74,16 @@
                 </b-table>
             </b-col>
         </b-form-row>
+        <b-row v-if="the_item && the_item.status">
+            <b-col md="4" sm="12" offset-md="4">
+                <b-form-group label-class="text-center" :label="__('status','Status')">
+                    <b-select
+                        v-model="the_item.status"
+                        :options="statuses"
+                        @input="changeStatus"></b-select>
+                </b-form-group>
+            </b-col>
+        </b-row>
         <div v-if="!the_item.payment_id && !disabled" class="text-center" @click="makePayment">
             <b-button variant="dark" size="sm">{{__('make_payment','Make Payment')}}</b-button>
         </div>
@@ -86,16 +95,43 @@
 <script>
     import view from "@/partials/view"
     import {BasicModalOptions} from "@/partials/datatable";
+    import statuses from "@/shared/statuses";
 
     export default {
         mixins: [view],
         data() {
             return {
                 BasicModalOptions,
-                disabled: false
+                disabled: false,
+                statuses
             }
         },
         methods: {
+            changeStatus(value) {
+                console.log(value)
+                if (!value) {
+                    alert("Status is required");
+                    return false;
+                }
+                this.disabled = true;
+                axios.post(route('Backend.Collections.ChangeStatus', {
+                    customer: this.the_item.customer_id,
+                    order_collection: this.the_item.id
+                }), {
+                    status: value
+                }).then(res => {
+                    this.$root.msgBox(res.data);
+                    this.$emit('refreshDatatable', true);
+                    this.getItem(this.the_item.id, route('Backend.Collections.List'))
+                        .then(res => {
+                            this.the_item = res.data
+                        })
+                        .catch(err => console.log(err.response));
+                }).catch(err => {
+                    console.log(err.response);
+                    this.$root.msgBox(err.response.data);
+                });
+            },
             makePayment() {
                 this.disabled = true;
                 axios.post(route('Backend.Collections.MakePayment', {
@@ -103,7 +139,7 @@
                     order_collection: this.the_item.id
                 })).then(res => {
                     this.$root.msgBox(res.data);
-                    this.$refs.datatable.refresh();
+                    this.$emit('refreshDatatable', true);
                     this.getItem(this.the_item.id, route('Backend.Collections.List'))
                         .then(res => {
                             this.the_item = res.data

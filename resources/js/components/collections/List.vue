@@ -1,8 +1,85 @@
 <template>
     <div>
-        <dt-table :title="__(title,startCase(title))" v-model="search" :fields="fields" :datatable="datatable"
+        <dt-table :title="__(title,startCase(title))"
+                  v-model="search"
+                  :fields="fields"
+                  :datatable="datatable"
                   :custom_buttons="custom_buttons"
+                  enable-date-range
+                  @refreshDatatable="$refs.datatable.refresh()"
         >
+            <template #header_dropdowns>
+                <b-button variant="dark" size="sm" @click="$refs.datatable.refresh()">
+                    <i class="fa fa-sync"></i>
+                </b-button>
+            </template>
+            <template #header_bottom_panel>
+                <b-row class="mt-3">
+                    <b-col md="4" sm="12">
+                        <b-form-group :label="__('customer', 'Customer')" label-cols-md="4">
+                            <b-input-group size="sm">
+                                <vue-select
+                                    size="sm"
+                                    :required="true"
+                                    @input="(v) => {
+                                        $set(datatable.search_columns,'customer_id',v ? v.id : null);
+                                    }"
+                                    v-model="temp_customer"
+                                    :tag-text="(op)=>op ? [op.id, op.name].join(' # '): __('not_selected', 'Not Selected')"
+                                    :option-text="(op)=>op ? [op.id, op.name,op.village].join(' # '): ''"
+                                    :api_url="route('Backend.Customers.Search')">
+                                </vue-select>
+                                <template v-slot:append>
+                                    <b-button
+                                        @click="(temp_customer = null), (datatable.search_columns.customer_id = null)"
+                                        class="font-weight-bold">
+                                        <b-icon-x/>
+                                    </b-button>
+                                </template>
+                            </b-input-group>
+                        </b-form-group>
+                    </b-col>
+                    <b-col md="4" sm="12">
+                        <b-form-group :label="__('status','Status')" label-cols-md="4">
+                            <b-input-group size="sm">
+                                <b-select
+                                    v-model="datatable.search_columns.status"
+                                    :options="statuses"/>
+                                <template #append>
+                                    <b-button @click="datatable.search_columns.status=null">
+                                        <b-icon-x/>
+                                    </b-button>
+                                </template>
+                            </b-input-group>
+                        </b-form-group>
+                    </b-col>
+                    <b-col md="4" sm="12">
+                        <b-form-group :label="__('user','User')" label-cols-md="4">
+                            <b-input-group size="sm">
+                                <vue-select
+                                    :init-options="true"
+                                    size="sm"
+                                    @input="(v) => {
+                                        $set(datatable.search_columns,'user_id',v ? v.id : null)
+                                    }"
+                                    v-model="temp_user"
+                                    :tag-text="(op) =>op? op.name: __('not_selected','Not Selected')"
+                                    :option-text="(op) =>op? op.name: __('not_selected','Not Selected')"
+                                    :api_url="route('Wovosoft.Users.Search')"
+                                />
+                                <template #append>
+                                    <b-button @click="()=>{
+                                        $set(datatable.search_columns,'user_id', null);
+                                        temp_user=null;
+                                    }">
+                                        <b-icon-x/>
+                                    </b-button>
+                                </template>
+                            </b-input-group>
+                        </b-form-group>
+                    </b-col>
+                </b-row>
+            </template>
             <template v-slot:table>
                 <b-table ref="datatable" v-bind="commonDtOptions()">
                     <template v-slot:cell(action)="row">
@@ -26,6 +103,15 @@
                             </b-button>
                         </b-button-group>
                     </template>
+                    <template #foot(payment_amount)="row">
+                        {{colSum(datatable.items,'payment_amount')|currency}}
+                    </template>
+                    <template #foot(previous_balance)="row">
+                        {{colSum(datatable.items,'previous_balance')|currency}}
+                    </template>
+                    <template #foot(current_balance)="row">
+                        {{colSum(datatable.items,'current_balance')|currency}}
+                    </template>
                 </b-table>
             </template>
         </dt-table>
@@ -39,8 +125,10 @@
 <script>
     import DtHeader from '@/partials/DtHeader'
     import DtFooter from '@/partials/DtFooter'
-    import Datatable, {commonDtOptions} from "@/partials/datatable";
+    import Datatable, {commonDtOptions, colSum} from "@/partials/datatable";
     import DtTable from "@/partials/DtTable";
+    import statuses from "@/shared/statuses";
+    import VueSelect from "@/partials/VueSelect";
 
     export default {
         name: "CollectionsList",
@@ -48,6 +136,7 @@
             DtHeader,
             DtFooter,
             DtTable,
+            VueSelect
         },
         mixins: [Datatable],
         props: {
@@ -88,7 +177,13 @@
                 ]
             },
         },
+        beforeMount() {
+            const date = new Date();
+            this.datatable.search_columns.starting_date = [date.getFullYear(), date.getMonth() + 1, date.getDate()].join("-");
+            this.$set(this.datatable.search_columns, 'status', 'Pending');
+        },
         methods: {
+            colSum,
             commonDtOptions() {
                 return commonDtOptions(this);
             },
@@ -117,6 +212,9 @@
         },
         data() {
             return {
+                temp_customer: null,
+                temp_user: null,
+                statuses,
                 form: {},
                 fields: [
                     {key: 'id', sortable: true, label: _t('id', 'ID')},

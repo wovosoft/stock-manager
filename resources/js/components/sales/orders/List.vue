@@ -167,6 +167,7 @@
         beforeMount() {
             const date = new Date();
             this.datatable.search_columns.starting_date = [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('-');
+            this.$set(this.datatable.search_columns, 'status', 'Pending');
         },
         methods: {
             commonDtOptions() {

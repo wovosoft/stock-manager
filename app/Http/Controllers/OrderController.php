@@ -58,7 +58,7 @@ class OrderController extends Controller
                     "customer_id" => $request->post('customer_id'),
                     "total" => $total,
                     "paid" => $request->post('paid') ?? 0,
-                    "status" => $request->post('status') ?? "pending",
+                    "status" => $request->post('status') ?? "Pending",
                     "note" => $request->post('note') ?? null,
                 ]);
             if (!$request->has('id')) {
@@ -99,7 +99,7 @@ class OrderController extends Controller
             $request->validate([
                 "status" => [
                     "required",
-                    Rule::in(['pending', 'accepted', 'processed', 'cancelled'])
+                    Rule::in(['Pending', 'Accepted', 'Processed', 'Cancelled'])
                 ]
             ]);
             DB::beginTransaction();
@@ -158,6 +158,7 @@ class OrderController extends Controller
                 $sale_item->saveOrFail();
             }
             $order->sale_id = $sale->id;
+            $order->status = "Processed";
             $order->saveOrFail();
             DB::commit();
             return successResponse([

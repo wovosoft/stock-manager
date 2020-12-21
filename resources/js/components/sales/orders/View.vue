@@ -101,12 +101,7 @@
                     v-model="the_item.status"
                     name="order-status"
                     @change="changeStatus"
-                    :options="[
-                        {value:'pending',text:__('pending','Pending')},
-                        {value:'accepted',text:__('accepted','Accepted')},
-                        {value:'processed',text:__('processed','Processed')},
-                        {value: 'cancelled',text: __('cancelled','Cancelled')}
-                    ]">
+                    :options="statuses">
                 </b-form-radio-group>
             </b-form-group>
             <b-form-group class="text-center">
@@ -143,11 +138,13 @@
 <script>
     import view from "@/partials/view"
     import {BasicModalOptions} from "@/partials/datatable";
+    import statuses from "@/shared/statuses";
 
     export default {
         mixins: [view],
         data() {
             return {
+                statuses,
                 disabled: false,
                 BasicModalOptions,
                 item_fields: [
