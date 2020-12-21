@@ -34,7 +34,7 @@ class OrderCollectionController extends Controller
             Route::post("search", [self::class, 'search'])->name('Search');
             Route::post("store", [self::class, 'store'])->name('Store');
             Route::post("make_payment/{customer}/{order_collection}", [self::class, 'makePayment'])->name('MakePayment');
-            Route::post("delete/{order}", [self::class, 'delete'])->name('Delete');
+            Route::post("delete/{order_collection}", [self::class, 'delete'])->name('Delete');
         });
     }
 

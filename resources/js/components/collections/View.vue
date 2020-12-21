@@ -1,5 +1,5 @@
 <template>
-    <b-modal @hidden="$router.go(-1)" visible
+    <b-modal @hidden="$router.go(-1),$emit('reset',true)" visible
              v-bind="{...BasicModalOptions,size:'xl'}"
              :title="__('view_collection','View Collection')">
         <b-form-row>
@@ -103,6 +103,7 @@
                     order_collection: this.the_item.id
                 })).then(res => {
                     this.$root.msgBox(res.data);
+                    this.$refs.datatable.refresh();
                     this.getItem(this.the_item.id, route('Backend.Collections.List'))
                         .then(res => {
                             this.the_item = res.data

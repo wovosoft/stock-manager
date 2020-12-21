@@ -1,6 +1,6 @@
-<h3 style="text-align: center;margin: 0;padding: 0;">
+<div style="width:100%;font-size:small;text-align: center;margin: 0;padding: 0;">
     বিসমিল্লাহির রাহমানির রাহিম
-</h3>
+</div>
 <table style="width: 100%;font-size: small;">
     <tr>
         <td style="width: 50%;vertical-align: top;">

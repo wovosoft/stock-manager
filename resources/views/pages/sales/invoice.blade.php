@@ -66,5 +66,10 @@
     @include("pages.sales.cash_invoice")
 @endif
 {!! _s('invoice_footer') !!}
+@if(isset($auto_print) && $auto_print)
+    <script>
+        window.print();
+    </script>
+@endif
 </body>
 </html>

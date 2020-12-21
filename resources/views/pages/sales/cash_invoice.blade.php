@@ -68,14 +68,6 @@
     </tr>
     <tr>
         <td colspan="3" class="text-right">
-            সর্বমোটঃ
-        </td>
-        <td>
-            {{\App\Drivers\BanglaConverter::en2bn(number_format(($sale->previous_balance + $sale->payable),2))}}
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3" class="text-right">
             জমাঃ
         </td>
         <td>
@@ -96,9 +88,9 @@
     </tr>
     </tfoot>
 </table>
-<div style="text-align: center;position: absolute;margin-top: -50px;margin-left: 10px;">
+<div style="text-align: center;position: absolute;margin-top: -50px;;">
     .............................<br>
-    স্বাক্ষর ও তারিখ
+    স্বাক্ষর
 </div>
 {{--<div style="font-size: smaller;">--}}
 {{--    @php($date=\Carbon\Carbon::now()->locale('bn-BD'))--}}

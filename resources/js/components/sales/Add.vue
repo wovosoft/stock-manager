@@ -4,14 +4,10 @@
             <b-col sm="12" md="6">
                 <b-card body-class="p-2" class="h-100">
                     <b-form @submit.prevent="handleSubmit" ref="theForm">
-                        <b-form-group>
+                        <b-form-group :label="__('customer', 'Customer')" label-cols-md="4">
                             <b-input-group>
-                                <template #prepend>
-                                    <b-input-group-text style="min-width: 200px">
-                                        {{ __("customer", "Customer") }}
-                                    </b-input-group-text>
-                                </template>
                                 <vue-select
+                                    size="md"
                                     :init-options="true"
                                     :required="true"
                                     @input="(v) => {
@@ -19,8 +15,8 @@
                                         customer_balance=v?v.balance:0;
                                     }"
                                     v-model="form.customer"
-                                    :tag-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): __('not_selected', 'Not Selected')"
-                                    :option-text="(op)=>op ? [op.id, op.name, op.phone,op.village].join(' # '): ''"
+                                    :tag-text="(op)=>op ? [op.id, op.name].join(' # '): __('not_selected', 'Not Selected')"
+                                    :option-text="(op)=>op ? [op.id, op.name,op.village].join(' # '): ''"
                                     :api_url="route('Backend.Customers.Search')">
                                 </vue-select>
                                 <template v-slot:append>
@@ -36,24 +32,18 @@
                             </b-input-group>
                         </b-form-group>
 
-                        <b-form-group class="mb-1">
-                            <b-input-group>
-                                <template #prepend>
-                                    <b-input-group-text style="min-width: 200px">
-                                        {{ __("select_product", "Select Product") }}
-                                    </b-input-group-text>
-                                </template>
-                                <vue-select
-                                    :get-filtered="(o) => o.filter((op) => !form.items.map((i) => i.code).includes(op.code))"
-                                    :init-options="true"
-                                    ref="productSelector"
-                                    @input="v=>{addProductToCart(v);$set(form,'product_temp',null);}"
-                                    v-model="form.product_temp"
-                                    :option-text="op=>op?[op.id, op.name, op.code].join(' # '):__('not_selected','Not Selected')"
-                                    :tag-text="op=>op?[op.id, op.name, op.code].join(' # '):__('not_selected','Not Selected')"
-                                    :api_url="route('Backend.Products.Search')">
-                                </vue-select>
-                            </b-input-group>
+                        <b-form-group class="mb-1" :label="__('select_product', 'Select Product')" label-cols-md="4">
+                            <vue-select
+                                size="md"
+                                :get-filtered="(o) => o.filter((op) => !form.items.map((i) => i.code).includes(op.code))"
+                                :init-options="true"
+                                ref="productSelector"
+                                @input="v=>{addProductToCart(v);$set(form,'product_temp',null);}"
+                                v-model="form.product_temp"
+                                :option-text="op=>op?[op.id, op.name, op.code].join(' # '):__('not_selected','Not Selected')"
+                                :tag-text="op=>op?[op.id, op.name, op.code].join(' # '):__('not_selected','Not Selected')"
+                                :api_url="route('Backend.Products.Search')">
+                            </vue-select>
                         </b-form-group>
                         <b-table
                             responsive
@@ -66,9 +56,10 @@
                             :items="form.items"
                         >
                             <template v-slot:cell(price)="row">
-                                <b-input-group size="sm" :append="$options.filters.currencySymbol(0)">
+                                <b-input-group style="min-width: 200px;" size="sm"
+                                               :append="$options.filters.currencySymbol(0)">
                                     <b-input type="number" step="any" v-model="row.item.price"
-                                             style="min-width: 100px;"
+
                                              :placeholder="__('sales.price', 'Price')" :required="true"/>
                                 </b-input-group>
                             </template>
@@ -192,24 +183,22 @@
                     body-class="p-2 mh-60vh overflow-auto"
                     header-class="px-2">
                     <template #header>
-                        <b-input-group>
-                            <template #prepend>
-                                <b-input-group-text style="min-width: 200px">
-                                    {{ __("select_category", "Select Category") }}
-                                </b-input-group-text>
-                            </template>
-                            <template #append>
-                                <b-button @click="search_category = null">x</b-button>
-                            </template>
-                            <vue-select
-                                v-model="search_category"
-                                :init-options="true"
-                                :option-text="(op) => [op.id, op.name, op.code].join(' # ')"
-                                :tag-text="(op) =>op? [op.id, op.name, op.code].join(' # '): __('not_selected', 'Not Selected')"
-                                :api_url="route('Backend.Categories.Search')"
-                            >
-                            </vue-select>
-                        </b-input-group>
+                        <b-form-group :label="__('select_category', 'Select Category')" label-cols-md="4">
+                            <b-input-group>
+                                <template #append>
+                                    <b-button @click="search_category = null">x</b-button>
+                                </template>
+                                <vue-select
+                                    size="md"
+                                    v-model="search_category"
+                                    :init-options="true"
+                                    :option-text="(op) => [op.id, op.name, op.code].join(' # ')"
+                                    :tag-text="(op) =>op? [op.id, op.name, op.code].join(' # '): __('not_selected', 'Not Selected')"
+                                    :api_url="route('Backend.Categories.Search')"
+                                >
+                                </vue-select>
+                            </b-input-group>
+                        </b-form-group>
                     </template>
                     <b-form-row>
                         <b-col md="4" sm="6" v-for="(si, si_key) in searched_items.data" class="mb-2" :key="si_key">
@@ -285,7 +274,6 @@
             id="invoice-modal"
             lazy
             no-close-on-backdrop
-            no-close-on-esc
             @hidden="sale_id=null">
             <b-embed
                 v-if="sale_id"
@@ -295,17 +283,34 @@
                 :src="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'html',invoice_both:'yes'})"/>
             <template v-slot:modal-footer="{close}">
                 <b-button
-                    :href="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'pdf',invoice_both:'yes'})"
+                    size="sm"
+                    :href="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'html',invoice_both:'no',auto_print:true})"
                     target="_blank"
                     variant="primary">
                     <i class="fa fa-file-pdf"></i>
-                    {{__('pdf','PDF')}}
+                    {{__('cash_invoice','Cash Invoice')}}
                 </b-button>
-                <b-button @click="printInvoice" variant="primary">
+                <b-button
+                    size="sm"
+                    :href="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'html',is_delivery:'yes',auto_print:true})"
+                    target="_blank"
+                    variant="primary">
+                    <i class="fa fa-file-pdf"></i>
+                    {{__('delivery_slip','Delivery Slip')}}
+                </b-button>
+                <b-button
+                    size="sm"
+                    :href="route('Backend.Sales.Invoice.PDF',{sale:sale_id,type:'html',invoice_both:'yes',auto_print:true})"
+                    target="_blank"
+                    variant="primary">
+                    <i class="fa fa-file-pdf"></i>
+                    {{__('cash_and_delivery_memo','Cash & Delivery')}}
+                </b-button>
+                <b-button size="sm" @click="printInvoice" variant="primary">
                     <i class="fa fa-print"></i>
                     {{__('print','Print')}}
                 </b-button>
-                <b-button @click="close" variant="secondary">Close</b-button>
+                <b-button size="sm" @click="close" variant="secondary">Close</b-button>
             </template>
         </b-modal>
     </div>
@@ -345,6 +350,7 @@
         },
         data() {
             return {
+                print_type: 'html',
                 submit_disabled: false,
                 sale_id: null,
                 search_category: null,

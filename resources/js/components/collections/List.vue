@@ -91,6 +91,28 @@
         methods: {
             commonDtOptions() {
                 return commonDtOptions(this);
+            },
+            trash(id) {
+                this.$bvModal
+                    .msgBoxConfirm(this.__('are_you_sure', 'Are you sure?'), {
+                        okTitle: this.__('ok', 'Ok'),
+                        cancelTitle: this.__('cancel', 'Cancel')
+                    })
+                    .then(value => {
+                        if (value) {
+                            axios
+                                .post(route('Backend.Collections.Delete', {order_collection: id}))
+                                .then(res => {
+                                    console.log(res)
+                                    this.$root.msgBox(res.data);
+                                    this.$refs.datatable.refresh();
+                                })
+                                .catch(err => {
+                                    console.log(err.response);
+                                    this.$root.msgBox(err.response.data);
+                                });
+                        }
+                    });
             }
         },
         data() {
