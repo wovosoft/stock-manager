@@ -65,6 +65,7 @@ class CustomerController extends Controller
     {
         Route::name('Customers.')->prefix('customers')->group(function () {
             Route::post("list", [self::class, 'list'])->name('List');
+            Route::post("addresses", [self::class, 'addresses'])->name('Addresses');
             Route::get("export_balances", [self::class, 'exportBalances'])->name('ExportBalances');
             Route::match(['get', 'post'], "input_balances", [self::class, 'inputBalances'])->name('InputBalances');
             Route::post("list/with/dues", [self::class, 'listWithDues'])->name('ListWithDues');
@@ -477,6 +478,16 @@ class CustomerController extends Controller
         } catch (\Throwable $exception) {
             throw $exception;
         }
+    }
+
+    public function addresses(Request $request)
+    {
+        return Customer::query()
+            ->where('village', 'like', '%' . $request->post('query') . '%')
+            ->select(['village'])
+            ->distinct()
+            ->get()
+            ->map(fn($i) => $i->village);
     }
 }
 

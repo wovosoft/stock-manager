@@ -63,6 +63,7 @@ class SalePaymentController extends Controller
                     'sale_payments.id',
                     'sale_payments.customer_id',
                     DB::raw("customers.name as customer"),
+                    DB::raw("customers.village as address"),
                     'sale_payments.payment_method',
                     'sale_payments.payment_amount',
                     'sale_payments.bank',
@@ -72,7 +73,10 @@ class SalePaymentController extends Controller
                     'sale_payments.created_at',
                 ])
                 ->leftJoin("customers", "customers.id", "=", "sale_payments.customer_id")
-                ->leftJoin("users", "users.id", "=", "sale_payments.taken_by");
+                ->leftJoin("users", "users.id", "=", "sale_payments.taken_by")
+                ->when($request->has('address') && $request->post('address'), function ($query) use ($request) {
+                    $query->where("customers.village", '=', $request->post('address'));
+                });
             if ($request->post("date")) {
                 $items->whereDate("sale_payments.created_at", "=", $request->post("date"));
             }

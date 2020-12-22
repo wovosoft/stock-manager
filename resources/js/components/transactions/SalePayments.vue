@@ -1,14 +1,34 @@
 <template>
     <div>
         <b-row class="my-2">
-            <b-col>
+            <b-col md="3" sm="12">
                 <b-input-group size="sm" :prepend="__('per_page','Per Page')">
                     <b-select
                         v-model="dt.per_page"
                         :options="[5,10,20,30,50,80,100,150,500]"/>
                 </b-input-group>
             </b-col>
-            <b-col class="text-right">
+            <b-col md="6" sm="12">
+                <b-form-group label="Address" label-cols-md="3">
+                    <b-input-group size="sm">
+                        <vue-select
+                            size="sm"
+                            :required="true"
+                            v-model="address"
+                            @input="$refs.dt_table.refresh()"
+                            :init-options="true"
+                            :tag-text="o=>o?o:__('not_selected','Not Selected')"
+                            :option-text="o=>o?o :__('not_selected','Not Selected')"
+                            :api_url="route('Backend.Customers.Addresses')"/>
+                        <template #append>
+                            <b-button @click="address=null,$refs.dt_table.refresh()">
+                                <b-icon-x/>
+                            </b-button>
+                        </template>
+                    </b-input-group>
+                </b-form-group>
+            </b-col>
+            <b-col md="3" sm="12" class="text-right">
                 <b-button size="sm" variant="dark" v-b-modal:add-sale-payment>
                     <i class="fa fa-plus"></i>
                     {{ __("add", "Add") }}
@@ -117,6 +137,7 @@
         },
         data() {
             return {
+                address: null,
                 dirty: false,
                 employee: null,
                 employeeId: null,
@@ -136,6 +157,12 @@
                         name: 'sale_payments.payment_amount',
                         sortable: true,
                         formatter: v => this.$options.filters.currency(v)
+                    },
+                    {
+                        key: 'address',
+                        label: _t('address', 'Address'),
+                        name: 'customers.village',
+                        sortable: true,
                     },
                     {
                         key: 'created_at',
@@ -163,6 +190,7 @@
                     per_page: ctx.perPage || 10,
                     orderBy: ctx.sortBy || 'id',
                     order: isTrue(ctx.sortDesc) ? 'desc' : 'asc',
+                    address: this.address
                 }).then(res => {
                     this.dt = {...this.dt, ...res.data};
                     return res.data.data;
