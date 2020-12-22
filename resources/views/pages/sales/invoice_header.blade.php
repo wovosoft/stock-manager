@@ -1,4 +1,4 @@
-<div style="width:100%;font-size:small;text-align: center;margin: 0;padding: 0;">
+<div style="width:100%;font-size:small;transform: scale(1.8,0.9);text-align: center;margin: 0;padding: 0;">
     বিসমিল্লাহির রাহমানির রাহিম
 </div>
 <table style="width: 100%;font-size: small;">
@@ -12,8 +12,8 @@
             @endphp
         </td>
         <td style="text-align: right;vertical-align: top;">
-            ক্রমিক নং- {{\App\Drivers\BanglaConverter::en2bn($sale->id)}}<br>
-            তারিখ : {{\App\Drivers\BanglaConverter::en2bn($sale_date->format('d-m-Y'))}},
+            ID- {{\App\Drivers\BanglaConverter::en2bn($sale->id)}}<br>
+            তারিখ : {{\App\Drivers\BanglaConverter::en2bn($sale_date->format('d-m-Y'))}},<br>
             {{$sale_date->dayName}}
         </td>
     </tr>

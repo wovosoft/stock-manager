@@ -1,5 +1,5 @@
 
-<div style="text-align: center;">
+<div style="text-align: center;font-size: x-small;margin-top: -5px;">
     ডেলিভারি স্লিপ
 </div>
 <table style="width: 100%;font-size: small;" class="invoice table table-sm table-striped table-bordered">

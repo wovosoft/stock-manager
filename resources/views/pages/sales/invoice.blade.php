@@ -11,6 +11,10 @@
             font-family: 'bangla', sans-serif;
         }
 
+        * {
+            line-height: 1;
+        }
+
         table.invoice tbody tr
             /*table.invoice th, table.invoice td */
         {
