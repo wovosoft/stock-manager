@@ -9,11 +9,9 @@
 
         html, body {
             font-family: 'bangla', sans-serif;
+            overflow-x: hidden;
         }
 
-        * {
-            line-height: 1;
-        }
 
         table.invoice tbody tr
             /*table.invoice th, table.invoice td */
@@ -52,9 +50,19 @@
         .text-center {
             text-align: center;
         }
+
+        @media print {
+            body {
+                width: 48%;
+            }
+
+            * {
+                line-height: 1;
+            }
+        }
     </style>
 </head>
-<body style="width: 48%;">
+<body>
 
 @if($is_delivery)
     @include("pages.sales.invoice_header")

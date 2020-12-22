@@ -6,7 +6,7 @@
         <td style="width: 50%;vertical-align: top;">
             {{$sale->customer->name}}<br>
             {{$sale->customer->village}}<br>
-            মোবাইল নং: {{\App\Drivers\BanglaConverter::en2bn($sale->customer->phone)}}<br>
+            মোবাইল: {{\App\Drivers\BanglaConverter::en2bn($sale->customer->phone)}}<br>
             @php
                 $sale_date=\Carbon\Carbon::parse($sale->created_at)->locale('bn-BD');
             @endphp

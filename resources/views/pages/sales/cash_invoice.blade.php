@@ -88,7 +88,7 @@
     </tr>
     </tfoot>
 </table>
-<div style="text-align: center;position: absolute;margin-top: -50px;;">
+<div style="text-align: center;font-size:small;position: absolute;margin-top: -30px;;">
     .............................<br>
     স্বাক্ষর
 </div>
