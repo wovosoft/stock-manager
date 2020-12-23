@@ -53,14 +53,14 @@
 </div>
 <table class="items">
     <thead>
-    <th>আইডি/কোড</th>
+    <th>আইডি</th>
     <th>নাম</th>
     <th>পরিমাণ</th>
     </thead>
     <tbody>
     @foreach($items as $item)
         <tr>
-            <td>{{join(' / ',$item->only(['id','code']))}}</td>
+            <td>{{$item->id}}</td>
             <td>{{$item->name}}</td>
             <td>{{\App\Drivers\BanglaConverter::en2bn(number_format($item->quantity,2))}}</td>
         </tr>

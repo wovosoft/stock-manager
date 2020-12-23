@@ -88,15 +88,17 @@ class SaleItemController extends Controller
                 ->groupBy('sale_items.product_id')
                 ->orderBy("products.code")
                 ->select([
-                    'products.id',
-                    "products.name",
-                    "products.code",
-//                    'name' => function (Builder $builder) {
-//                        $builder
-//                            ->from('products')
-//                            ->where('products.id', '=', DB::raw('sale_items.product_id'))
-//                            ->selectRaw('products.name');
-//                    },
+                    //doesn't support in current namecheap mysql version
+//                    'products.id',
+//                    "products.name",
+//                    "products.code",
+                    DB::raw("sale_items.product_id as id"),
+                    'name' => function (Builder $builder) {
+                        $builder
+                            ->from('products')
+                            ->where('products.id', '=', DB::raw('sale_items.product_id'))
+                            ->selectRaw('products.name');
+                    },
                     DB::raw("SUM(sale_items.quantity) as quantity"),
                 ]);
             //both starting and ending dates are available, cause starting date is required
