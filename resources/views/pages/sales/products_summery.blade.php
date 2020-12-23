@@ -38,19 +38,21 @@
     </style>
 </head>
 <body>
-<h3 style="text-align: center;margin: 0;">পণ্য অনুযায়ী বিক্রয় সামারি</h3>
-<div style="text-align: center;">
-    @php
-        $starting_date=\Carbon\Carbon::parse($starting_date);
-        if ($ending_date){
-            $ending_date=\Carbon\Carbon::parse($ending_date);
-        }
-    @endphp
-    তারিখঃ {{\App\Drivers\BanglaConverter::en2bn($starting_date->format('d-m-Y'))}}
-    @if($ending_date)
-        থেকে {{\App\Drivers\BanglaConverter::en2bn($ending_date->format('d-m-Y'))}} পর্যন্ত
-    @endif
-</div>
+<header>
+    <h3 style="text-align: center;margin: 0;">পণ্য অনুযায়ী বিক্রয় সামারি</h3>
+    <div style="text-align: center;">
+        @php
+            $starting_date=\Carbon\Carbon::parse($starting_date);
+            if ($ending_date){
+                $ending_date=\Carbon\Carbon::parse($ending_date);
+            }
+        @endphp
+        তারিখঃ {{\App\Drivers\BanglaConverter::en2bn($starting_date->format('d-m-Y'))}}
+        @if($ending_date)
+            থেকে {{\App\Drivers\BanglaConverter::en2bn($ending_date->format('d-m-Y'))}} পর্যন্ত
+        @endif
+    </div>
+</header>
 <table class="items">
     <thead>
     <th>আইডি</th>
