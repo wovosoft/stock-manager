@@ -71,15 +71,16 @@
     <table id="items" style="border-collapse: collapse;border: 1px solid lightgray;width: 100%;">
         <thead>
         <tr style="background-color: #1b1b1b;">
-            <th style="color: white;">আইডি</th>
+            <th style="color: white;">ক্রঃনং</th>
             <th style="color: white;">নাম</th>
             <th style="color: white;">পরিমাণ</th>
         </tr>
         </thead>
         <tbody>
+        @php($i=1)
         @foreach($items as $item)
             <tr style="{{$border}}">
-                <td style="{{$border}}{{$padding}}">{{$item->id}}</td>
+                <td style="{{$border}}{{$padding}}">{{$i++}}</td>
                 <td style="{{$border}}{{$padding}}">{{$item->name}}</td>
                 <td style="text-align: right;{{$border}}{{$padding}}">
                     {{\App\Drivers\BanglaConverter::en2bn($item->quantity)}}
