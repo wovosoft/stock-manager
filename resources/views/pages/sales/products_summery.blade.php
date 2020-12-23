@@ -7,27 +7,23 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Product wise sales</title>
     <style>
-        table.items {
+        table#items {
             width: 100%;
         }
 
-        table.items,
-        table.items tr,
-        table.items th,
-        table.items td {
+        table#items,
+        table#items tr,
+        table#items th,
+        table#items td {
             border: 1px solid lightgray;
             border-collapse: collapse;
             padding: 2px 3px;
         }
 
-        table.items tr:nth-child(even) {
+        table#items tr:nth-child(even) {
             background-color: #f2f2f2;
         }
 
-        table.items thead > tr {
-            background-color: #1b1b1b;
-            color: white;
-        }
 
         @if(isset($html) && $html)
             body {
@@ -35,6 +31,11 @@
             margin: auto;
             padding-top: 70px;
             padding-bottom: 70px;
+        }
+
+        @else
+            html, body {
+            font-family: 'bangla', sans-serif;
         }
 
         @endif
@@ -62,19 +63,27 @@
     </div>
 </header>
 <hr>
-<div style="column-count: 2;">
-    <table class="items">
+@php
+    $border="border:1px solid lightgray;";
+    $padding="padding:2px 3px;"
+@endphp
+<div style="column-count: 2;column-fill: auto;">
+    <table id="items" style="border-collapse: collapse;border: 1px solid lightgray;width: 100%;">
         <thead>
-        <th>আইডি</th>
-        <th>নাম</th>
-        <th>পরিমাণ</th>
+        <tr style="background-color: #1b1b1b;">
+            <th style="color: white;">আইডি</th>
+            <th style="color: white;">নাম</th>
+            <th style="color: white;">পরিমাণ</th>
+        </tr>
         </thead>
         <tbody>
         @foreach($items as $item)
-            <tr>
-                <td>{{$item->id}}</td>
-                <td>{{$item->name}}</td>
-                <td style="text-align: right;">{{\App\Drivers\BanglaConverter::en2bn($item->quantity)}}</td>
+            <tr style="{{$border}}">
+                <td style="{{$border}}{{$padding}}">{{$item->id}}</td>
+                <td style="{{$border}}{{$padding}}">{{$item->name}}</td>
+                <td style="text-align: right;{{$border}}{{$padding}}">
+                    {{\App\Drivers\BanglaConverter::en2bn($item->quantity)}}
+                </td>
             </tr>
         @endforeach
         <tr>

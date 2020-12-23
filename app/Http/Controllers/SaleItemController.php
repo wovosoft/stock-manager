@@ -17,7 +17,7 @@ class SaleItemController extends Controller
     {
         Route::post('sales/{sale}/items/store', [self::class, 'store'])->name('SaleItems.Store');
         Route::post('sales/{sale}/items/{sale_item}/delete', [self::class, 'delete'])->name('SaleItems.Delete');
-        Route::match(['get', 'post'], 'sale_items/export', [self::class, 'exportItems'])->name('SaleItems.Export');
+        Route::match(['get', 'post'], 'sale_items/export/{type?}', [self::class, 'exportItems'])->name('SaleItems.Export');
 
 //        Route::post("sales/items/return/{sale}/{sale_item}", [static::class, 'returnItem'])->name('Sales.Items.Return');
     }
@@ -75,7 +75,7 @@ class SaleItemController extends Controller
         }
     }
 
-    public function exportItems(Request $request)
+    public function exportItems(string $type = 'html', Request $request)
     {
         try {
             $request->validate([
@@ -111,6 +111,14 @@ class SaleItemController extends Controller
             } else {
                 $items
                     ->whereDate("sale_items.created_at", "=", Carbon::parse($request->input("starting_date"))->toDateString());
+            }
+            if ($type == 'pdf') {
+                return \PDF::loadView("pages.sales.products_summery", [
+                    "items" => $items->get(),
+                    "starting_date" => $request->post("starting_date"),
+                    "ending_date" => $request->post("ending_date") ?? null,
+                    "html" => false
+                ])->stream('product_wise_sales.pdf');
             }
             return view("pages.sales.products_summery", [
                 "items" => $items->get(),
