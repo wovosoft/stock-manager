@@ -25,7 +25,7 @@
                             right
                             :text="__('export','Export')">
                     <b-dropdown-item @click="getProductWiseReport">
-                        {{__('product_wise','Product Wise')}}
+                        {{__('product_summery','Product Summery')}}
                     </b-dropdown-item>
                 </b-dropdown>
                 <b-button size="sm" variant="dark"
@@ -218,7 +218,7 @@
                 if (this.search) {
                     query.search = this.search;
                 }
-                console.log(route('Backend.SaleItems.Export', query));
+                window.open(route('Backend.SaleItems.Export', query), "_blank");
             }
         },
         mounted() {

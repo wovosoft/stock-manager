@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -15,7 +17,7 @@ class SaleItemController extends Controller
     {
         Route::post('sales/{sale}/items/store', [self::class, 'store'])->name('SaleItems.Store');
         Route::post('sales/{sale}/items/{sale_item}/delete', [self::class, 'delete'])->name('SaleItems.Delete');
-        Route::post('sale_items/export', [self::class, 'exportItems'])->name('SaleItems.Export');
+        Route::match(['get', 'post'], 'sale_items/export', [self::class, 'exportItems'])->name('SaleItems.Export');
 
 //        Route::post("sales/items/return/{sale}/{sale_item}", [static::class, 'returnItem'])->name('Sales.Items.Return');
     }
@@ -76,7 +78,44 @@ class SaleItemController extends Controller
     public function exportItems(Request $request)
     {
         try {
+            $request->validate([
+                "starting_date" => ["required", "date"],
+                "ending_date" => ["nullable", "date"]
+            ]);
 
+            $items = SaleItem::query()
+                ->leftJoin("products", "products.id", "=", "sale_items.product_id")
+                ->groupBy('sale_items.product_id')
+                ->orderBy("products.code")
+                ->select([
+                    'products.id',
+                    "products.name",
+                    "products.code",
+//                    'name' => function (Builder $builder) {
+//                        $builder
+//                            ->from('products')
+//                            ->where('products.id', '=', DB::raw('sale_items.product_id'))
+//                            ->selectRaw('products.name');
+//                    },
+                    DB::raw("SUM(sale_items.quantity) as quantity"),
+                ]);
+            //both starting and ending dates are available, cause starting date is required
+            if ($request->has('ending_date')) {
+                $items
+                    ->whereBetween("sale_items.created_at", [
+                        Carbon::parse($request->input("starting_date"))->toDateString(),
+                        Carbon::parse($request->input("ending_date"))->toDateString()
+                    ]);
+            } else {
+                $items
+                    ->whereDate("sale_items.created_at", "=", Carbon::parse($request->input("starting_date"))->toDateString());
+            }
+            return view("pages.sales.products_summery", [
+                "items" => $items->get(),
+                "starting_date" => $request->post("starting_date"),
+                "ending_date" => $request->post("ending_date") ?? null,
+                "html" => true
+            ]);
         } catch (\Throwable $exception) {
             throw $exception;
         }
