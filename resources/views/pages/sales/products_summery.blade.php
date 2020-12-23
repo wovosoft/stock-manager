@@ -62,7 +62,6 @@
         @endif
     </div>
 </header>
-<hr>
 @php
     $border="border:1px solid lightgray;";
     $padding="padding:2px 3px;"
