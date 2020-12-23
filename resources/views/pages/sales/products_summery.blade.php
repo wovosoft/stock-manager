@@ -36,7 +36,13 @@
             padding-top: 70px;
             padding-bottom: 70px;
         }
+
         @endif
+        @media print {
+            body {
+                padding: 5px;
+            }
+        }
     </style>
 </head>
 <body>
