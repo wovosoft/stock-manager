@@ -80,7 +80,7 @@
         @php($i=1)
         @foreach($items as $item)
             <tr style="{{$border}}">
-                <td style="{{$border}}{{$padding}}">{{$i++}}</td>
+                <td style="{{$border}}{{$padding}}">{{\App\Drivers\BanglaConverter::en2bn($i++)}}</td>
                 <td style="{{$border}}{{$padding}}">{{$item->name}}</td>
                 <td style="text-align: right;{{$border}}{{$padding}}">
                     {{\App\Drivers\BanglaConverter::en2bn($item->quantity)}}
