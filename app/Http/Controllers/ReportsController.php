@@ -140,8 +140,15 @@ class ReportsController extends Controller
             if ($export == "pdf") {
                 return \PDF::loadView("pages.products.daily_product_stock", [
                     "items" => $this->dailyProductsReport($date, $export, $request)->get(),
-                    "date" => $date
+                    "date" => $date,
+                    "html" => false
                 ])->stream("product_stock_report-{$date}.pdf");
+            } elseif ($export == "html") {
+                return view("pages.products.daily_product_stock", [
+                    "items" => $this->dailyProductsReport($date, $export, $request)->get(),
+                    "date" => $date,
+                    "html" => true
+                ]);
             }
             return $this
                 ->dailyProductsReport($date, $export, $request)

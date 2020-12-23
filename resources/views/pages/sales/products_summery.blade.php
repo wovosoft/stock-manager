@@ -56,13 +56,15 @@
             padding: 5px 10px;
             margin: auto;
             cursor: pointer;
-            box-shadow: 0 0  5px gray;
+            box-shadow: 0 0 5px gray;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
-<button id="print" onclick="window.print()">প্রিন্ট করুন</button>
+@if(isset($html) && $html)
+    <button id="print" onclick="window.print()">প্রিন্ট করুন</button>
+@endif
 <header>
     <h3 style="text-align: center;margin: 0;">পণ্য অনুযায়ী বিক্রয় সামারি</h3>
     <div style="text-align: center;">

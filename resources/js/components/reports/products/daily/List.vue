@@ -27,7 +27,7 @@
                             </b-button>
                             <b-button variant="primary"
                                       target="_blank"
-                                      :href="route('Backend.Reports.Products.Daily', { date:date,export:'pdf'})"
+                                      :href="route('Backend.Reports.Products.Daily', { date:date,export:'html'})"
                                       :title="__('export_report','Export Report')">
                                 {{__('export_report',"Export Report")}}
                             </b-button>

@@ -16,7 +16,7 @@
         }
 
         table.invoice th, table.invoice td {
-            padding: 5px 10px;
+            padding: 2px 3px;
         }
 
         table.invoice tbody tr:nth-child(odd) {
@@ -50,46 +50,46 @@
     {!! _s('invoice_header') !!}
     গোডাউনের মজুদ এবং খরচের পর মোট মজুদ মালের তালিকা
 </div>
-<div style="position: absolute;top:100px;right:60px;">
+<div style="text-align: center;">
     তারিখঃ {{\App\Drivers\BanglaConverter::en2bn(\Carbon\Carbon::parse($date)->format('d-m-Y'))}}
 </div>
 <br>
-<table style="width: 100%;" class="invoice">
-    <thead>
-    <tr>
-        <th>ক্রঃ নং</th>
-        <th>মালামালের বিবরণ</th>
-        <th>বর্তমান মজুদ</th>
-        <th>জমা</th>
-        <th>খরচ</th>
-        <th>অবশিষ্ট</th>
-        <th>মোট মজুদ</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach($items as $item)
+<div style="column-count: 2;column-fill: auto;">
+    <table style="width: 100%;" class="invoice">
+        <thead>
         <tr>
-            <td>{{\App\Drivers\BanglaConverter::en2bn($item->id)}}</td>
-            <td>{{$item->name}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn($item->current_stock)}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn(($item->addition))}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn(($item->subtraction))}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn($item->remains)}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn($item->stock)}}</td>
+            <th>ক্রঃ নং</th>
+            <th>মালামালের বিবরণ</th>
+            <th>বর্তমান মজুদ</th>
+            <th>জমা</th>
+            <th>খরচ</th>
+            <th>অবশিষ্ট</th>
+            <th>মোট মজুদ</th>
         </tr>
-    @endforeach
-    </tbody>
-    <tfoot>
-    <tr>
-        <td>মোট</td>
-        <td>{{\App\Drivers\BanglaConverter::en2bn($items->count())}}টি পণ্য</td>
-        <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('current_stock'))}}</td>
-        <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('addition'))}}</td>
-        <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('subtraction'))}}</td>
-        <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('remains'))}}</td>
-        <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('stock'))}}</td>
-    </tr>
-    </tfoot>
-</table>
+        </thead>
+        <tbody>
+        @foreach($items as $item)
+            <tr>
+                <td>{{\App\Drivers\BanglaConverter::en2bn($item->id)}}</td>
+                <td>{{$item->name}}</td>
+                <td>{{\App\Drivers\BanglaConverter::en2bn($item->current_stock)}}</td>
+                <td>{{\App\Drivers\BanglaConverter::en2bn(($item->addition))}}</td>
+                <td>{{\App\Drivers\BanglaConverter::en2bn(($item->subtraction))}}</td>
+                <td>{{\App\Drivers\BanglaConverter::en2bn($item->remains)}}</td>
+                <td>{{\App\Drivers\BanglaConverter::en2bn($item->stock)}}</td>
+            </tr>
+        @endforeach
+        <tr>
+            <td>মোট</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn($items->count())}}টি পণ্য</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('current_stock'))}}</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('addition'))}}</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('subtraction'))}}</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('remains'))}}</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('stock'))}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
