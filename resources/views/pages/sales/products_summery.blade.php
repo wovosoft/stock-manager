@@ -33,6 +33,8 @@
             body {
             max-width: 1024px;
             margin: auto;
+            padding-top: 70px;
+            padding-bottom: 70px;
         }
         @endif
     </style>
@@ -53,6 +55,7 @@
         @endif
     </div>
 </header>
+<hr>
 <div style="column-count: 2;">
     <table class="items">
         <thead>
