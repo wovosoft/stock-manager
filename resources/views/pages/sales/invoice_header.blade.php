@@ -10,7 +10,7 @@
             @php
                 $sale_date=\Carbon\Carbon::parse($sale->created_at)->locale('bn-BD');
             @endphp
-        </td>K
+        </td>
         <td style="text-align: right;vertical-align: top;">
             ID- {{\App\Drivers\BanglaConverter::en2bn($sale->id)}}<br>
             {{\App\Drivers\BanglaConverter::en2bn($sale_date->format('d-m-Y'))}},<br>
