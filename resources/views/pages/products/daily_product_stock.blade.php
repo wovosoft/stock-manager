@@ -43,6 +43,23 @@
         .text-center {
             text-align: center;
         }
+
+        @media print {
+            #print {
+                display: none !important;
+            }
+        }
+
+        #print {
+            background-color: red;
+            color: white;
+            border: 1px solid red;
+            padding: 5px 10px;
+            margin: auto;
+            cursor: pointer;
+            box-shadow: 0 0 5px gray;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -54,6 +71,9 @@
     তারিখঃ {{\App\Drivers\BanglaConverter::en2bn(\Carbon\Carbon::parse($date)->format('d-m-Y'))}}
 </div>
 <br>
+@if(isset($html) && $html)
+    <button id="print" onclick="window.print()">প্রিন্ট করুন</button>
+@endif
 <div style="column-count: 2;column-fill: auto;">
     <table style="width: 100%;" class="invoice">
         <thead>
