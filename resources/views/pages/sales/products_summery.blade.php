@@ -24,7 +24,7 @@
             background-color: #f2f2f2;
         }
 
-        table.items thead {
+        table.items tr {
             background-color: #1b1b1b;
             color: white;
         }
