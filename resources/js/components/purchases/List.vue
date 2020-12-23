@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-row class="mb-3">
+        <b-form-row class="mb-3">
             <b-col md="4" sm="12">
                 <b-card bg-variant="dark" text-variant="light" :title="__('purchases_quantity','Purchases Quantity')">
                     {{overview.purchases_quantity | localNumber}}
@@ -16,7 +16,7 @@
                     {{overview.purchases_returned | currency}}
                 </b-card>
             </b-col>
-        </b-row>
+        </b-form-row>
         <dt-table :title="title" v-model="search" :fields="fields" :datatable="datatable"
                   :custom_buttons="custom_buttons"
                   enable-date-range

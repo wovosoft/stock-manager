@@ -15,6 +15,7 @@ class SaleItemController extends Controller
     {
         Route::post('sales/{sale}/items/store', [self::class, 'store'])->name('SaleItems.Store');
         Route::post('sales/{sale}/items/{sale_item}/delete', [self::class, 'delete'])->name('SaleItems.Delete');
+        Route::post('sale_items/export', [self::class, 'exportItems'])->name('SaleItems.Export');
 
 //        Route::post("sales/items/return/{sale}/{sale_item}", [static::class, 'returnItem'])->name('Sales.Items.Return');
     }
@@ -67,6 +68,15 @@ class SaleItemController extends Controller
             $sale->saveOrFail();
 
             return successResponse();
+        } catch (\Throwable $exception) {
+            throw $exception;
+        }
+    }
+
+    public function exportItems(Request $request)
+    {
+        try {
+
         } catch (\Throwable $exception) {
             throw $exception;
         }

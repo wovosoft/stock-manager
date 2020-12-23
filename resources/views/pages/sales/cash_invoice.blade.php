@@ -1,4 +1,4 @@
-<div style="text-align: center;font-size: x-small;margin-top: -5px;">
+<div style="text-align: center;font-size: small;margin-top: -15px;">
     ক্যাশ মেমো
 </div>
 <table style="width: 100%;font-size: small;" class="invoice table table-sm table-striped table-bordered">

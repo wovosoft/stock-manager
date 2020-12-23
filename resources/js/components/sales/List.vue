@@ -12,12 +12,22 @@
                 </b-card>
             </b-col>
         </b-row>
-        <dt-table :title="title" v-model="search" :fields="fields" :datatable="datatable"
+        <dt-table :title="title"
+                  v-model="search"
+                  :fields="fields"
+                  :datatable="datatable"
                   :custom_buttons="custom_buttons"
                   enable-date-range
-                  @refreshDatatable="$refs.datatable.refresh()"
-        >
+                  @refreshDatatable="$refs.datatable.refresh()">
             <template #header_dropdowns>
+                <b-dropdown size="sm"
+                            variant="dark"
+                            right
+                            :text="__('export','Export')">
+                    <b-dropdown-item @click="getProductWiseReport">
+                        {{__('product_wise','Product Wise')}}
+                    </b-dropdown-item>
+                </b-dropdown>
                 <b-button size="sm" variant="dark"
                           :title="__('refresh','Refresh')"
                           @click="$refs.datatable.refresh()">
@@ -196,6 +206,19 @@
                 let el = document.getElementById('print_invoice').contentWindow;
                 el.focus();
                 el.print();
+            },
+            getProductWiseReport() {
+                let query = {};
+                if (this.datatable.search_columns.starting_date) {
+                    query.starting_date = this.datatable.search_columns.starting_date;
+                }
+                if (this.datatable.search_columns.ending_date) {
+                    query.ending_date = this.datatable.search_columns.ending_date;
+                }
+                if (this.search) {
+                    query.search = this.search;
+                }
+                console.log(route('Backend.SaleItems.Export', query));
             }
         },
         mounted() {

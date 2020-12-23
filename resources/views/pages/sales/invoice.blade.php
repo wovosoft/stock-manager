@@ -9,7 +9,7 @@
 
         html, body {
             font-family: 'bangla', sans-serif;
-            overflow-x: hidden;
+            width: 48%;
         }
 
 
@@ -51,15 +51,6 @@
             text-align: center;
         }
 
-        @media print {
-            body {
-                width: 48%;
-            }
-
-            * {
-                line-height: 1;
-            }
-        }
     </style>
 </head>
 <body>

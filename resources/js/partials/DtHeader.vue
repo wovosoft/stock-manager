@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="row">
-            <div class="col" style="min-width: 150px;max-width: 200px;">
+        <b-row>
+            <b-col md="2" sm="12" style="min-width: 150px;" class="mb-2 mb-md-0">
                 <b-input-group :size="perPageSize" :prepend="__('per_page','Per Page')">
                     <b-form-select
                         class="form-control"
@@ -10,8 +10,8 @@
                         :options="range()">
                     </b-form-select>
                 </b-input-group>
-            </div>
-            <div class="col" style="min-width: 150px" v-if="!noSearch">
+            </b-col>
+            <b-col md="3" sm="12" style="min-width: 150px" v-if="!noSearch" class="mb-2 mb-md-0">
                 <b-form-input
                     type="search"
                     v-model="search"
@@ -20,8 +20,8 @@
                     @change="datatable.current_page=1"
                     @input="$emit('input', search)"
                     :placeholder="__('type_and_hit_enter_to_search_the_table','Type and Hit Enter to Search the table, ESC to clear')"/>
-            </div>
-            <div class="col" v-if="enableDateRange">
+            </b-col>
+            <b-col md="3" sm="12" v-if="enableDateRange" class="mb-2 mb-md-0">
                 <b-input-group :size="searchSize">
                     <b-form-input type="date"
                                   :title="__('starting_date','Starting Date')"
@@ -43,8 +43,8 @@
                         </b-button>
                     </template>
                 </b-input-group>
-            </div>
-            <div class="col text-right">
+            </b-col>
+            <b-col :md="enableDateRange?4:7" sm="12" class="text-right">
                 <slot name="header_searches"></slot>
                 <b-button-group v0i :size="customButtonSize" v-if="custom_buttons && custom_buttons.length">
                     <template v-for="(btn,btn_key) in custom_buttons">
@@ -92,8 +92,8 @@
                         </li>
                     </ul>
                 </b-dropdown>
-            </div>
-        </div>
+            </b-col>
+        </b-row>
         <slot name="bottom_panel"></slot>
     </div>
 </template>
@@ -144,11 +144,18 @@
         data: () => {
             return {
                 search: '',
-                the:this
+                the: this,
+                col_size: 2
             }
         },
         mounted() {
             this.datatable.per_page = this.getPerPage();
+            if (!this.noSearch) {
+                this.col_size++;
+            }
+            if (this.enableDateRange) {
+                this.col_size++;
+            }
         },
         watch: {
             "datatable.search_columns": {
