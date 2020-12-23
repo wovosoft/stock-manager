@@ -74,12 +74,12 @@
             <tr>
                 <td>{{$item->id}}</td>
                 <td>{{$item->name}}</td>
-                <td>{{\App\Drivers\BanglaConverter::en2bn($item->quantity)}}</td>
+                <td style="text-align: right;">{{\App\Drivers\BanglaConverter::en2bn($item->quantity)}}</td>
             </tr>
         @endforeach
         <tr>
             <td colspan="2" style="text-align: right;">মোট</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn($items->sum('quantity'))}}</td>
+            <td style="text-align: right">{{\App\Drivers\BanglaConverter::en2bn($items->sum('quantity'))}}</td>
         </tr>
         </tbody>
     </table>
