@@ -13,7 +13,7 @@
         </td>
         <td style="text-align: right;vertical-align: top;">
             ID- {{\App\Drivers\BanglaConverter::en2bn($sale->id)}}<br>
-            তারিখ : {{\App\Drivers\BanglaConverter::en2bn($sale_date->format('d-m-Y'))}},<br>
+            {{\App\Drivers\BanglaConverter::en2bn($sale_date->format('d-m-Y'))}},<br>
             {{$sale_date->dayName}}
         </td>
     </tr>

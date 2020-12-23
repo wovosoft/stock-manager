@@ -60,7 +60,7 @@
 @elseif($invoice_both)
     @include("pages.sales.invoice_header")
     @include("pages.sales.cash_invoice")
-    <div style="border-top:1px dotted gray;margin-top: 40px;margin-bottom: 40px;"></div>
+    <div style="border-top:1px dotted gray;margin-top: 2in;margin-bottom: 40px;"></div>
     @include("pages.sales.invoice_header")
     @include("pages.sales.delivery_slip")
 @else
