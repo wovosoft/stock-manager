@@ -86,7 +86,7 @@ class SaleItemController extends Controller
             $items = SaleItem::query()
                 ->leftJoin("products", "products.id", "=", "sale_items.product_id")
                 ->groupBy('sale_items.product_id')
-                ->orderBy("products.code")
+//                ->orderBy("products.code")
                 ->select([
                     //doesn't support in current namecheap mysql version
 //                    'products.id',

@@ -53,27 +53,27 @@
         @endif
     </div>
 </header>
-<table class="items">
-    <thead>
-    <th>আইডি</th>
-    <th>নাম</th>
-    <th>পরিমাণ</th>
-    </thead>
-    <tbody>
-    @foreach($items as $item)
+<div style="column-count: 2;">
+    <table class="items">
+        <thead>
+        <th>আইডি</th>
+        <th>নাম</th>
+        <th>পরিমাণ</th>
+        </thead>
+        <tbody>
+        @foreach($items as $item)
+            <tr>
+                <td>{{$item->id}}</td>
+                <td>{{$item->name}}</td>
+                <td>{{\App\Drivers\BanglaConverter::en2bn(number_format($item->quantity,2))}}</td>
+            </tr>
+        @endforeach
         <tr>
-            <td>{{$item->id}}</td>
-            <td>{{$item->name}}</td>
-            <td>{{\App\Drivers\BanglaConverter::en2bn(number_format($item->quantity,2))}}</td>
+            <td colspan="2" style="text-align: right;">মোট</td>
+            <td>{{\App\Drivers\BanglaConverter::en2bn(number_format($items->sum('quantity'),2))}}</td>
         </tr>
-    @endforeach
-    </tbody>
-    <tfoot>
-    <tr>
-        <td colspan="2" style="text-align: right;">মোট</td>
-        <td>{{\App\Drivers\BanglaConverter::en2bn(number_format($items->sum('quantity'),2))}}</td>
-    </tr>
-    </tfoot>
-</table>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
