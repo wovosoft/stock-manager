@@ -9,7 +9,6 @@
 
         html, body {
             font-family: 'bangla', sans-serif;
-            width: 48%;
         }
 
 
@@ -53,7 +52,7 @@
 
     </style>
 </head>
-<body>
+<body style="width: 48%;">
 
 @if($is_delivery)
     @include("pages.sales.invoice_header")
@@ -61,7 +60,7 @@
 @elseif($invoice_both)
     @include("pages.sales.invoice_header")
     @include("pages.sales.cash_invoice")
-    <div style="border-top:1px dotted gray;margin-top: 20px;margin-bottom: 20px;"></div>
+    <div style="border-top:1px dotted gray;margin-top: 30px;margin-bottom: 30px;"></div>
     @include("pages.sales.invoice_header")
     @include("pages.sales.delivery_slip")
 @else
